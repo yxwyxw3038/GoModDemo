@@ -15,6 +15,7 @@ require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/astaxie/beego v1.11.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.4.0
 	github.com/jinzhu/configor v1.0.0
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
