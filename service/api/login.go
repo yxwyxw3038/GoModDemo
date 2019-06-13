@@ -11,7 +11,6 @@ import (
 
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 type auth struct {
@@ -21,7 +20,7 @@ type auth struct {
 
 func Login(c *gin.Context) {
 	logger := util.InitZapLog()
-	logger.Debug(fmt.Sprint("Info log "), zap.String("level", `{"a":"4","b":"5"}`))
+	logger.Debug("开始登录验证！")
 	appG := util.Gin{C: c}
 	valid := validation.Validation{}
 	str, err := appG.GetBase64Body()

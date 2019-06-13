@@ -1,64 +1,52 @@
 package util
 
 import (
+	"os"
 	"time"
 
-	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-// logpath 日志文件路径
-// loglevel 日志级别
-func initLogger(logpath string, loglevel string) *zap.Logger {
-
-	hook := lumberjack.Logger{
-		Filename:   logpath, // 日志文件路径
-		MaxSize:    128,     // megabytes
-		MaxBackups: 30,      // 最多保留300个备份
-		MaxAge:     7,       // days
-		Compress:   true,    // 是否压缩 disabled by default
+func NewEncoderConfig() zapcore.EncoderConfig {
+	return zapcore.EncoderConfig{
+		// Keys can be anything except the empty string.
+		TimeKey:        "T",
+		LevelKey:       "L",
+		NameKey:        "N",
+		CallerKey:      "C",
+		MessageKey:     "M",
+		StacktraceKey:  "S",
+		LineEnding:     zapcore.DefaultLineEnding,
+		EncodeLevel:    zapcore.CapitalLevelEncoder,
+		EncodeTime:     TimeEncoder,
+		EncodeDuration: zapcore.StringDurationEncoder,
+		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
-
-	w := zapcore.AddSync(&hook)
-
-	// 设置日志级别,debug可以打印出info,debug,warn；info级别可以打印warn，info；warn只能打印warn
-	// debug->info->warn->error
-	var level zapcore.Level
-	switch loglevel {
-	case "debug":
-		level = zap.DebugLevel
-	case "info":
-		level = zap.InfoLevel
-	case "error":
-		level = zap.ErrorLevel
-	default:
-		level = zap.InfoLevel
-	}
-	encoderConfig := zap.NewProductionEncoderConfig()
-	// 时间格式
-	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	core := zapcore.NewCore(
-		zapcore.NewConsoleEncoder(encoderConfig),
-		w,
-		level,
-	)
-
-	logger := zap.New(core)
-	logger.Info("DefaultLogger init success")
-
-	return logger
 }
 
-type Test struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }
-
 func InitZapLog() *zap.Logger {
 	var t time.Time
 	t = time.Now()
 	dataStr := t.Format("2006-01-02")
 	logNameStr := "./log/" + dataStr + ".log"
-	return initLogger(logNameStr, "debug")
+	w := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   logNameStr,
+		MaxSize:    500, // megabytes
+		MaxBackups: 3,
+		MaxAge:     28, // days
+	})
+	core := zapcore.NewCore(
+		zapcore.NewConsoleEncoder(NewEncoderConfig()),
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout),
+			w),
+		zap.DebugLevel,
+	)
+	logger := zap.New(core, zap.AddCaller())
+	return logger
+
 }

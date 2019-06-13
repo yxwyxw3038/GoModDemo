@@ -2,11 +2,12 @@ package main
 
 import (
 	. "GoModDemo/router"
-	"fmt"
+	"GoModDemo/util"
 )
 
 func main() {
-	fmt.Printf("启动服务")
+	logger := util.InitZapLog()
+	logger.Debug("启动服务")
 	router := InitRouter()
 	router.Run(":8080")
 	// address := fmt.Sprintf("%s:%s", setting.ServerSetting.Ip, setting.ServerSetting.Port)
