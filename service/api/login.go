@@ -4,12 +4,14 @@ import (
 	"GoModDemo/consts"
 	"GoModDemo/service/authentication"
 	"GoModDemo/util"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"net/url"
+
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"encoding/base64"
+	"go.uber.org/zap"
 )
 
 type auth struct {
@@ -18,15 +20,17 @@ type auth struct {
 }
 
 func Login(c *gin.Context) {
+	logger := util.InitZapLog()
+	logger.Debug(fmt.Sprint("Info log "), zap.String("level", `{"a":"4","b":"5"}`))
 	appG := util.Gin{C: c}
-	valid := validation.Validation{}	
+	valid := validation.Validation{}
 	str, err := appG.GetBase64Body()
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, nil)
 		return
 	}
 	fmt.Printf(str)
-	dists,err:=	url.ParseQuery(str)
+	dists, err := url.ParseQuery(str)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, nil)
 		return
@@ -38,7 +42,7 @@ func Login(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "密码解密异常")
 		return
 	}
-	unpassword:=string(unsz)
+	unpassword := string(unsz)
 	a := auth{Username: username, Password: unpassword}
 	ok, _ := valid.Valid(&a)
 	if !ok {
