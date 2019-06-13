@@ -1,6 +1,9 @@
 package authentication
 
-import "fmt"
+import (
+  "fmt"
+"GoModDemo/util"
+)
 
 type Auth struct {
     Username string
@@ -10,7 +13,8 @@ type Auth struct {
 func (a *Auth) Check() (bool, error) {
     userName := a.Username
     passWord := a.Password
+    newpassword:=util.Md5(passWord)
   // todo：实现自己的鉴权逻辑
-    fmt.Println(userName, passWord)
+    fmt.Println(userName, newpassword)
     return true, nil
 }
