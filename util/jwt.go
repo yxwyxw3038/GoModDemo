@@ -6,7 +6,6 @@ import (
     "GoModDemo/setting"
 )
 
-var jwtSecret = []byte(setting.AppSetting.JwtSecret)
 
 type Claims struct {
     Username string `json:"username"`
@@ -15,6 +14,7 @@ type Claims struct {
 }
 
 func GenerateToken(username, password string) (string, error) {
+    var jwtSecret = []byte(setting.AppSetting.JwtSecret)
     nowTime := time.Now()
     expireTime := nowTime.Add(3 * time.Hour)
     claims := Claims{
@@ -32,6 +32,7 @@ func GenerateToken(username, password string) (string, error) {
 }
 
 func ParseToken(token string) (*Claims, error) {
+    var jwtSecret = []byte(setting.AppSetting.JwtSecret)
     tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
         return jwtSecret, nil
     })

@@ -11,6 +11,7 @@ type App struct {
 type Server struct {
     Ip   string
     Port string
+    Url string
 }
 type Database struct {
     Type        string
@@ -28,9 +29,9 @@ var config *ini.File
 
 func Setup() {
     var err error
-    config, err = ini.Load("config/app.ini")
+    config, err = ini.Load("app.ini")
     if err != nil {
-        log.Fatal("Fail to parse 'config/app.ini': %v", err)
+        log.Fatal("Fail to parse 'app.ini': %v", err)
     }
     mapTo("app", AppSetting)
     mapTo("server", ServerSetting)
