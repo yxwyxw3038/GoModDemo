@@ -13,6 +13,12 @@ type Server struct {
     Port string
     Url string
 }
+type RedisServer struct {
+    Url string
+    DbName string
+    MaxIdle int32
+    MaxActive int32
+}
 type Database struct {
     Type        string
     User        string
@@ -25,6 +31,8 @@ type Database struct {
 var AppSetting = &App{}
 var ServerSetting = &Server{}
 var DatabaseSetting = &Database{}
+var MogodbSetting = &Server{}
+var RedisSetting = &RedisServer{}
 var config *ini.File
 
 func Setup() {
@@ -36,6 +44,8 @@ func Setup() {
     mapTo("app", AppSetting)
     mapTo("server", ServerSetting)
     mapTo("database", DatabaseSetting)
+    mapTo("mogodbconfig", MogodbSetting)
+    mapTo("redisconfig", RedisSetting)
 }
 
 func mapTo(section string, v interface{}) {
