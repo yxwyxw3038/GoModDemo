@@ -18,6 +18,11 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
+// @Summary 登陆验证接口
+// @Produce  json
+// @Param 
+// @Success 200 {string} json "{"Code":200,"Data":{},"Message":"ok"}"
+// @Router /api/hello [get]
 func Login(c *gin.Context) {
 	logger := util.InitZapLog()
 	logger.Debug("开始登录验证！")

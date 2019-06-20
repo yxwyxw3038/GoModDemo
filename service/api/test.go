@@ -5,7 +5,11 @@ import (
 	"time"
 )
 
-//IndexApi 测试服务
+// @Summary 测试API
+// @Produce  json
+// @Param 
+// @Success 200 {string} json "{"success": true,"code":200,"data":{},"message":"ok"}"
+// @Router /api/hello [get]
 func IndexApi(c *gin.Context) {
 	var t time.Time
 	t = time.Now()
