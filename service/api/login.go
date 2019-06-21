@@ -18,12 +18,9 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
-// @Summary Login
+// @Summary 登录验证服务
 // @Produce  json
-// @Param name query string false "Name"
-// @Param state query int false "State"
 // @Success 200 {string} json "{"Code":200,"Data":{},"Message":"ok"}"
-// @Failure 200 {string} json "{"Code":,"Data":{},"Message":"ok"}"
 // @Router  /Login [post]
 func Login(c *gin.Context) {
 	logger := util.InitZapLog()

@@ -3,7 +3,7 @@ package router
 import (
 	"GoModDemo/middleware/jwt"
 	"GoModDemo/service/api"
-
+	_ "GoModDemo/docs"
 	"github.com/gin-gonic/gin"
 	 ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
