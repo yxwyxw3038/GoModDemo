@@ -5,7 +5,6 @@ import (
 	"GoModDemo/service/api"
 
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/swag/cmd/swag"
 	 ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )

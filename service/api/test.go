@@ -5,11 +5,13 @@ import (
 	"time"
 )
 
-// @Summary 测试API
+// @Summary Login
 // @Produce  json
-// @Param 
-// @Success 200 {string} json "{"success": true,"code":200,"data":{},"message":"ok"}"
-// @Router /api/hello [get]
+// @Param name query string false "Name"
+// @Param state query int false "State"
+// @Success 200 {string} json "{"Code":200,"Data":{},"Message":"ok"}"
+// @Failure 200 {string} json "{"Code":,"Data":{},"Message":"ok"}"
+// @Router /api/helper [get]
 func IndexApi(c *gin.Context) {
 	var t time.Time
 	t = time.Now()

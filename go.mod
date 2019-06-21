@@ -3,6 +3,7 @@ module GoModDemo
 go 1.12
 
 replace (
+	github.com/ugorji/go v1.1.4 => github.com/ugorji/go/codec v1.1.5-pre
 	golang.org/x/crypto => github.com/golang/crypto v0.0.0-20190605123033-f99c8df09eb5
 	golang.org/x/net => github.com/golang/net v0.0.0-20190607181551-461777fb6f67
 	golang.org/x/sync => github.com/golang/sync v0.0.0-20190423024810-112230192c58
@@ -24,9 +25,11 @@ require (
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
+	github.com/swaggo/gin-swagger v1.1.0
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.10.0
 	gopkg.in/ini.v1 v1.42.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
+
 )
