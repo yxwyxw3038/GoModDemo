@@ -9,23 +9,15 @@ info:
 paths:
   /Login:
     post:
-      parameters:
-      - description: Name
-        in: query
-        name: name
-        type: string
-      - description: State
-        in: query
-        name: state
-        type: integer
+      description: 验证用户名密码有效性 accountName=aaa&passWord=base64(bbb)
       produces:
-      - application/json
+      - multipart/form-data
       responses:
         "200":
-          description: '{"Code":,"Data":{},"Message":"ok"}'
+          description: '{"Code":200,"Data":{},"Message":"ok"}'
           schema:
             type: string
-      summary: Login
+      summary: 登录验证服务
   /api/helper:
     get:
       parameters:

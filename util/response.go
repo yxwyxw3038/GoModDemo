@@ -10,10 +10,10 @@ type Gin struct {
 }
 
 
-func (g *Gin) Response(httpCode, errCode int, data interface{}) {
+func (g *Gin) Response(httpCode, errCode int, message string, data interface{}) {
 	g.C.JSON(httpCode, gin.H{
-		"Code": httpCode,
-		"Message":  consts.GetMsg(errCode),
+		"Code": consts.GetMsg(errCode),
+		"Message": message ,
 		"Data": data,
 	})
 
