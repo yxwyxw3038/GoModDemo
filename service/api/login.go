@@ -17,10 +17,11 @@ type auth struct {
 	Username string `valid:"Required; MaxSize(50)"`
 	Password string `valid:"Required; MaxSize(50)"`
 }
-
+// Login 登录验证服务
 // @Summary 登录验证服务
 // @Description 验证用户名密码有效性 accountName=aaa&passWord=base64(bbb)
 // @Accept   multipart/form-data
+// @Param name query string false "Name"
 // @Produce  json
 // @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
 // @Router  /Login [post]
