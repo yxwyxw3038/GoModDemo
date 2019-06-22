@@ -13,13 +13,16 @@
         "/Login": {
             "post": {
                 "description": "验证用户名密码有效性 accountName=aaa\u0026passWord=base64(bbb)",
-                "produces": [
+                "consumes": [
                     "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
                 ],
                 "summary": "登录验证服务",
                 "responses": {
                     "200": {
-                        "description": "{\"Code\":200,\"Data\":{},\"Message\":\"ok\"}",
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }

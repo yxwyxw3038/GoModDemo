@@ -20,8 +20,9 @@ type auth struct {
 
 // @Summary 登录验证服务
 // @Description 验证用户名密码有效性 accountName=aaa&passWord=base64(bbb)
-// @Produce  multipart/form-data
-// @Success 200 {string} json "{"Code":200,"Data":{},"Message":"ok"}"
+// @Accept   multipart/form-data
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
 // @Router  /Login [post]
 func Login(c *gin.Context) {
 	logger := util.InitZapLog()
@@ -50,25 +51,25 @@ func Login(c *gin.Context) {
 	a := auth{Username: username, Password: unpassword}
 	ok, _ := valid.Valid(&a)
 	if !ok {
-		appG.Response(http.StatusOK, consts.INVALID_PARAMS, "",nil)
+		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败",nil)
 		return
 	}
 
 	authService := authentication.Auth{Username: username, Password: unpassword}
 	isExist, err := authService.Check()
 	if err != nil {
-		appG.Response(http.StatusOK, consts.ERROR_AUTH_CHECK_TOKEN_FAIL,"JWT验证失败", nil)
+		appG.Response(http.StatusOK, consts.ERROR,"JWT验证失败", nil)
 		return
 	}
 
 	if !isExist {
-		appG.Response(http.StatusOK, consts.ERROR_AUTH,"JWT验证失败", nil)
+		appG.Response(http.StatusOK, consts.ERROR,"JWT验证失败", nil)
 		return
 	}
 
 	token, err := util.GenerateToken(username, password)
 	if err != nil {
-		appG.Response(http.StatusOK, consts.ERROR_AUTH_TOKEN,"JWT验证失败", nil)
+		appG.Response(http.StatusOK, consts.ERROR,"JWT验证失败", nil)
 		return
 	}
 
