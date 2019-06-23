@@ -1,19 +1,22 @@
 package main
 
 import (
+	"GoModDemo/daemon"
 	. "GoModDemo/router"
 	"GoModDemo/setting"
 	"GoModDemo/util"
-	"GoModDemo/daemon"
 )
 
+// @title Rest API
+// @version 1.0
+// @description 目前仅仅是一个demo
 func main() {
 	setting.Setup()
 	util.RegisterInfo()
 	go daemon.Run()
 	logger := util.InitZapLog()
-	url:=":"+setting.ServerSetting.Port  
-	logger.Debug("启动服务"+url)
+	url := ":" + setting.ServerSetting.Port
+	logger.Debug("启动服务" + url)
 	router := InitRouter()
 	router.Run(url)
 
