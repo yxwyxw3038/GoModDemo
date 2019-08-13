@@ -46,7 +46,7 @@ func PushTask(deviceId string) {
 		if isOk {
 			logger.Debug("本机" + deviceId + "推送基础资料权限")
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(1800* time.Second)
 
 	}
 }
@@ -57,15 +57,15 @@ func GetPushQx(deviceId string) (bool, error) {
 	defer rc.Close()
 	v, err := redis.Int64(rc.Do("EXISTS", "pushdeviceId"))
 	if err != nil {
-		return false, nil
+		return false, err
 	}
 	if v != 1 {
-		rc.Do("SET", "pushdeviceId", deviceId, "EX", "120")
+		rc.Do("SET", "pushdeviceId", deviceId, "EX", "4000")
 		return true, nil
 	}
 	v1, err := redis.String(rc.Do("GET", "pushdeviceId"))
 	if err != nil {
-		return false, nil
+		return false, err
 	}
 	if v1 != deviceId {
 		return false, nil
