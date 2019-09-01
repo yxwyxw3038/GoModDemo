@@ -55,6 +55,7 @@ func PushTask(deviceId string) {
 func GetPushQx(deviceId string) (bool, error) {
 	rc := util.RedisClient.Get()
 	defer rc.Close()
+	
 	v, err := redis.Int64(rc.Do("EXISTS", "pushdeviceId"))
 	if err != nil {
 		return false, err
