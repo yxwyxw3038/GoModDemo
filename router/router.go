@@ -15,6 +15,8 @@ func InitRouter() *gin.Engine {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	loginVersionOne := router.Group("/")
 	loginVersionOne.POST("Login", api.Login)
+	testVersionOne := router.Group("/test")
+	testVersionOne.GET("hello", api.IndexApi)
 	apiVersionOne := router.Group("/api")
 	apiVersionOne.Use(jwt.Jwt())
 	apiVersionOne.GET("hello", api.IndexApi)

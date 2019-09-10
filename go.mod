@@ -3,6 +3,7 @@ module GoModDemo
 go 1.12
 
 replace (
+	cloud.google.com/go => github.com/googleapis/google-cloud-go v0.45.1
 	github.com/ugorji/go v1.1.4 => github.com/ugorji/go/codec v1.1.5-pre
 	golang.org/x/crypto => github.com/golang/crypto v0.0.0-20190605123033-f99c8df09eb5
 	golang.org/x/net => github.com/golang/net v0.0.0-20190607181551-461777fb6f67
