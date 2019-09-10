@@ -1,31 +1,33 @@
 package setting
 
 import (
-    "gopkg.in/ini.v1"
-    "log"
+	"log"
+
+	"gopkg.in/ini.v1"
 )
 
 type App struct {
-    JwtSecret string
+	JwtSecret string
 }
 type Server struct {
-    Ip   string
-    Port string
-    Url string
+	Ip   string
+	Port string
+	Url  string
 }
 type RedisServer struct {
-    Url string
-    DbName string
-    MaxIdle int32
-    MaxActive int32
+	Url       string
+	DbName    string
+	Password  string
+	MaxIdle   int32
+	MaxActive int32
 }
 type Database struct {
-    Type        string
-    User        string
-    Password    string
-    Host        string
-    Name        string
-    TablePrefix string
+	Type        string
+	User        string
+	Password    string
+	Host        string
+	Name        string
+	TablePrefix string
 }
 
 var AppSetting = &App{}
@@ -36,21 +38,21 @@ var RedisSetting = &RedisServer{}
 var config *ini.File
 
 func Setup() {
-    var err error
-    config, err = ini.Load("app.ini")
-    if err != nil {
-        log.Fatal("Fail to parse 'app.ini': %v", err)
-    }
-    mapTo("app", AppSetting)
-    mapTo("server", ServerSetting)
-    mapTo("database", DatabaseSetting)
-    mapTo("mogodbconfig", MogodbSetting)
-    mapTo("redisconfig", RedisSetting)
+	var err error
+	config, err = ini.Load("app.ini")
+	if err != nil {
+		log.Fatal("Fail to parse 'app.ini': %v", err)
+	}
+	mapTo("app", AppSetting)
+	mapTo("server", ServerSetting)
+	mapTo("database", DatabaseSetting)
+	mapTo("mogodbconfig", MogodbSetting)
+	mapTo("redisconfig", RedisSetting)
 }
 
 func mapTo(section string, v interface{}) {
-    err := config.Section(section).MapTo(v)
-    if err != nil {
-        log.Fatalf("Cfg.MapTo RedisSetting err: %v", err)
-    }
+	err := config.Section(section).MapTo(v)
+	if err != nil {
+		log.Fatalf("Cfg.MapTo RedisSetting err: %v", err)
+	}
 }
