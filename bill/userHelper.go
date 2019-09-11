@@ -21,6 +21,9 @@ func UserAuth(userName string,passWord string) error {
 	if len(user)>1 {
 		return errors.New("找到多个对应用户")
 	}
+	if user[0].PassWord!=passWord {
+		return errors.New("帐户与密码不一至")
+	}
 	return nil
 }
 

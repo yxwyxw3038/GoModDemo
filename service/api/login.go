@@ -4,11 +4,13 @@ import (
 	"GoModDemo/consts"
 	"GoModDemo/service/authentication"
 	"GoModDemo/util"
+	"GoModDemo/model"
 	"encoding/base64"
+	"GoModDemo/bill"
 	"fmt"
 	"net/http"
 	"net/url"
-
+	"encoding/json"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 )
@@ -81,9 +83,38 @@ func Login(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 		return
 	}
-
+	user, err :=bill.GetUserInfoByAccountName(username)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
+		return
+	}
+	
+   createTime,_:=util.ParseAnyToStr((*user).CreateTime)
+   updateTime,_:=util.ParseAnyToStr((*user).UpdateTime)
+   var  tokenUser = model.TokenUser {
+		ID:(*user).ID,
+		AccountName :(*user).AccountName,
+		PassWord   :"",
+		RealName    :(*user).RealName,
+		MobilePhone :(*user).MobilePhone,
+		Email       :(*user).Email,
+		Description :"",
+		CreateBy    :"",
+		CreateTime  :createTime,
+		UpdateBy    :"",
+		UpdateTime  :updateTime,
+		IsAble      :(*user).IsAble,
+		IfChangePwd :(*user).IfChangePwd,
+		Token:token,
+	}
+	b, err := json.Marshal(tokenUser)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
+		return
+	}
+	s:= string(b)
 	// appG.Response(http.StatusOK, consts.SUCCESS, map[string]string{
 	//     "token": token,
 	// })
-	appG.Response(http.StatusOK, consts.SUCCESS, "JWT验证通过", token)
+	appG.Response(http.StatusOK, consts.SUCCESS, "JWT验证通过", s)
 }

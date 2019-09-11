@@ -27,6 +27,7 @@ require (
 	github.com/jinzhu/configor v1.0.0
 	github.com/muesli/cache2go v0.0.0-20190609140403-5eb79359852d
 	github.com/natefinch/lumberjack v2.0.0+incompatible
+	github.com/noaway/dateparse v0.0.0-20171117034806-ad2b19d7b298
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
 	github.com/swaggo/gin-swagger v1.1.0
