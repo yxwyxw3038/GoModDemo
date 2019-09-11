@@ -1,7 +1,7 @@
 package model
 import ("time")
 type Model struct {
-	ID        int64 `gorm:"primary_key"`
+	ID        int64 
 	CreateBy  string
 	UpdateBy  string
 	CreateTime time.Time

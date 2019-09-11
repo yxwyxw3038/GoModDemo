@@ -13,7 +13,7 @@ type Claims struct {
     jwt.StandardClaims
 }
 
-func GenerateToken(username, password string) (string, error) {
+func GenerateToken(username string, password string) (string, error) {
     var jwtSecret = []byte(setting.AppSetting.JwtSecret)
     nowTime := time.Now()
     expireTime := nowTime.Add(3 * time.Hour)

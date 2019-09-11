@@ -32,6 +32,11 @@ func Login(c *gin.Context) {
 	logger := util.InitZapLog()
 	logger.Debug("开始登录验证！")
 	appG := util.Gin{C: c}
+	defer func(){
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
+		}
+	}()
 	valid := validation.Validation{}
 	str, err := appG.GetBase64Body()
 	if err != nil {
