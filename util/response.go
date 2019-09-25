@@ -14,6 +14,9 @@ func (g *Gin) Response(httpCode, errCode int, message string, data interface{}) 
 
 	g.C.Header("Access-Control-Allow-Origin", "*")		// 这是允许访问所有域
 	g.C.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE,UPDATE")
+	// g.C.Header("Access-Control-Allow-Credentials", "true")
+	g.C.Header("Access-Control-Allow-Headers", "Content-Type, Accept")
+	g.C.Header("Access-Control-Max-Age", "1728000")
 	g.C.JSON(httpCode, gin.H{
 		"Code": consts.GetMsg(errCode),
 		"Message": message ,

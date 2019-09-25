@@ -34,9 +34,9 @@ func registerTask() {
 
 //PushTask 推送基础数据
 func PushTask(deviceId string) {
-
+	logger := util.InitZapLog()
 	for {
-		logger := util.InitZapLog()
+		
 		isOk, err := GetPushQx(deviceId)
 		if err != nil {
 

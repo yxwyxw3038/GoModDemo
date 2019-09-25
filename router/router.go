@@ -17,8 +17,8 @@ func InitRouter() *gin.Engine {
 	loginVersionOne.POST("Login", api.Login)
 	testVersionOne := router.Group("/test")
 	testVersionOne.GET("hello", api.IndexApi)
-	apiVersionOne := router.Group("/api")
-	apiVersionOne.Use(jwt.Jwt())
-	apiVersionOne.GET("hello", api.IndexApi)
+	userOne := router.Group("/User")
+	userOne.Use(jwt.Jwt())
+	userOne.GET("hello", api.IndexApi)
 	return router
 }
