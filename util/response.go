@@ -3,6 +3,7 @@ package util
 import (
 	"GoModDemo/consts"
 	"github.com/gin-gonic/gin"
+	"net/url"
 )
 
 type Gin struct {
@@ -36,4 +37,17 @@ func (g *Gin) GetBase64Body() (string, error) {
 	}
 	return decodeString, nil
 
+}
+func (g *Gin) ParseQuery()(map[string][]string,error) {
+	str, err := g.GetBase64Body()
+	if err != nil {
+		
+		return nil,err
+	}
+	dists, err := url.ParseQuery(str)
+	if err != nil {
+	
+	   return nil,err
+	}
+	return dists,nil
 }

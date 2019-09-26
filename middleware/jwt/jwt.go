@@ -15,7 +15,7 @@ func Jwt() gin.HandlerFunc {
         // var data interface{}
         appG := util.Gin{C: c}
         code = consts.SUCCESS
-        token := c.Query("token")
+        token := c.Query("Token")
         if token == "" {
             code = consts.ERROR
         } else {
