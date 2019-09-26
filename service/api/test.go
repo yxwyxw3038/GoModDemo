@@ -6,6 +6,7 @@ import (
 	"GoModDemo/util"
 	"net/http"
 	"time"
+	"fmt"
 	// "github.com/google/uuid"
 	"github.com/gin-gonic/gin"
 )
@@ -31,22 +32,32 @@ func IndexApi(c *gin.Context) {
 		// newUuidStr := newUuid.String()
 		// var user model.User
 		// user.ID=newUuidStr
-		// user.AccountName="admin" 
-		// user.PassWord="F6FDFFE48C908DEB0F4C3BD36C032E72"  
-		// user.RealName="系统管理员"
+		// user.AccountName="0000" 
+		// user.PassWord="A390113400778BE79BC2B853A4E808CA"  
+		// user.RealName="0000"
 		// user.CreateBy="admin"
 		// user.CreateTime=t.Format("2006-01-02 15:04:05")
 		// user.UpdateBy="admin"
 		// user.UpdateTime=t.Format("2006-01-02 15:04:05")
 		// user.IsAble=1
 		// user.IfChangePwd=1
-		// _, err :=db.Insert(&user)
+		// _, err =db.Insert(&user)
+
+		
 		if err != nil {
 			str = err.Error()
 		} else {
 
 			str = "你好!当前时间：" + t.Format("2006-01-02 15:04:05") 
 		}
+		strSql:="select * from User"
+		res,err:=db.Query(strSql)
+		if err != nil {
+		  fmt.Println(err)
+		}else {
+			fmt.Println(res[0]["AccountName"])
+		}
+
 	}
 	// c.String(http.StatusOK, str)
 	// c.JSON(http.StatusOK, gin.H{
