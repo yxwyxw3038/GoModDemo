@@ -20,5 +20,6 @@ func InitRouter() *gin.Engine {
 	userOne := router.Group("/User")
 	userOne.Use(jwt.Jwt())
 	userOne.POST("GetUserByID", api.GetUserByID)
+	userOne.POST("GetUserMenu", api.GetUserMenu)
 	return router
 }

@@ -4,6 +4,7 @@ import (
 	"GoModDemo/model"
 	"GoModDemo/util"
 	"errors"
+	"fmt"
 )
 
 func UserAuth(userName string, passWord string) error {
@@ -70,13 +71,57 @@ func GetUserByID(ID string) (*model.User, error) {
 	return &user[0], nil
 }
 func GetUserMenu(userId string) (*[]model.MenuTree, error) {
-	// db, err := util.OpenDB()
-	// if err != nil {
-	// 	return nil,err
-	// }
-	// strSql:=fmt.Sprintf("select m.* from  UserRole ur, User u,Role r,RoleMenu rm,Menu m where   ur.UserId=u.ID and ur.RoleId=r.ID and  ur.RoleId =rm.RoleId and rm.MenuId=m.ID and m.IsAble!=0  and u.ID='%s'",userId)
-	// strSql:=fmt.Sprintf("select m.* from  UserRole ur, User u,Role r,RoleMenu rm,Menu m where   ur.UserId=u.ID and ur.RoleId=r.ID and  ur.RoleId =rm.RoleId and rm.MenuId=m.ID and m.IsAble!=0  and u.ID='%s'",userId)
-	// res:=db.Query(strSql)
-	// fmt.Println(res)
-	return nil, nil
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil,err
+	}
+	strSql:=fmt.Sprintf("SELECT	m.* FROM	Menu m,	RoleMenu rm,	UserRole ur,	Role r,	User u WHERE	m.IsAble != 0 AND rm.MenuId = m.ID AND ur.RoleId = rm.RoleId AND r.IsAble != 0 AND ur.UserId = u.ID AND ur.RoleId = r.ID AND u.IsAble != 0 AND u.ID = '%s'",userId)
+	data,err:=db.Query(strSql)
+	if err != nil {
+		return nil, err
+	}
+	 list :=make([]model.MenuTree,0)
+	if len(data)<=0 {
+		return &list,nil
+	}
+	for i:=0;i<len(data);i++ {
+	 var temp  model.MenuTree
+	 temp.ID=util.ToString( data[i]["ID"])
+	 temp.Icon=util.ToString( data[i]["Icon"])
+	 temp.MenuName=util.ToString( data[i]["Name"])
+	 temp.ParentId=util.ToString( data[i]["ParentId"])
+	 temp.Url=util.ToString( data[i]["LinkAddress"])
+	 list=append(list,temp)
+	}
+	list=*generateMenuTree(&list)
+	return &list, nil
+}
+func generateMenuTree(list *[]model.MenuTree) *[]model.MenuTree {
+	 listTemp :=make([]model.MenuTree,0)
+
+     for i:=0;i<len(*list);i++ {
+        if (*list)[i].ParentId=="0" {
+			temp:=(*list)[i]
+			node :=generateMenuTreeNext((*list)[i].ID,list)
+			if node!=nil && len(*node)>0 {
+				temp.Node= *node
+			}
+			listTemp=append(listTemp,temp)
+		}
+	 }
+	 return &listTemp
+}
+func generateMenuTreeNext(id string,  list *[]model.MenuTree) *[]model.MenuTree {
+	listTemp :=make([]model.MenuTree,0)
+	for i:=0;i<len(*list);i++ {
+	   if (*list)[i].ParentId==id {
+		   temp:=(*list)[i]
+		   node :=generateMenuTreeNext((*list)[i].ID,list)
+		   if node!=nil && len(*node)>0 {
+			   temp.Node= *node
+		   }
+		   listTemp=append(listTemp,temp)
+	   }
+	}
+	return &listTemp
 }

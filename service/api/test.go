@@ -4,9 +4,10 @@ import (
 	"GoModDemo/consts"
 	// "GoModDemo/model"
 	"GoModDemo/util"
+	// "GoModDemo/bill"
 	"net/http"
 	"time"
-	"fmt"
+	// "fmt"
 	// "github.com/google/uuid"
 	"github.com/gin-gonic/gin"
 )
@@ -50,13 +51,11 @@ func IndexApi(c *gin.Context) {
 
 			str = "你好!当前时间：" + t.Format("2006-01-02 15:04:05") 
 		}
-		strSql:="select * from User"
-		res,err:=db.Query(strSql)
-		if err != nil {
-		  fmt.Println(err)
-		}else {
-			fmt.Println(res[0]["AccountName"])
-		}
+		// _,err=bill.GetUserMenu("f86bec36-18f9-4444-ab48-d645383956fd")
+		// if err != nil {
+		//   fmt.Println(err)
+		// }
+
 
 	}
 	// c.String(http.StatusOK, str)
