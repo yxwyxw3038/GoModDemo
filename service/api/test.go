@@ -2,12 +2,13 @@ package api
 
 import (
 	"GoModDemo/consts"
-	// "GoModDemo/model"
+	"GoModDemo/model"
 	"GoModDemo/util"
-	// "GoModDemo/bill"
+	"GoModDemo/bill"
 	"net/http"
 	"time"
-	// "fmt"
+	"encoding/json"
+	"fmt"
 	// "github.com/google/uuid"
 	"github.com/gin-gonic/gin"
 )
@@ -55,8 +56,31 @@ func IndexApi(c *gin.Context) {
 		// if err != nil {
 		//   fmt.Println(err)
 		// }
-
-
+		list := make([]model.FilterModel, 0)
+		 var temp1 model.FilterModel 
+		 temp1.Column="UpdateTime"
+		 temp1.Value="2019-09-26 16:47:58"
+		 temp1.Action=">="
+		 temp1.Logic="AND"
+		 temp1.DataType="D"
+		 list=append(list,temp1)
+		 var temp2 model.FilterModel 
+		 temp2.Column="AccountName"
+		 temp2.Value="0000"
+		 temp2.Action="="
+		 temp2.Logic="AND"
+		 temp2.DataType="S"
+		 list=append(list,temp2)
+		 b, err := json.Marshal(list)
+		 if err != nil {
+			fmt.Println(err)
+			return
+		}
+		s:= string(b)
+         _,err=bill.GetAllUserInfo(s,1,1)
+		if err != nil {
+		  fmt.Println(err)
+		}
 	}
 	// c.String(http.StatusOK, str)
 	// c.JSON(http.StatusOK, gin.H{

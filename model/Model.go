@@ -7,6 +7,13 @@ type Model struct {
 	CreateTime time.Time
 	UpdateTime time.Time
 }
+type FilterModel struct {
+	Column   string
+	Action   string
+	Logic    string
+	Value    string
+	DataType string
+}
 type Department struct {
 	ID          string `:"ID"`          // 部门ID
 	Name        string `:"Name"`        // 部门名

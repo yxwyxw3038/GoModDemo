@@ -22,3 +22,14 @@ func ParseAnyToStr (timeStr string) (string ,error) {
 
 	return str,nil
 } 
+func AnyToTimeStr (obj interface{}) (string ,error) {
+	if  obj ==nil {
+		return "",nil
+	}
+	objStr:=obj.(time.Time)
+	str:= objStr.Format("2006-01-02 15:04:05")
+	// if err != nil {
+	// 	return "",err
+	// }
+	return str,nil
+} 
