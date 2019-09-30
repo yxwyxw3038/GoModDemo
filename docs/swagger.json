@@ -10,9 +10,62 @@
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/GetAllUserInfo": {
+            "post": {
+                "description": "前台条件获取用户信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]User",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "前台条件获取用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]User},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"User\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetUserByID": {
             "post": {
-                "description": "根据用户ID获取用户信息 请求主体: ID=base64(aaaa) 成功输出User",
+                "description": "根据用户ID获取用户信息 请求主体: base64(ID=aaaa) 成功输出User",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -51,7 +104,7 @@
         },
         "/GetUserMenu": {
             "post": {
-                "description": "根据用户ID获取用户菜单信息 请求主体: userID=base64(aaaa) 成功输出[]MenuTree",
+                "description": "根据用户ID获取用户菜单信息 请求主体:  base64(userID=aaaa)  成功输出[]MenuTree",
                 "consumes": [
                     "multipart/form-data"
                 ],
