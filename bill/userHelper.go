@@ -131,6 +131,9 @@ func generateMenuTreeNext(id string, list *[]model.MenuTree) *[]model.MenuTree {
 
 func  GetAllUserInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.User, error)   {
 	 whereSql,err:=util.GetWhereSqlLimt("User" ,ParameterStr,PageSize,CurrentPage)
+	 if err != nil {
+		return nil, err
+	}
 	 db, err := util.OpenDB()
 	 if err != nil {
 		 return nil, err

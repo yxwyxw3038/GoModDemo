@@ -8,11 +8,11 @@ type Model struct {
 	UpdateTime time.Time
 }
 type FilterModel struct {
-	Column   string
-	Action   string
-	Logic    string
-	Value    string
-	DataType string
+	Column   string `json:"column"` //字段名
+	Action   string `json:"action"` //操作符 > < =
+	Logic    string `json:"logic"`  //关系  and or 
+	Value    string `json:"value"`  //值
+	DataType string `json:"dataType"` //数据类型
 }
 type Department struct {
 	ID          string `:"ID"`          // 部门ID
