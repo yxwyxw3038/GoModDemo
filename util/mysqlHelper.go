@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
+	"strings"
 )
 func GetWhereSqlLimt(TabName,ParameterStr string,PageSize, CurrentPage int) (string, error) {
 	
@@ -53,16 +54,33 @@ func getFieldWhere(model *model.FilterModel) (string, error) {
 		return "", errors.New("算术符为空")
 	}
 	strTemp=" " + (*model).Logic
-	switch((*model).DataType) {
-		case "S","D":
-			strTemp+=" " +(*model).Column+ " "+(*model).Action + " '"+(*model).Value+"' "
-		case "I","F":
-			strTemp+=" " +(*model).Column+ " "+(*model).Action + " "+(*model).Value+" "
-	    default:
-			strTemp+=" " +(*model).Column+ " "+(*model).Action + " '"+(*model).Value+"' "
-	}
+	strTemp+=" " +(*model).Column+ " "+(*model).Action 
+	strTemp+= getwhereByDataType( (*model).DataType)
+	strTemp+= getwhereByAction( (*model).Action)
+	strTemp+=(*model).Value
+	strTemp+= getwhereByAction( (*model).Action)
+	strTemp+=getwhereByDataType( (*model).DataType)
 
 	return strTemp,nil
 
 }
+func  getwhereByAction(action string)  string {
+	action =strings.ToLower(action)
+	switch(action) {
+	case "like":
+	 return "%"
+	default:
+	 return ""
+}
+}
 
+func  getwhereByDataType(dataType string)  string {
+		switch(dataType) {
+		case "S","D":
+		 return "'"
+		case "I","F":
+			return ""
+		default:
+			return "'"
+	}
+}

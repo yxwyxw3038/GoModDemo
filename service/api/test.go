@@ -67,7 +67,7 @@ func IndexApi(c *gin.Context) {
 		 var temp2 model.FilterModel 
 		 temp2.Column="AccountName"
 		 temp2.Value="0000"
-		 temp2.Action="="
+		 temp2.Action="like"
 		 temp2.Logic="AND"
 		 temp2.DataType="S"
 		 list=append(list,temp2)
