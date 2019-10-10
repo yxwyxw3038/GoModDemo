@@ -11,6 +11,8 @@ import (
 //InitRouter 注册路由
 func InitRouter() *gin.Engine {
 
+	gin.SetMode(gin.ReleaseMode)
+	gin.DisableBindValidation()
 	router := gin.New()
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	loginVersionOne := router.Group("/")

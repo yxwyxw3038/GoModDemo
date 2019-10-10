@@ -39,12 +39,12 @@ func GetMenuByID(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	user, err := bill.GetMenuByID(ID)
+	temp, err := bill.GetMenuByID(ID)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
-	b, err := json.Marshal(*user)
+	b, err := json.Marshal(*temp)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
