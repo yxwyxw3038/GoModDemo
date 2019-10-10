@@ -22,5 +22,10 @@ func InitRouter() *gin.Engine {
 	userOne.POST("GetUserByID", api.GetUserByID)
 	userOne.POST("GetUserMenu", api.GetUserMenu)
 	userOne.POST("GetAllUserInfo",api.GetAllUserInfo)
+	userOne.POST("GetUserLogininfoByToken",api.GetUserLogininfoByToken)
+	menuOne := router.Group("/Menu")
+	menuOne.POST("GetMenuByID", api.GetMenuByID)
+	menuOne.POST("GetAllMenuInfo",api.GetAllMenuInfo)
+
 	return router
 }

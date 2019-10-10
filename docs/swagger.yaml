@@ -7,6 +7,43 @@ info:
   title: Rest API
   version: "1.0"
 paths:
+  /GetAllMenuInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取菜单信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]Menu'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]Menu},"Message":""} or {"Code":-1,"Data":{},"Menu":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取菜单信息
+      tags:
+      - Menu
   /GetAllUserInfo:
     post:
       consumes:
@@ -44,6 +81,32 @@ paths:
       summary: 前台条件获取用户信息
       tags:
       - User
+  /GetMenuByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID获取菜单信息 请求主体: base64(ID=aaaa) 成功输出Menu'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{Menu},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID获取菜单信息
+      tags:
+      - Menu
   /GetUserByID:
     post:
       consumes:
@@ -68,6 +131,21 @@ paths:
           schema:
             type: string
       summary: 根据用户ID获取用户信息
+      tags:
+      - User
+  /GetUserLogininfoByToken:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 验证Token有效性 请求主体:为空 成功输出 空
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":"","Message":""}'
+          schema:
+            type: string
+      summary: 验证Token有效性
       tags:
       - User
   /GetUserMenu:

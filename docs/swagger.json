@@ -10,6 +10,59 @@
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/GetAllMenuInfo": {
+            "post": {
+                "description": "前台条件获取菜单信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]Menu",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "前台条件获取菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]Menu},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Menu\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetAllUserInfo": {
             "post": {
                 "description": "前台条件获取用户信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]User",
@@ -63,6 +116,45 @@
                 }
             }
         },
+        "/GetMenuByID": {
+            "post": {
+                "description": "根据菜单ID获取菜单信息 请求主体: base64(ID=aaaa) 成功输出Menu",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "根据菜单ID获取菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{Menu},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetUserByID": {
             "post": {
                 "description": "根据用户ID获取用户信息 请求主体: base64(ID=aaaa) 成功输出User",
@@ -95,6 +187,29 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{User},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetUserLogininfoByToken": {
+            "post": {
+                "description": "验证Token有效性 请求主体:为空 成功输出 空",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "验证Token有效性",
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":\"\",\"Message\":\"\"}",
                         "schema": {
                             "type": "string"
                         }

@@ -153,3 +153,17 @@ func GetAllUserInfo(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 }
 
+// GetUserLogininfoByToken 验证Token有效性
+// @Summary 验证Token有效性
+// @Tags User
+// @Description 验证Token有效性 请求主体:为空 成功输出 空
+// @Accept mpfd
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":"","Message":""}"
+// @Router  /GetUserLogininfoByToken [post]
+func GetUserLogininfoByToken (c *gin.Context) {
+ 
+	appG := util.Gin{C: c}
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+
+}
