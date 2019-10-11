@@ -67,6 +67,8 @@ func GetUserByID(c *gin.Context) {
 // @Router  /GetUserMenu [post]
 func GetUserMenu(c *gin.Context) {
 	appG := util.Gin{C: c}
+	errMsg:=""
+	s:=""
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
@@ -82,6 +84,19 @@ func GetUserMenu(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
+	isOk,err:= util.RedisExists("GetUserMenu"+userID)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	if isOk {
+		s,err=util.GetRedisString("GetUserMenu"+userID)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+
+	} else {
 	data, err := bill.GetUserMenu(userID)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
@@ -92,9 +107,15 @@ func GetUserMenu(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
-	s := string(b)
-	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
+	s = string(b)
+	err= util.SetRedisAnyEx("GetUserMenu"+userID,s,"60")
 
+	if err != nil {
+		errMsg=err.Error()
+	}
+
+}
+appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
 }
 
 // GetAllUserInfo 前台条件获取用户信息
