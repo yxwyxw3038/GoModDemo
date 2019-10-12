@@ -109,3 +109,57 @@ func GetAllMenuInfo(c *gin.Context) {
 	s := string(b)
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 }
+
+// GetCascaderMenu 根据用户ID获取用户菜单信息
+// @Summary 根据用户ID获取用户菜单信息
+// @Tags User
+// @Description 根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{[]MenuTree},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetCascaderMenu [post]
+func GetCascaderMenu(c *gin.Context) {
+	appG := util.Gin{C: c}
+	errMsg:=""
+	s:=""
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	
+	isOk,err:= util.RedisExists("GetCascaderMenu")
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	if isOk {
+		s,err=util.GetRedisString("GetCascaderMenu")
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+
+	} else {
+		data, err := bill.GetCascaderMenu()
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		b, err := json.Marshal(*data)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		s = string(b)
+		err= util.SetRedisAnyEx("GetCascaderMenu",s,"180")
+
+		if err != nil {
+			errMsg=err.Error()
+		}
+
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
+}
+

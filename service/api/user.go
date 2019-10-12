@@ -108,7 +108,7 @@ func GetUserMenu(c *gin.Context) {
 		return
 	}
 	s = string(b)
-	err= util.SetRedisAnyEx("GetUserMenu"+userID,s,"60")
+	err= util.SetRedisAnyEx("GetUserMenu"+userID,s,"180")
 
 	if err != nil {
 		errMsg=err.Error()

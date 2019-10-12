@@ -81,6 +81,58 @@ paths:
       summary: 前台条件获取用户信息
       tags:
       - User
+  /GetButtonByMenuIdAndUserId:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据用户ID获取用户菜单信息 请求主体:  base64(userId=aaaa&menuId=aaaa)  成功输出[]Button'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: userId
+        in: formData
+        name: userId
+        required: true
+        type: string
+      - description: menuId
+        in: formData
+        name: menuId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]Button},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据用户ID和菜单ID获取相应权限的按钮信息
+      tags:
+      - Button
+  /GetCascaderMenu:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]MenuTree},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据用户ID获取用户菜单信息
+      tags:
+      - User
   /GetMenuByID:
     post:
       consumes:

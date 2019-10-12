@@ -116,6 +116,84 @@
                 }
             }
         },
+        "/GetButtonByMenuIdAndUserId": {
+            "post": {
+                "description": "根据用户ID获取用户菜单信息 请求主体:  base64(userId=aaaa\u0026menuId=aaaa)  成功输出[]Button",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Button"
+                ],
+                "summary": "根据用户ID和菜单ID获取相应权限的按钮信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "userId",
+                        "name": "userId",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "menuId",
+                        "name": "menuId",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]Button},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetCascaderMenu": {
+            "post": {
+                "description": "根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "根据用户ID获取用户菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]MenuTree},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetMenuByID": {
             "post": {
                 "description": "根据菜单ID获取菜单信息 请求主体: base64(ID=aaaa) 成功输出Menu",

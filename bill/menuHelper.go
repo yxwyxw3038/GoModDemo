@@ -67,3 +67,31 @@ func GetAllMenuInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Menu
    }
    return &list,nil
 }
+func GetCascaderMenu ()(*[]model.MenuTree, error) {
+
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	list := make([]model.MenuTree, 0)
+	menuList:=make([]model.Menu, 0)
+	err = db.Table(&menuList).Select()
+	if err != nil {
+		return nil, err
+	}
+	if len(menuList) <= 0 {
+		return &list, nil
+	}
+	for i := 0; i < len(menuList); i++ {
+		var temp model.MenuTree
+		temp.ID = util.ToString(menuList[i].ID)
+		temp.Icon = util.ToString(menuList[i].Icon)
+		temp.MenuName = util.ToString(menuList[i].Name)
+		temp.ParentId = util.ToString(menuList[i].ParentId)
+		temp.Url = util.ToString(menuList[i].LinkAddress)
+		list = append(list, temp)
+	}
+	list = *generateMenuTree(&list)
+	return &list, nil
+
+}
