@@ -3,6 +3,7 @@ package bill
 import (
 	"GoModDemo/model"
 	"GoModDemo/util"
+	"encoding/json"
 	"errors"
 	"fmt"
 )
@@ -14,9 +15,25 @@ func UserAuth(userName string, passWord string) error {
 		return err
 	}
 	var user []model.User
-	err = db.Table(&user).Where("AccountName", "=", userName).Select()
-	if err != nil {
-		return err
+	isRedis:=false
+	s,err:=util.GetRedisHasString("TaskUserInfoByAccountName",userName)
+	if err == nil {
+		isRedis=true
+	}
+	if isRedis {
+		var tempUser  model.User
+		err = json.Unmarshal([]byte(s), &tempUser)
+		if err != nil {
+			isRedis=false
+		}
+		user=append(user,tempUser)
+	} 
+	if !isRedis{
+
+		err = db.Table(&user).Where("AccountName", "=", userName).Select()
+		if err != nil {
+			return err
+		}
 	}
 	if len(user) <= 0 {
 		return errors.New("未找到对应用户")

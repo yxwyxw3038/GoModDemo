@@ -83,10 +83,27 @@ func Login(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 		return
 	}
-	user, err :=bill.GetUserInfoByAccountName(username)
-	if err != nil {
-		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
-		return
+	var tempUser  model.User
+	var user  *model.User
+	isRedis:=false
+	tempStr,err:=util.GetRedisHasString("TaskUserInfoByAccountName",username)
+	if err == nil {
+		isRedis=true
+	}
+	if isRedis {
+
+		err = json.Unmarshal([]byte(tempStr), &tempUser)
+		if err != nil {
+			isRedis=false
+		}
+		user=&tempUser
+	} 
+	if !isRedis{
+		user, err =bill.GetUserInfoByAccountName(username)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
+			return
+		}
 	}
 	
    createTime,_:=util.ParseAnyToStr((*user).CreateTime)

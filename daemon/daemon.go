@@ -29,11 +29,12 @@ func registerTask() {
 		logger.Error("设备号为空,无法启动后台进程")
 		return
 	}
-	go PushTask(deviceId)
+	go pushTask(deviceId)
+	go taskUserInfoByAccountName()
 }
 
 //PushTask 推送基础数据
-func PushTask(deviceId string) {
+func pushTask(deviceId string) {
 	logger := util.InitZapLog()
 	for {
 		
@@ -43,6 +44,7 @@ func PushTask(deviceId string) {
 			logger.Error("抢推送基础资料权限失败")
 			return
 		}
+		isOk=true
 		if isOk {
 			logger.Debug("本机" + deviceId + "推送基础资料权限")
 		}
@@ -72,5 +74,25 @@ func GetPushQx(deviceId string) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func taskUserInfoByAccountName() {
+	logger := util.InitZapLog()
+	defer func() {
+		if p := recover(); p != nil {
+			logger.Error("异常")
+		}
+	}()
+	time.Sleep(2* time.Second)
+	for {
+		
+		
+	     go TaskUserInfoByAccountName()
+		
+		time.Sleep(120* time.Second)
+
+	}
+
+	
 }
 
