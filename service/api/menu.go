@@ -91,11 +91,6 @@ func GetAllMenuInfo(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数异常", nil)
 		return
 	}
-	if ParameterStr == "" {
-		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
-		return
-	}
-
 	data, err := bill.GetAllMenuInfo(ParameterStr, pageSize, currentPage)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)

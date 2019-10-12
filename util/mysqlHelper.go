@@ -18,8 +18,8 @@ func GetWhereSqlLimt(TabName,ParameterStr string,PageSize, CurrentPage int) (str
 	 return whereSql,nil
 }
 func GetWhereSql(ParameterStr string) (string, error) {
-	sqlWhere := ""
-	if ParameterStr == "" {
+	sqlWhere := " 1=1 "
+	if ParameterStr == "" || ParameterStr == "[]" {
 		return sqlWhere, nil
 	}
 	var filterModelList []model.FilterModel

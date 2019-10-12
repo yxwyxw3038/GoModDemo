@@ -7,3 +7,9 @@ type MenuTree struct {
 	MenuName       string `:"MenuName"`       
 	Node []MenuTree
 }
+
+type CascaderMenu struct {
+	Value          string `json:"value"`          
+	Label string `json:"label"`   
+	Children []CascaderMenu  `json:"children"` 
+}
