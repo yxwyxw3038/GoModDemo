@@ -7,6 +7,16 @@ import (
 	"strconv"
 	"strings"
 )
+func GetWhereSqlOrderLimt(TabName,ParameterStr string,OrderStr string,SortStr string, PageSize, CurrentPage int) (string, error) {
+	
+	whereSql,err:=GetWhereSql(ParameterStr)
+	if err != nil {
+	   return "", err
+	}
+	 
+	whereSql ="select * from  " +TabName+"  where "+ whereSql+" Order By "+OrderStr+" "+SortStr+ "  LIMIT " + strconv.Itoa( (CurrentPage-1)*PageSize)+"," +strconv.Itoa(CurrentPage*PageSize)
+	return whereSql,nil
+}
 func GetWhereSqlLimt(TabName,ParameterStr string,PageSize, CurrentPage int) (string, error) {
 	
 	 whereSql,err:=GetWhereSql(ParameterStr)
@@ -16,6 +26,16 @@ func GetWhereSqlLimt(TabName,ParameterStr string,PageSize, CurrentPage int) (str
 	  
 	 whereSql ="select * from  " +TabName+"  where "+ whereSql+ "  LIMIT " + strconv.Itoa( (CurrentPage-1)*PageSize)+"," +strconv.Itoa(CurrentPage*PageSize)
 	 return whereSql,nil
+}
+func GetWhereSqlCount(TabName,ParameterStr string) (string, error) {
+	
+	whereSql,err:=GetWhereSql(ParameterStr)
+	if err != nil {
+	   return "", err
+	}
+	 
+	whereSql ="select count(1) as Num from  " +TabName+"  where "+ whereSql
+	return whereSql,nil
 }
 func GetWhereSql(ParameterStr string) (string, error) {
 	sqlWhere := " 1=1 "

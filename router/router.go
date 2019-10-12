@@ -29,6 +29,7 @@ func InitRouter() *gin.Engine {
 	menuOne.POST("GetMenuByID", api.GetMenuByID)
 	menuOne.POST("GetAllMenuInfo",api.GetAllMenuInfo)
 	menuOne.POST("GetCascaderMenu",api.GetCascaderMenu)
+	menuOne.POST("GetMenuAllCount",api.GetMenuAllCount)
 	buttonOne := router.Group("/Button")
 	buttonOne.POST("GetButtonByMenuIdAndUserId", api.GetButtonByMenuIdAndUserId)
 

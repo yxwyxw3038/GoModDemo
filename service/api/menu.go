@@ -91,7 +91,7 @@ func GetAllMenuInfo(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数异常", nil)
 		return
 	}
-	data, err := bill.GetAllMenuInfo(ParameterStr, pageSize, currentPage)
+	data,num, err := bill.GetAllMenuInfo(ParameterStr, pageSize, currentPage)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
@@ -102,7 +102,7 @@ func GetAllMenuInfo(c *gin.Context) {
 		return
 	}
 	s := string(b)
-	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
+	appG.Response1(http.StatusOK, consts.SUCCESS, "", s,num)
 }
 
 // GetCascaderMenu 根据用户ID获取用户菜单信息
@@ -157,4 +157,32 @@ func GetCascaderMenu(c *gin.Context) {
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
 }
-
+// GetMenuAllCount 获取菜单总条数
+// @Summary 获取菜单总条数
+// @Tags User
+// @Description 获取菜单总条数 请求主体: Null  成功输出 int
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{int},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetMenuAllCount [post]
+func GetMenuAllCount(c *gin.Context) {
+	appG := util.Gin{C: c}
+	errMsg:=""
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+		data, err := bill.GetMenuAllCount()
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}	
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, data)
+}

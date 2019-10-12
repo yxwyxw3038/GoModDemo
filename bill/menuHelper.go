@@ -3,6 +3,7 @@ package bill
 import (
 	"GoModDemo/model"
 	"GoModDemo/util"
+	"GoModDemo/consts"
 	"errors"
 	"fmt"
 )
@@ -28,23 +29,39 @@ func GetMenuByID(ID string) (*model.Menu, error) {
 	return &menu[0], nil
 }
 
-func GetAllMenuInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Menu, error)   {
-	whereSql,err:=util.GetWhereSqlLimt("Menu" ,ParameterStr,PageSize,CurrentPage)
+func GetAllMenuInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Menu, int, error)   {
+	list := make([]model.Menu, 0)
+	whereSql,err:=util.GetWhereSqlOrderLimt("Menu" ,ParameterStr,"Sort",consts.ASC, PageSize,CurrentPage)
 	if err != nil {
-	   return nil, err
+	   return nil,0, err
+    }
+    whereSqlCount,err:=util.GetWhereSqlCount("Menu" ,ParameterStr)
+	if err != nil {
+		return nil,0, err
    }
+ 
+   fmt.Println(whereSqlCount)
+   fmt.Println(whereSql)
 	db, err := util.OpenDB()
 	if err != nil {
-		return nil, err
+		return nil,0, err
 	}
-	fmt.Println(whereSql)
+	
+	dataCount, err := db.Query(whereSqlCount)
+	if err != nil {
+	 return nil,0, err
+	}
+	if len(dataCount) <= 0 {
+		return &list,0, nil
+	}
+   num:=	 util.ToInt(dataCount[0]["Num"])
    data, err := db.Query(whereSql)
    if err != nil {
-	   return nil, err
+	return nil,0, err
    }
-   list := make([]model.Menu, 0)
+   
    if len(data) <= 0 {
-	   return &list, nil
+	   return &list,0, nil
    }
    for i := 0; i < len(data); i++ {
 	   var temp model.Menu
@@ -65,7 +82,7 @@ func GetAllMenuInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Menu
 	   temp.Sort = util.ToInt(data[i]["Sort"])
 	   list = append(list, temp)
    }
-   return &list,nil
+   return &list,num,nil
 }
 func GetCascaderMenu ()(*[]model.CascaderMenu, error) {
 
@@ -123,4 +140,26 @@ func generateCascaderMenuNext(id string, list *[]model.Menu) *[]model.CascaderMe
 		}
 	}
 	return &listTemp
+}
+func GetMenuAllCount()(int, error) {
+	whereSqlCount,err:=util.GetWhereSqlCount("Menu" ,"")
+	if err != nil {
+		return 0, err
+   }
+ 
+   fmt.Println(whereSqlCount)
+	db, err := util.OpenDB()
+	if err != nil {
+		return 0, err
+	}
+	
+	dataCount, err := db.Query(whereSqlCount)
+	if err != nil {
+	 return 0, err
+	}
+	if len(dataCount) <= 0 {
+		return 0, nil
+	}
+	num:=	 util.ToInt(dataCount[0]["Num"])
+	return num, nil
 }
