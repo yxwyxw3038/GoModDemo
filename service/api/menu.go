@@ -107,6 +107,58 @@ func GetAllMenuInfo(c *gin.Context) {
 	appG.Response1(http.StatusOK, consts.SUCCESS, "", s,num)
 }
 
+// GetAllMenuViewInfo 前台条件获取菜单信息
+// @Summary 前台条件获取菜单信息
+// @Tags MenuView
+// @Description 前台条件获取菜单信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1) 成功输出[]Menu
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param ParameterStr formData string true "ParameterStr"
+// @Param PageSize formData int true "PageSize"
+// @Param CurrentPage formData int true "CurrentPage"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{[]MenuView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetAllMenuViewInfo [post]
+func GetAllMenuViewInfo(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	ParameterStr := dists["ParameterStr"][0]
+	PageSize := dists["PageSize"][0]
+	CurrentPage := dists["CurrentPage"][0]
+	pageSize, err := strconv.Atoi(PageSize)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "参数异常", nil)
+		return
+	}
+	currentPage, err := strconv.Atoi(CurrentPage)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "参数异常", nil)
+		return
+	}
+	data,num, err := bill.GetAllMenuViewInfo(ParameterStr, pageSize, currentPage)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	b, err := json.Marshal(*data)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	s := string(b)
+	appG.Response1(http.StatusOK, consts.SUCCESS, "", s,num)
+}
+
+
 // GetCascaderMenu 根据用户ID获取用户菜单信息
 // @Summary 根据用户ID获取用户菜单信息
 // @Tags User

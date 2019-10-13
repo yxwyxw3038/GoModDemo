@@ -84,6 +84,64 @@ func GetAllMenuInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Menu
    }
    return &list,num,nil
 }
+
+func GetAllMenuViewInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.MenuView, int, error)   {
+	list := make([]model.MenuView, 0)
+	whereSql,err:=util.GetWhereSqlOrderLimt("MenuView" ,ParameterStr,"Sort",consts.ASC, PageSize,CurrentPage)
+	if err != nil {
+	   return nil,0, err
+    }
+    whereSqlCount,err:=util.GetWhereSqlCount("Menu" ,ParameterStr)
+	if err != nil {
+		return nil,0, err
+   }
+ 
+   fmt.Println(whereSqlCount)
+   fmt.Println(whereSql)
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil,0, err
+	}
+	
+	dataCount, err := db.Query(whereSqlCount)
+	if err != nil {
+	 return nil,0, err
+	}
+	if len(dataCount) <= 0 {
+		return &list,0, nil
+	}
+   num:=	 util.ToInt(dataCount[0]["Num"])
+   data, err := db.Query(whereSql)
+   if err != nil {
+	return nil,0, err
+   }
+   
+   if len(data) <= 0 {
+	   return &list,0, nil
+   }
+   for i := 0; i < len(data); i++ {
+	   var temp model.MenuView
+	   temp.ID = util.ToString(data[i]["ID"])
+	   temp.Name = util.ToString(data[i]["Name"])
+	   temp.ParentId = util.ToString(data[i]["ParentId"])
+	   temp.ParentName = util.ToString(data[i]["ParentName"])
+	   temp.Code = util.ToString(data[i]["Code"])
+	   temp.LinkAddress = util.ToString(data[i]["LinkAddress"])
+	   temp.Icon = util.ToString(data[i]["Icon"])
+	   temp.Description = util.ToString(data[i]["Description"])
+	   temp.CreateBy = util.ToString(data[i]["CreateBy"])
+	   temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
+	   createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
+	   updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
+	   temp.CreateTime= createTime
+	   temp.UpdateTime= updateTime
+	   temp.IsAble = util.ToInt(data[i]["IsAble"])
+	   temp.Sort = util.ToInt(data[i]["Sort"])
+	   list = append(list, temp)
+   }
+   return &list,num,nil
+}
+
 func GetCascaderMenu ()(*[]model.CascaderMenu, error) {
 
 	db, err := util.OpenDB()
