@@ -2,7 +2,7 @@ package api
 
 import (
 	"GoModDemo/consts"
-	// "GoModDemo/model"
+	"GoModDemo/model"
 	"GoModDemo/bill"
 	"GoModDemo/util"
 	"net/http"
@@ -11,6 +11,8 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"strings"
+
 )
 // GetMenuByID 根据菜单ID获取菜单信息
 // @Summary 根据菜单ID获取菜单信息
@@ -185,4 +187,122 @@ func GetMenuAllCount(c *gin.Context) {
 			return
 		}	
 	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, data)
+}
+
+// DeleteMenu 删除菜单信息
+// @Summary 删除菜单信息
+// @Tags Menu
+// @Description 删除菜单信息 请求主体: base64(str)=aaaa) 成功输出null
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param str formData string true "str"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /DeleteMenu [post]
+func DeleteMenu(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	str := dists["str"][0]
+	if str==""{
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	date   := strings.Split(str, ",")
+	err = bill.DeleteMenu(date)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}
+
+// AddMenu 新增菜单信息
+// @Summary 新增菜单信息
+// @Tags Menu
+// @Description 新增菜单信息 请求主体: base64(str)=aaaa) 成功输出null
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param str formData string true "str"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /AddMenu [post]
+func AddMenu(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	str := dists["str"][0]
+	if str==""{
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	var date  model.Menu
+	err = json.Unmarshal([]byte(str), &date)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return 
+	}
+	err = bill.AddMenu(date)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}
+
+// UpdateMenu 修改菜单信息
+// @Summary 修改菜单信息
+// @Tags Menu
+// @Description 修改菜单信息 请求主体: base64(str)=aaaa) 成功输出null
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param str formData string true "str"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /UpdateMenu [post]
+func UpdateMenu(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	str := dists["str"][0]
+	if str==""{
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	var date  model.Menu
+	err = json.Unmarshal([]byte(str), &date)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return 
+	}
+	err = bill.UpdateMenu(date)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
 }

@@ -104,3 +104,32 @@ func  getwhereByDataType(dataType string)  string {
 			return "'"
 	}
 }
+
+func DelSqlByID(TabName,FieldName string, Value  interface {} )  (string, error) {
+	var err error
+	var Sql string
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("类型断言错误")
+		}
+	}()
+	if Value==nil {
+	 return "",	errors.New("值为空")
+	}
+	Sql=" delete FROM "+ TabName +" where  "+FieldName+" = "
+	Sql1:=""
+	switch  Value.(type) {
+		case int:
+			Sql1=  strconv.Itoa(Value.(int))
+		case int64:
+			Sql1=  strconv.FormatInt(Value.(int64),10)
+		case float64:
+			Sql1=strconv.FormatFloat(Value.(float64), 'E', -1, 64)
+		case string:
+			Sql1="'"+Value.(string)+"'"
+		default:
+			Sql1=""
+		}
+	Sql=Sql+Sql1
+	return Sql,err
+}

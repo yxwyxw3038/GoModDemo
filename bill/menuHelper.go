@@ -163,3 +163,78 @@ func GetMenuAllCount()(int, error) {
 	num:=	 util.ToInt(dataCount[0]["Num"])
 	return num, nil
 }
+
+func DeleteMenu(idList []string) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("删除数据异常")
+		}
+	}()
+	if len(idList)<=0 {
+		return nil
+	}
+	var sqlList []string
+	for _,v :=range idList{
+		temp,err:=util.DelSqlByID("Menu","ID",v)  
+		if err != nil {
+			return  err
+	   }
+	   sqlList=append(sqlList,temp)
+	}
+    db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}
+	db.Begin()
+	for _,v :=range sqlList{
+		_,err := db.Execute(v)
+		if (err!=nil) {
+			db.Rollback()
+		}
+	}
+	db.Commit()
+	return err
+}
+
+func AddMenu(data model.Menu) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("新增数据异常")
+		}
+	}()
+	timeStr:= util.GetNowStr()
+	data.CreateTime=timeStr
+	data.UpdateTime=timeStr
+	data.Description=" "
+	db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}
+	_,err = db.Insert(&data)
+	if err != nil {
+		return  err
+	}
+	return err
+}
+
+func UpdateMenu(data model.Menu) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("修改数据异常")
+		}
+	}()
+	timeStr:= util.GetNowStr()
+	data.UpdateTime=timeStr
+	db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}
+	_,err = db.Where("ID",data.ID).Update(&data)
+	if err != nil {
+		return  err
+	}
+	return err
+}

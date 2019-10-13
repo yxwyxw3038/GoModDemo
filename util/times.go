@@ -33,3 +33,8 @@ func AnyToTimeStr (obj interface{}) (string ,error) {
 	// }
 	return str,nil
 } 
+func GetNowStr() string {
+	currentTime:=time.Now()
+	str:= currentTime.Format("2006-01-02 15:04:05")
+	return str
+}
