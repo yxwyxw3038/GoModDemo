@@ -3,6 +3,7 @@ package bill
 import (
 	"GoModDemo/model"
 	"GoModDemo/util"
+	"GoModDemo/consts"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -184,4 +185,123 @@ func  GetAllUserInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Use
 		list = append(list, temp)
 	}
 	return &list,nil
+}
+
+func  GetAllUserViewInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.UserView, error)   {
+	whereSql,err:=util.GetWhereSqlLimt("UserView" ,ParameterStr,PageSize,CurrentPage)
+	if err != nil {
+	   return nil, err
+   }
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(whereSql)
+   data, err := db.Query(whereSql)
+   if err != nil {
+	   return nil, err
+   }
+   list := make([]model.UserView, 0)
+   if len(data) <= 0 {
+	   return &list, nil
+   }
+   for i := 0; i < len(data); i++ {
+	   var temp model.UserView
+	   temp.ID = util.ToString(data[i]["ID"])
+	   temp.AccountName = util.ToString(data[i]["AccountName"])
+	   temp.PassWord = "这不是密码"
+	   temp.RealName = util.ToString(data[i]["RealName"])
+	   temp.MobilePhone = util.ToString(data[i]["MobilePhone"])
+	   temp.Email = util.ToString(data[i]["Email"])
+	   temp.Description = util.ToString(data[i]["Description"])
+	   temp.CreateBy = util.ToString(data[i]["CreateBy"])
+	   temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
+	   createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
+	   updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
+	   temp.CreateTime= createTime
+	   temp.UpdateTime= updateTime
+	   temp.IsAble = util.ToInt(data[i]["IsAble"])
+	   temp.IfChangePwd = util.ToInt(data[i]["IfChangePwd"])
+	   temp.DepartmentName = util.ToString(data[i]["DepartmentName"])
+	   list = append(list, temp)
+   }
+   return &list,nil
+}
+
+
+func DeleteUser(idList []string) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("删除数据异常")
+		}
+	}()
+	if len(idList)<=0 {
+		return nil
+	}
+	var sqlList []string
+	for _,v :=range idList{
+		temp,err:=util.DelSqlByField("User","ID",v)  
+		if err != nil {
+			return  err
+	   }
+	   sqlList=append(sqlList,temp)
+	}
+    db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}
+	db.Begin()
+	for _,v :=range sqlList{
+		_,err := db.Execute(v)
+		if (err!=nil) {
+			db.Rollback()
+			return err
+		}
+	}
+	db.Commit()
+	return err
+}
+
+func AddUser(data model.User) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("新增数据异常")
+		}
+	}()
+	timeStr:= util.GetNowStr()
+	data.CreateTime=timeStr
+	data.UpdateTime=timeStr
+	db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}
+	
+	_,err = db.ExtraCols(consts.GetUserTabInfo()...).Insert(&data)
+	fmt.Println(db.LastSql())
+	if err != nil {
+		return  err
+	}
+	return err
+}
+
+func UpdateUser(data model.User) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("修改数据异常")
+		}
+	}()
+	timeStr:= util.GetNowStr()
+	data.UpdateTime=timeStr
+	db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}
+	_,err = db.ExtraCols(consts.GetUserTabInfo()...).Where("ID",data.ID).Update(&data)
+	if err != nil {
+		return  err
+	}
+	return err
 }

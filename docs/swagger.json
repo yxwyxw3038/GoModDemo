@@ -49,6 +49,45 @@
                 }
             }
         },
+        "/AddUser": {
+            "post": {
+                "description": "新增用户信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "新增用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/DeleteMenu": {
             "post": {
                 "description": "删除菜单信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -81,6 +120,98 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/DeleteUser": {
+            "post": {
+                "description": "删除用户信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "删除用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetAllGetAllUserViewInfoUserInfo": {
+            "post": {
+                "description": "前台条件获取用户信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]User",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "前台条件获取用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]UserView},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -239,7 +370,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"Code\":1,\"Data\":{[]User},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"User\":\"错误提示\"}",
+                        "description": "{\"Code\":1,\"Data\":{[]User},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -551,6 +682,45 @@
                     "Menu"
                 ],
                 "summary": "修改菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/UpdateUser": {
+            "post": {
+                "description": "修改用户信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "修改用户信息",
                 "parameters": [
                     {
                         "type": "string",

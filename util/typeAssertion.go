@@ -1,5 +1,6 @@
 package util
-import ("strconv")
+import ("strconv"
+"strings")
 func  ToString (t interface {} ) string {
 	if t==nil {
 		return ""
@@ -27,5 +28,12 @@ func  ToInt (t interface {} ) int {
 	default:
 		s=0
 	}	
+	return s
+}
+func GetNullToStr(s string) string {
+	s=strings.Trim(s," ")
+	if s=="" {
+		s=" "
+	}
 	return s
 }

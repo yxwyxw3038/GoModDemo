@@ -33,6 +33,32 @@ paths:
       summary: 新增菜单信息
       tags:
       - Menu
+  /AddUser:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '新增用户信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 新增用户信息
+      tags:
+      - User
   /DeleteMenu:
     post:
       consumes:
@@ -59,6 +85,69 @@ paths:
       summary: 删除菜单信息
       tags:
       - Menu
+  /DeleteUser:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '删除用户信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 删除用户信息
+      tags:
+      - User
+  /GetAllGetAllUserViewInfoUserInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取用户信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]UserView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取用户信息
+      tags:
+      - User
   /GetAllMenuInfo:
     post:
       consumes:
@@ -164,7 +253,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"Code":1,"Data":{[]User},"Message":""} or {"Code":-1,"Data":{},"User":"错误提示"}'
+          description: '{"Code":1,"Data":{[]User},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
       summary: 前台条件获取用户信息
@@ -390,6 +479,32 @@ paths:
       summary: 修改菜单信息
       tags:
       - Menu
+  /UpdateUser:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '修改用户信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 修改用户信息
+      tags:
+      - User
   /api/helper:
     get:
       parameters:

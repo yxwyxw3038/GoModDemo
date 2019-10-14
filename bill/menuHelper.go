@@ -234,7 +234,7 @@ func DeleteMenu(idList []string) error {
 	}
 	var sqlList []string
 	for _,v :=range idList{
-		temp,err:=util.DelSqlByID("Menu","ID",v)  
+		temp,err:=util.DelSqlByField("Menu","ID",v)  
 		if err != nil {
 			return  err
 	   }
@@ -271,7 +271,7 @@ func AddMenu(data model.Menu) error {
 	if err != nil {
 		return  err
 	}
-	_,err = db.Insert(&data)
+	_,err = db.ExtraCols(consts.GetMenuTabInfo()...).Insert(&data)
 	if err != nil {
 		return  err
 	}
@@ -291,7 +291,7 @@ func UpdateMenu(data model.Menu) error {
 	if err != nil {
 		return  err
 	}
-	_,err = db.Where("ID",data.ID).Update(&data)
+	_,err = db.ExtraCols(consts.GetMenuTabInfo()...).Where("ID",data.ID).Update(&data)
 	if err != nil {
 		return  err
 	}

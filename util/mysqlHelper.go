@@ -105,7 +105,7 @@ func  getwhereByDataType(dataType string)  string {
 	}
 }
 
-func DelSqlByID(TabName,FieldName string, Value  interface {} )  (string, error) {
+func DelSqlByField(TabName,FieldName string, Value  interface {} )  (string, error) {
 	var err error
 	var Sql string
 	defer func() {
