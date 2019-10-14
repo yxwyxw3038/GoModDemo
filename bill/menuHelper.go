@@ -249,6 +249,7 @@ func DeleteMenu(idList []string) error {
 		_,err := db.Execute(v)
 		if (err!=nil) {
 			db.Rollback()
+			return err
 		}
 	}
 	db.Commit()

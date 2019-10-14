@@ -109,7 +109,7 @@ func GetAllMenuInfo(c *gin.Context) {
 
 // GetAllMenuViewInfo 前台条件获取菜单信息
 // @Summary 前台条件获取菜单信息
-// @Tags MenuView
+// @Tags Menu
 // @Description 前台条件获取菜单信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1) 成功输出[]Menu
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -244,7 +244,7 @@ func GetMenuAllCount(c *gin.Context) {
 // DeleteMenu 删除菜单信息
 // @Summary 删除菜单信息
 // @Tags Menu
-// @Description 删除菜单信息 请求主体: base64(str)=aaaa) 成功输出null
+// @Description 删除菜单信息 请求主体: base64(str=aaaa) 成功输出null
 // @Accept mpfd
 // @Param Token formData string true "Token"
 // @Param str formData string true "str"
@@ -280,7 +280,7 @@ func DeleteMenu(c *gin.Context) {
 // AddMenu 新增菜单信息
 // @Summary 新增菜单信息
 // @Tags Menu
-// @Description 新增菜单信息 请求主体: base64(str)=aaaa) 成功输出null
+// @Description 新增菜单信息 请求主体: base64(str=aaaa) 成功输出null
 // @Accept mpfd
 // @Param Token formData string true "Token"
 // @Param str formData string true "str"
@@ -321,7 +321,7 @@ func AddMenu(c *gin.Context) {
 // UpdateMenu 修改菜单信息
 // @Summary 修改菜单信息
 // @Tags Menu
-// @Description 修改菜单信息 请求主体: base64(str)=aaaa) 成功输出null
+// @Description 修改菜单信息 请求主体: base64(str=aaaa) 成功输出null
 // @Accept mpfd
 // @Param Token formData string true "Token"
 // @Param str formData string true "str"
