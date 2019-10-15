@@ -111,43 +111,27 @@ paths:
       summary: 删除用户信息
       tags:
       - User
-  /GetAllGetAllUserViewInfoUserInfo:
+  /GetAllDeptForTransfer:
     post:
       consumes:
       - multipart/form-data
-      description: '前台条件获取用户信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
-        成功输出[]User'
+      description: '获取所有部门清单 请求主体: Null  成功输出[]TransferModel'
       parameters:
       - description: Token
         in: formData
         name: Token
         required: true
         type: string
-      - description: ParameterStr
-        in: formData
-        name: ParameterStr
-        required: true
-        type: string
-      - description: PageSize
-        in: formData
-        name: PageSize
-        required: true
-        type: integer
-      - description: CurrentPage
-        in: formData
-        name: CurrentPage
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: '{"Code":1,"Data":{[]UserView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          description: '{"Code":1,"Data":{[]TransferModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
-      summary: 前台条件获取用户信息
+      summary: 获取所有部门清单
       tags:
-      - User
+      - Dept
   /GetAllMenuInfo:
     post:
       consumes:
@@ -222,6 +206,27 @@ paths:
       summary: 前台条件获取菜单信息
       tags:
       - Menu
+  /GetAllRoleForTransfer:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '获取所有权限清单 请求主体: Null  成功输出[]TransferModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]TransferModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 获取所有权限清单
+      tags:
+      - Role
   /GetAllUserInfo:
     post:
       consumes:
@@ -254,6 +259,43 @@ paths:
       responses:
         "200":
           description: '{"Code":1,"Data":{[]User},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取用户信息
+      tags:
+      - User
+  /GetAllUserViewInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取用户信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]UserView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
       summary: 前台条件获取用户信息
@@ -311,6 +353,27 @@ paths:
       summary: 根据用户ID获取用户菜单信息
       tags:
       - User
+  /GetDeptByUserIdForTransfer:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据用户ID获取用户权限信息
+      tags:
+      - Role
   /GetMenuAllCount:
     post:
       consumes:
@@ -451,6 +514,68 @@ paths:
           schema:
             type: string
       summary: 登录验证服务
+      tags:
+      - User
+  /SetUserDept:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '设置用户部门 请求主体: base64(ID=aaaa) 成功输出User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: 用户ID
+        in: formData
+        name: userId
+        required: true
+        type: string
+      - description: 部门ID，拼着接字符串
+        in: formData
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 设置用户部门
+      tags:
+      - User
+  /SetUserRole:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '设置设置用户权限用户部门 请求主体: base64(ID=aaaa) 成功输出User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: 用户ID
+        in: formData
+        name: userId
+        required: true
+        type: string
+      - description: 权限ID，拼着接字符串
+        in: formData
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 设置用户权限
       tags:
       - User
   /UpdateMenu:

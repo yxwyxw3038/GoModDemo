@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
+	"strings"
 )
 
 func UserAuth(userName string, passWord string) error {
@@ -223,6 +225,7 @@ func  GetAllUserViewInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model
 	   temp.IsAble = util.ToInt(data[i]["IsAble"])
 	   temp.IfChangePwd = util.ToInt(data[i]["IfChangePwd"])
 	   temp.DepartmentName = util.ToString(data[i]["DepartmentName"])
+	   temp.RoleName = util.ToString(data[i]["RoleName"])
 	   list = append(list, temp)
    }
    return &list,nil
@@ -239,7 +242,7 @@ func DeleteUser(idList []string) error {
 	if len(idList)<=0 {
 		return nil
 	}
-	var sqlList []string
+	var sqlList [] string
 	for _,v :=range idList{
 		temp,err:=util.DelSqlByField("User","ID",v)  
 		if err != nil {
@@ -251,15 +254,7 @@ func DeleteUser(idList []string) error {
 	if err != nil {
 		return  err
 	}
-	db.Begin()
-	for _,v :=range sqlList{
-		_,err := db.Execute(v)
-		if (err!=nil) {
-			db.Rollback()
-			return err
-		}
-	}
-	db.Commit()
+	err=util.ExecuteList(db,sqlList...)
 	return err
 }
 
@@ -270,14 +265,35 @@ func AddUser(data model.User) error {
 			err=errors.New("新增数据异常")
 		}
 	}()
-	timeStr:= util.GetNowStr()
-	data.CreateTime=timeStr
-	data.UpdateTime=timeStr
 	db, err := util.OpenDB()
 	if err != nil {
 		return  err
 	}
-	
+	count, err := db.Table("User").Where("AccountName", "=", data.AccountName).Count()
+	if err != nil {
+		return err
+	}
+    if count>0 {
+		return errors.New("帐号重复不得新增")
+	}
+	count, err = db.Table("User").Where("Email", "=", data.Email).Count()
+	if err != nil {
+		return err
+	}
+    if count>0 {
+		return errors.New("邮箱重复不得新增")
+	}
+	count, err = db.Table("User").Where("MobilePhone", "=", data.MobilePhone).Count()
+	if err != nil {
+		return err
+	}
+    if count>0 {
+		return errors.New("手机号重复不得新增")
+	}
+
+	timeStr:= util.GetNowStr()
+	data.CreateTime=timeStr
+	data.UpdateTime=timeStr
 	_,err = db.ExtraCols(consts.GetUserTabInfo()...).Insert(&data)
 	fmt.Println(db.LastSql())
 	if err != nil {
@@ -304,4 +320,158 @@ func UpdateUser(data model.User) error {
 		return  err
 	}
 	return err
+}
+
+func SetUserDept( userId,deptStr string) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("数据异常")
+		}
+	}()
+	db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}	
+	deptList:=make([]string,0)
+	if deptStr!="" {
+		deptList= strings.Split(deptStr, ",")
+	}
+	hasmap:=make(map[string]int, 0)
+	oldhasmap:=make(map[string]int, 0)
+	for i:=0;i<len(deptList);i++ {
+		hasmap[deptList[i]]=1
+	}
+	strSql := fmt.Sprintf("select ud.DepartmentId from  UserDepartment ud ,Department  d   where ud.DepartmentId=d.ID  and ud.UserId='%s'", userId)
+	data, err := db.Query(strSql)
+	if err != nil {
+		return  err
+	}
+	var delList []string
+	for i := 0; i < len(data); i++ {
+		temp := util.ToString(data[i]["DepartmentId"])
+		if _,ok:=hasmap[temp];!ok {
+		
+			delList=append(delList,temp)
+		}
+		oldhasmap[temp]=0
+	}
+
+
+	  var tempList []model.UserDepartment
+	  timeStr:= util.GetNowStr()
+      for key,_:=range hasmap {
+			if _,ok:=oldhasmap[key];!ok {
+		
+				newUuid := uuid.New()
+				newUuidStr := newUuid.String()
+				var temp	model.UserDepartment
+				temp.ID=newUuidStr
+				temp.UserId=userId
+				temp.DepartmentId=key
+				temp.CreateBy   ="admin"
+				temp.CreateTime  = timeStr
+				temp.UpdateBy     ="admin"
+				temp.UpdateTime  = timeStr
+				
+				tempList=append(tempList,temp)
+			}
+
+		}
+	
+	db.Begin()
+	for i:=0;i<len(delList);i++ {
+		_,err := db.Table("UserDepartment").Where("UserId", userId).Where("DepartmentId", delList[i]).Delete()
+		if (err!=nil) {
+			db.Rollback()
+			return err
+		}
+	}
+	for i:=0;i<len(tempList);i++ {
+		_,err := db.Insert(&(tempList[i]))
+		if (err!=nil) {
+			db.Rollback()
+			return err
+		}
+	}
+	db.Commit()
+	return err
+	
+}
+
+func SetUserRole( userId,roleStr string) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err=errors.New("数据异常")
+		}
+	}()
+	db, err := util.OpenDB()
+	if err != nil {
+		return  err
+	}	
+	roleList:=make([]string,0)
+	if roleStr!="" {
+		roleList= strings.Split(roleStr, ",")
+	}
+	hasmap:=make(map[string]int, 0)
+	oldhasmap:=make(map[string]int, 0)
+	for i:=0;i<len(roleList);i++ {
+		hasmap[roleList[i]]=1
+	}
+	strSql := fmt.Sprintf("select ud.RoleId from  UserRole ud ,Role  d   where ud.RoleId=d.ID  and ud.UserId='%s'", userId)
+	data, err := db.Query(strSql)
+	if err != nil {
+		return  err
+	}
+	var delList []string
+	for i := 0; i < len(data); i++ {
+		temp := util.ToString(data[i]["RoleId"])
+		if _,ok:=hasmap[temp];!ok {
+		
+			delList=append(delList,temp)
+		}
+		oldhasmap[temp]=0
+	}
+
+
+	  var tempList []model.UserRole
+	  timeStr:= util.GetNowStr()
+      for key,_:=range hasmap {
+			if _,ok:=oldhasmap[key];!ok {
+		
+				newUuid := uuid.New()
+				newUuidStr := newUuid.String()
+				var temp	model.UserRole
+				temp.ID=newUuidStr
+				temp.UserId=userId
+				temp.RoleId=key
+				temp.CreateBy   ="admin"
+				temp.CreateTime  = timeStr
+				temp.UpdateBy     ="admin"
+				temp.UpdateTime  = timeStr
+				
+				tempList=append(tempList,temp)
+			}
+
+		}
+	
+	db.Begin()
+	for i:=0;i<len(delList);i++ {
+		_,err := db.Table("UserRole").Where("UserId", userId).Where("RoleId", delList[i]).Delete()
+		if (err!=nil) {
+			db.Rollback()
+			return err
+		}
+	}
+	for i:=0;i<len(tempList);i++ {
+		_,err := db.Insert(&(tempList[i]))
+		if (err!=nil) {
+			db.Rollback()
+			return err
+		}
+	}
+	db.Commit()
+	return err
+	
 }

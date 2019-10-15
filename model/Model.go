@@ -14,6 +14,13 @@ type FilterModel struct {
 	Value    string `json:"value"`  //值
 	DataType string `json:"dataType"` //数据类型
 }
+type TransferModel struct {
+	Key      string `json:"key"`
+	Label    string `json:"label"`
+	Title    string `json:"title"`
+	Disabled bool   `json:"disabled"`
+}
+
 type Department struct {
 	ID          string `:"ID"`          // 部门ID
 	Name        string `:"Name"`        // 部门名

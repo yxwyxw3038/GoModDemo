@@ -186,7 +186,7 @@ func GetAllUserInfo(c *gin.Context) {
 // @Param CurrentPage formData int true "CurrentPage"
 // @Produce  json
 // @Success 200 {string} json "{"Code":1,"Data":{[]UserView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
-// @Router  /GetAllGetAllUserViewInfoUserInfo [post]
+// @Router  /GetAllUserViewInfo [post]
 func GetAllUserViewInfo(c *gin.Context) {
 	appG := util.Gin{C: c}
 	defer func() {
@@ -363,4 +363,82 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}
+
+// SetUserDept 设置用户部门
+// @Summary 设置用户部门
+// @Tags User
+// @Description 设置用户部门 请求主体: base64(ID=aaaa) 成功输出User
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param userId formData string true "用户ID""
+// @Param userId formData string true "部门ID，拼着接字符串"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /SetUserDept [post]
+func SetUserDept(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "设置用户部门", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	userId := dists["userId"][0]
+	deptStr := dists["deptStr"][0]
+	if userId == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	err = bill.SetUserDept(userId,deptStr)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+
+}
+
+// SetUserRole 设置用户权限
+// @Summary 设置用户权限
+// @Tags User
+// @Description 设置设置用户权限用户部门 请求主体: base64(ID=aaaa) 成功输出User
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param userId formData string true "用户ID""
+// @Param userId formData string true "权限ID，拼着接字符串"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /SetUserRole [post]
+func SetUserRole(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "设置用户权限", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	userId := dists["userId"][0]
+	roleStr := dists["roleStr"][0]
+	if userId == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	err = bill.SetUserRole(userId,roleStr)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+
 }
