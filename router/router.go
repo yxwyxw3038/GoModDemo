@@ -48,5 +48,9 @@ func InitRouter() *gin.Engine {
 	roleOne := router.Group("/Role")
 	roleOne.POST("GetAllRoleForTransfer", api.GetAllRoleForTransfer)
 	roleOne.POST("GetRoleByUserIdForTransfer", api.GetRoleByUserIdForTransfer)
+	roleOne.POST("GetAllRoleInfo", api.GetAllRoleInfo)
+	roleOne.POST("GetRoleByID", api.GetRoleByID)
+	roleOne.POST("GetMenuByRoleIdForTree", api.GetMenuByRoleIdForTree)
+	roleOne.POST("SetMenuRole", api.SetMenuRole)
 	return router
 }

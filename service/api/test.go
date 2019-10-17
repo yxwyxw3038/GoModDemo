@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// }
 // @Summary Login
 // @Produce  json
 // @Param name query string false "Name"
@@ -22,9 +23,11 @@ import (
 // @Router /api/helper [get]
 func IndexApi(c *gin.Context) {
 	appG := util.Gin{C: c}
+
 	var t time.Time
 	t = time.Now()
 	var str string
+
 	db, err := util.OpenDB()
 	if err != nil {
 		str = err.Error()
