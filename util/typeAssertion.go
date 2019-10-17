@@ -1,39 +1,126 @@
 package util
-import ("strconv"
-"strings")
-func  ToString (t interface {} ) string {
-	if t==nil {
+
+import (
+	"fmt"
+	"reflect"
+	"strconv"
+	"strings"
+	"errors"
+)
+
+func ToString(t interface{}) string {
+	if t == nil {
 		return ""
 	}
-	s:=t.(string)
+	s := t.(string)
 	return s
 }
 
-func  ToInt (t interface {} ) int {
-	if t==nil {
+func ToInt(t interface{}) int {
+	if t == nil {
 		return 0
 	}
-	s:=0
+	s := 0
 	switch v := t.(type) {
 	case int:
-		s=t.(int)
+		s = t.(int)
 	// case int32:
 	// 	strInt32 := strconv.FormatInt(v, 10)
 	// 	s ,_ := strconv.Atoi(strInt32)
 	case int64:
 		strInt64 := strconv.FormatInt(v, 10)
-		s ,_ = strconv.Atoi(strInt64)
+		s, _ = strconv.Atoi(strInt64)
 	case string:
-		s ,_ = strconv.Atoi(v)
+		s, _ = strconv.Atoi(v)
 	default:
-		s=0
-	}	
+		s = 0
+	}
 	return s
 }
 func GetNullToStr(s string) string {
-	s=strings.Trim(s," ")
-	if s=="" {
-		s=" "
+	s = strings.Trim(s, " ")
+	if s == "" {
+		s = " "
 	}
 	return s
+}
+
+// GetTagName 获取结构体中Tag的值，如果没有tag则返回字段值
+func GetTagName(structName interface{}, tagstr string) []string {
+	// 获取type
+	tag := reflect.TypeOf(structName)
+	// 如果是反射Ptr类型, 就获取他的 element type
+	if tag.Kind() == reflect.Ptr {
+		tag = tag.Elem()
+	}
+
+	// 判断是否是struct
+	if tag.Kind() != reflect.Struct {
+		fmt.Println("Check type error not Struct")
+		return nil
+	}
+	fmt.Println(tag.Kind())
+	// 获取字段数量
+	fieldNum := tag.NumField()
+	result := make([]string, 0, fieldNum)
+	for i := 0; i < fieldNum; i++ {
+		// tag 名字
+		tagName := tag.Field(i).Tag.Get(tagstr)
+		// if tagName != IGNORE {
+		// tag为-时, 不解析
+		if tagName == "-" || tagName == "" {
+			// 字段名字
+			tagName = tag.Field(i).Name
+		}
+		result = append(result, tagName)
+		// }
+	}
+	return result
+}
+
+
+func GetMapByStruct(st interface{})( map[string]interface{},error ){
+	// 获取type
+	rt := reflect.TypeOf(st)
+	rv := reflect.ValueOf(st)
+	// 如果是反射Ptr类型, 就获取他的 element type
+	if rt.Kind() == reflect.Ptr {
+		rt = rt.Elem()
+		rv = rv.Elem()
+	}
+	result := make(map[string]interface{})
+	// 判断是否是struct
+	if rt.Kind() != reflect.Struct {
+		return result, errors.New("不是结构无法反射成相应Map")
+	}
+	// 获取字段数量
+	fieldNum := rt.NumField()
+	for i := 0; i < fieldNum; i++ {
+		Name := rt.Field(i).Name
+		v:=   rv.Field(i).Interface()
+        result[Name]=v
+		
+	}
+	return result,nil
+}
+func SetStructByMap(st interface{},hasMap map[string]interface{}){
+    rt := reflect.TypeOf(st)
+	rv := reflect.ValueOf(st)
+	// 如果是反射Ptr类型, 就获取他的 element type
+	if rt.Kind() == reflect.Ptr {
+		rt = rt.Elem()
+		rv= rv.Elem()
+	}
+	// 获取字段数量
+	fieldNum := rt.NumField()
+	for i := 0; i < fieldNum; i++ {
+		Name := rt.Field(i).Name
+		if(rv.Field(i).CanSet()){
+			if v,ok:=hasMap[Name];ok{
+				dataVal := reflect.ValueOf(v)
+			    rv.Field(i).Set(dataVal)
+			}
+		}
+		
+	}
 }

@@ -29,7 +29,7 @@ func IndexApi(c *gin.Context) {
 	if err != nil {
 		str = err.Error()
 	} else {
-		_, err := db.Table("User").Count()
+		 _, err := db.Table("User").Count()
 		// newUuid := uuid.New()
 		// newUuidStr := newUuid.String()
 		// var user model.User
@@ -44,7 +44,7 @@ func IndexApi(c *gin.Context) {
 		// user.IsAble=1
 		// user.IfChangePwd=1
 		// _, err =db.Insert(&user)
-
+       
 		
 		if err != nil {
 			str = err.Error()
@@ -64,6 +64,21 @@ func IndexApi(c *gin.Context) {
 		 temp1.Logic="AND"
 		 temp1.DataType="D"
 		 list=append(list,temp1)
+
+		 temp,err:= util.GetMapByStruct(temp1)
+		 if err != nil {
+			fmt.Println(err)
+			return
+		}
+		 fmt.Println(temp)
+		//  var temp0  model.FilterModel
+		//  result := make(map[string]interface{})
+		//  result["Column"]="UpdateTime"
+		//  result["Value"]="2019-09-26 16:47:58"
+		//  result["Action"]=">="
+		//  result["Logic"]="And"
+		//  result["DataType"]="D"
+        //  util.SetStructByMap(temp0,result)
 		 var temp2 model.FilterModel 
 		 temp2.Column="AccountName"
 		 temp2.Value="0000"
@@ -81,6 +96,7 @@ func IndexApi(c *gin.Context) {
 		if err != nil {
 		  fmt.Println(err)
 		}
+		
 	}
 	// c.String(http.StatusOK, str)
 	// c.JSON(http.StatusOK, gin.H{
