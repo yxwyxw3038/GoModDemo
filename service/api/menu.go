@@ -1,19 +1,21 @@
 package api
 
 import (
+	"GoModDemo/bill"
 	"GoModDemo/consts"
 	"GoModDemo/model"
-	"GoModDemo/bill"
 	"GoModDemo/util"
 	"net/http"
+
 	// "time"
 	// "github.com/google/uuid"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 )
+
 // GetMenuByID 根据菜单ID获取菜单信息
 // @Summary 根据菜单ID获取菜单信息
 // @Tags Menu
@@ -93,7 +95,7 @@ func GetAllMenuInfo(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数异常", nil)
 		return
 	}
-	data,num, err := bill.GetAllMenuInfo(ParameterStr, pageSize, currentPage)
+	data, num, err := bill.GetAllMenuInfo(ParameterStr, pageSize, currentPage)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
@@ -104,7 +106,7 @@ func GetAllMenuInfo(c *gin.Context) {
 		return
 	}
 	s := string(b)
-	appG.Response1(http.StatusOK, consts.SUCCESS, "", s,num)
+	appG.Response1(http.StatusOK, consts.SUCCESS, "", s, num)
 }
 
 // GetAllMenuViewInfo 前台条件获取菜单信息
@@ -144,7 +146,7 @@ func GetAllMenuViewInfo(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数异常", nil)
 		return
 	}
-	data,num, err := bill.GetAllMenuViewInfo(ParameterStr, pageSize, currentPage)
+	data, num, err := bill.GetAllMenuViewInfo(ParameterStr, pageSize, currentPage)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
@@ -155,9 +157,8 @@ func GetAllMenuViewInfo(c *gin.Context) {
 		return
 	}
 	s := string(b)
-	appG.Response1(http.StatusOK, consts.SUCCESS, "", s,num)
+	appG.Response1(http.StatusOK, consts.SUCCESS, "", s, num)
 }
-
 
 // GetCascaderMenu 根据用户ID获取用户菜单信息
 // @Summary 根据用户ID获取用户菜单信息
@@ -170,21 +171,21 @@ func GetAllMenuViewInfo(c *gin.Context) {
 // @Router  /GetCascaderMenu [post]
 func GetCascaderMenu(c *gin.Context) {
 	appG := util.Gin{C: c}
-	errMsg:=""
-	s:=""
+	errMsg := ""
+	s := ""
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
 		}
 	}()
-	
-	isOk,err:= util.RedisExists("GetCascaderMenu")
+
+	isOk, err := util.RedisExists("GetCascaderMenu")
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
 	if isOk {
-		s,err=util.GetRedisString("GetCascaderMenu")
+		s, err = util.GetRedisString("GetCascaderMenu")
 		if err != nil {
 			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 			return
@@ -202,15 +203,16 @@ func GetCascaderMenu(c *gin.Context) {
 			return
 		}
 		s = string(b)
-		err= util.SetRedisAnyEx("GetCascaderMenu",s,"180")
+		err = util.SetRedisAnyEx("GetCascaderMenu", s, "180")
 
 		if err != nil {
-			errMsg=err.Error()
+			errMsg = err.Error()
 		}
 
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
 }
+
 // GetMenuAllCount 获取菜单总条数
 // @Summary 获取菜单总条数
 // @Tags User
@@ -222,22 +224,22 @@ func GetCascaderMenu(c *gin.Context) {
 // @Router  /GetMenuAllCount [post]
 func GetMenuAllCount(c *gin.Context) {
 	appG := util.Gin{C: c}
-	errMsg:=""
+	errMsg := ""
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
 		}
 	}()
-		data, err := bill.GetMenuAllCount()
-		if err != nil {
-			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-			return
-		}
-		
-		if err != nil {
-			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-			return
-		}	
+	data, err := bill.GetMenuAllCount()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
 	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, data)
 }
 
@@ -264,11 +266,11 @@ func DeleteMenu(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	date   := strings.Split(str, ",")
+	date := strings.Split(str, ",")
 	err = bill.DeleteMenu(date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
@@ -300,15 +302,15 @@ func AddMenu(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	var date  model.Menu
+	var date model.Menu
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return 
+		return
 	}
 	err = bill.AddMenu(date)
 	if err != nil {
@@ -341,15 +343,15 @@ func UpdateMenu(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	var date  model.Menu
+	var date model.Menu
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return 
+		return
 	}
 	err = bill.UpdateMenu(date)
 	if err != nil {
@@ -357,4 +359,43 @@ func UpdateMenu(c *gin.Context) {
 		return
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}
+
+// SetMenuButton 设置菜单按钮
+// @Summary 设置菜单按钮
+// @Tags User
+// @Description 设置菜单按钮 请求主体: base64(menuId=aaaa&buttonStr=bbbbbb) 成功输出
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param menuId formData string true "菜单ID""
+// @Param buttonStr formData string true "按钮ID，拼着接字符串"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /SetMenuButton [post]
+func SetMenuButton(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "设置菜单按钮", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	menuId := dists["menuId"][0]
+	buttonStr := dists["buttonStr"][0]
+	if menuId == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	err = bill.SetMenuButton(menuId, buttonStr)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+
 }
