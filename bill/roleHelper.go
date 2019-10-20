@@ -1,20 +1,23 @@
 package bill
 
 import (
+	"GoModDemo/consts"
 	"GoModDemo/model"
 	"GoModDemo/util"
-	"GoModDemo/consts"
+
 	// "encoding/json"
 	"errors"
-	 "fmt"
-	 "strings"
-	 "github.com/google/uuid"
+	"fmt"
+	"strings"
+
+	"github.com/google/uuid"
 )
-func GetAllRoleForTransfer()(*[]model.TransferModel, error)  {
+
+func GetAllRoleForTransfer() (*[]model.TransferModel, error) {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
 
@@ -28,23 +31,23 @@ func GetAllRoleForTransfer()(*[]model.TransferModel, error)  {
 	if err != nil {
 		return nil, err
 	}
-	for i:=0;i<len(role);i++ {
-	   var temp model.TransferModel
-	   temp.Key=role[i].ID
-	   temp.Label=role[i].Name
-	   temp.Title=role[i].Name
-	   temp.Disabled=false
-	   list=append(list,temp)
+	for i := 0; i < len(role); i++ {
+		var temp model.TransferModel
+		temp.Key = role[i].ID
+		temp.Label = role[i].Name
+		temp.Title = role[i].Name
+		temp.Disabled = false
+		list = append(list, temp)
 	}
 	return &list, err
 }
 
-func GetRoleByUserIdForTransfer(userId string) (string, error)  {
+func GetRoleByUserIdForTransfer(userId string) (string, error) {
 
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
 
@@ -65,78 +68,78 @@ func GetRoleByUserIdForTransfer(userId string) (string, error)  {
 		temp := util.ToString(data[i]["RoleId"])
 		list = append(list, temp)
 	}
-	str:=strings.Join(list, ",")
+	str := strings.Join(list, ",")
 	return str, err
 
 }
 
-func GetAllRoleInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Role, error)   {
+func GetAllRoleInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.Role, error) {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
-	whereSql,err:=util.GetWhereSqlLimt("Role" ,ParameterStr,PageSize,CurrentPage)
+	whereSql, err := util.GetWhereSqlLimt("Role", ParameterStr, PageSize, CurrentPage)
 	if err != nil {
-	   return nil, err
-   }
+		return nil, err
+	}
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(whereSql)
-   data, err := db.Query(whereSql)
-   if err != nil {
-	   return nil, err
-   }
-   list := make([]model.Role, 0)
-   if len(data) <= 0 {
-	   return &list, nil
-   }
-   for i := 0; i < len(data); i++ {
-	   var temp model.Role
-	   temp.ID = util.ToString(data[i]["ID"])
-	   temp.Name = util.ToString(data[i]["Name"])
-	   temp.Description = util.ToString(data[i]["Description"])
-	   temp.CreateBy = util.ToString(data[i]["CreateBy"])
-	   temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
-	   createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
-	   updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
-	   temp.CreateTime= createTime
-	   temp.UpdateTime= updateTime
-	   temp.IsAble = util.ToInt(data[i]["IsAble"])
-	   list = append(list, temp)
-   }
-   return &list,nil
+	data, err := db.Query(whereSql)
+	if err != nil {
+		return nil, err
+	}
+	list := make([]model.Role, 0)
+	if len(data) <= 0 {
+		return &list, nil
+	}
+	for i := 0; i < len(data); i++ {
+		var temp model.Role
+		temp.ID = util.ToString(data[i]["ID"])
+		temp.Name = util.ToString(data[i]["Name"])
+		temp.Description = util.ToString(data[i]["Description"])
+		temp.CreateBy = util.ToString(data[i]["CreateBy"])
+		temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
+		createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
+		updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
+		temp.CreateTime = createTime
+		temp.UpdateTime = updateTime
+		temp.IsAble = util.ToInt(data[i]["IsAble"])
+		list = append(list, temp)
+	}
+	return &list, nil
 }
 
 func DeleteRole(idList []string) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("删除数据异常")
+			err = errors.New("删除数据异常")
 		}
 	}()
-	if len(idList)<=0 {
+	if len(idList) <= 0 {
 		return nil
 	}
 	var sqlList []string
-	for _,v :=range idList{
-		temp,err:=util.DelSqlByField("Role","ID",v)  
+	for _, v := range idList {
+		temp, err := util.DelSqlByField("Role", "ID", v)
 		if err != nil {
-			return  err
-	   }
-	   sqlList=append(sqlList,temp)
+			return err
+		}
+		sqlList = append(sqlList, temp)
 	}
-    db, err := util.OpenDB()
+	db, err := util.OpenDB()
 	if err != nil {
-		return  err
+		return err
 	}
 	db.Begin()
-	for _,v :=range sqlList{
-		_,err := db.Execute(v)
-		if (err!=nil) {
+	for _, v := range sqlList {
+		_, err := db.Execute(v)
+		if err != nil {
 			db.Rollback()
 			return err
 		}
@@ -149,20 +152,20 @@ func AddRole(data model.Role) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("新增数据异常")
+			err = errors.New("新增数据异常")
 		}
 	}()
-	timeStr:= util.GetNowStr()
-	data.CreateTime=timeStr
-	data.UpdateTime=timeStr
-	data.Description=" "
+	timeStr := util.GetNowStr()
+	data.CreateTime = timeStr
+	data.UpdateTime = timeStr
+	data.Description = ""
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
+		return err
 	}
-	_,err = db.ExtraCols(consts.GetTabInfo()...).Insert(&data)
+	_, err = db.ExtraCols(consts.GetTabInfo()...).Insert(&data)
 	if err != nil {
-		return  err
+		return err
 	}
 	return err
 }
@@ -171,18 +174,18 @@ func UpdateRole(data model.Role) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("修改数据异常")
+			err = errors.New("修改数据异常")
 		}
 	}()
-	timeStr:= util.GetNowStr()
-	data.UpdateTime=timeStr
+	timeStr := util.GetNowStr()
+	data.UpdateTime = timeStr
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
+		return err
 	}
-	_,err = db.ExtraCols(consts.GetTabInfo()...).Where("ID",data.ID).Update(&data)
+	_, err = db.ExtraCols(consts.GetTabInfo()...).Where("ID", data.ID).Update(&data)
 	if err != nil {
-		return  err
+		return err
 	}
 	return err
 }
@@ -207,11 +210,11 @@ func GetRoleByID(ID string) (*model.Role, error) {
 	return &data[0], nil
 }
 
-func GetMenuByRoleIdForTree(ID string)( string,error) {
+func GetMenuByRoleIdForTree(ID string) (string, error) {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
 
@@ -232,119 +235,118 @@ func GetMenuByRoleIdForTree(ID string)( string,error) {
 		temp := util.ToString(data[i]["MenuId"])
 		list = append(list, temp)
 	}
-	str:=strings.Join(list, ",")
+	str := strings.Join(list, ",")
 	return str, err
 }
 
 // func SetMapByBasemap(hasmap,basehasmap map[string]string){
-	 
+
 // }
-func SetMenuRole( roleId,menuStr string) error {
+func SetMenuRole(roleId, menuStr string) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
-	}	
-	menuList:=make([]string,0)
-	if menuStr!="" {
-		menuList= strings.Split(menuStr, ",")
+		return err
 	}
-	basehasmap:=make(map[string]string, 0)
-	hasmap:=make(map[string]string, 0)
-	oldhasmap:=make(map[string]string, 0)
+	menuList := make([]string, 0)
+	if menuStr != "" {
+		menuList = strings.Split(menuStr, ",")
+	}
+	basehasmap := make(map[string]string, 0)
+	hasmap := make(map[string]string, 0)
+	oldhasmap := make(map[string]string, 0)
 	//加载基础资料
 	strSql := "select  m.ID,m.ParentId  from Menu m "
 	baseData, err := db.Query(strSql)
 	if err != nil {
-		return  err
+		return err
 	}
 
-    for i := 0; i < len(baseData); i++ {
+	for i := 0; i < len(baseData); i++ {
 		tempMenuId := util.ToString(baseData[i]["MenuId"])
 		tempParentId := util.ToString(baseData[i]["ParentId"])
-		basehasmap[tempMenuId]=tempParentId
+		basehasmap[tempMenuId] = tempParentId
 	}
-    //补齐ParentId
-    for i:=0;i<len(menuList);i++ {
-		if v,ok:= basehasmap[menuList[i]];ok {
-			hasmap[menuList[i]]=v
+	//补齐ParentId
+	for i := 0; i < len(menuList); i++ {
+		if v, ok := basehasmap[menuList[i]]; ok {
+			hasmap[menuList[i]] = v
 		}
 	}
-    //补上级菜单
-    for _,v:=range  hasmap {
-       if v=="0"  {
+	//补上级菜单
+	for _, v := range hasmap {
+		if v == "0" {
 
-	   } else {
-			if v,ok:= hasmap[v];!ok { 
-				if v1,ok:= basehasmap[v];ok {
-					hasmap[v]=v1
+		} else {
+			if v, ok := hasmap[v]; !ok {
+				if v1, ok := basehasmap[v]; ok {
+					hasmap[v] = v1
 				}
 			}
-	   }
+		}
 	}
 	strSql = fmt.Sprintf("select rm.MenuId,m.ParentId from RoleMenu rm ,Menu  m where  rm.RoleId='%s' and rm.MenuId=m.ID", roleId)
 	data, err := db.Query(strSql)
 	if err != nil {
-		return  err
+		return err
 	}
 	//在本权限所有菜单清单中找  找不到就清除
 	var delList []string
 	for i := 0; i < len(data); i++ {
 		temp := util.ToString(data[i]["MenuId"])
-		if _,ok:=hasmap[temp];!ok {
-		
-			delList=append(delList,temp)
+		if _, ok := hasmap[temp]; !ok {
+
+			delList = append(delList, temp)
 		}
-		oldhasmap[temp]=""
+		oldhasmap[temp] = ""
 	}
 
+	var tempList []model.RoleMenu
+	timeStr := util.GetNowStr()
+	for key, _ := range hasmap {
+		if _, ok := oldhasmap[key]; !ok {
 
-	  var tempList []model.RoleMenu
-	  timeStr:= util.GetNowStr()
-      for key,_:=range hasmap {
-			if _,ok:=oldhasmap[key];!ok {
-		
-				newUuid := uuid.New()
-				newUuidStr := newUuid.String()
-				var temp	model.RoleMenu
-				temp.ID=newUuidStr
-				temp.MenuId=key
-				temp.RoleId=roleId
-				temp.CreateBy   ="admin"
-				temp.CreateTime  = timeStr
-				temp.UpdateBy     ="admin"
-				temp.UpdateTime  = timeStr
-				tempList=append(tempList,temp)
-			}
-          
+			newUuid := uuid.New()
+			newUuidStr := newUuid.String()
+			var temp model.RoleMenu
+			temp.ID = newUuidStr
+			temp.MenuId = key
+			temp.RoleId = roleId
+			temp.CreateBy = "admin"
+			temp.CreateTime = timeStr
+			temp.UpdateBy = "admin"
+			temp.UpdateTime = timeStr
+			tempList = append(tempList, temp)
 		}
-	
+
+	}
+
 	db.Begin()
-	for i:=0;i<len(delList);i++ {
-		_,err := db.Table("RoleMenu").Where("RoleId", roleId).Where("MenuId", delList[i]).Delete()
-		if (err!=nil) {
+	for i := 0; i < len(delList); i++ {
+		_, err := db.Table("RoleMenu").Where("RoleId", roleId).Where("MenuId", delList[i]).Delete()
+		if err != nil {
 			db.Rollback()
 			return err
 		}
-		_,err = db.Table("RoleMenuButton").Where("RoleId", roleId).Where("MenuId", delList[i]).Delete()
-		if (err!=nil) {
+		_, err = db.Table("RoleMenuButton").Where("RoleId", roleId).Where("MenuId", delList[i]).Delete()
+		if err != nil {
 			db.Rollback()
 			return err
 		}
 	}
-	for i:=0;i<len(tempList);i++ {
-		_,err := db.Insert(&(tempList[i]))
-		if (err!=nil) {
+	for i := 0; i < len(tempList); i++ {
+		_, err := db.Insert(&(tempList[i]))
+		if err != nil {
 			db.Rollback()
 			return err
 		}
 	}
 	db.Commit()
 	return err
-	
+
 }

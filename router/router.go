@@ -57,5 +57,8 @@ func InitRouter() *gin.Engine {
 	roleOne.POST("GetRoleByID", api.GetRoleByID)
 	roleOne.POST("GetMenuByRoleIdForTree", api.GetMenuByRoleIdForTree)
 	roleOne.POST("SetMenuRole", api.SetMenuRole)
+	roleOne.POST("AddRole", api.AddRole)
+	roleOne.POST("UpdateRole", api.UpdateRole)
+	roleOne.POST("DeleteRole", api.DeleteRole)
 	return router
 }
