@@ -1,18 +1,21 @@
 package api
 
 import (
+	"GoModDemo/bill"
 	"GoModDemo/consts"
 	"GoModDemo/model"
-	"GoModDemo/bill"
 	"GoModDemo/util"
 	"net/http"
+
 	// "time"
 	// "github.com/google/uuid"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	 "strconv"
+	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
+
 // GetAllRoleForTransfer  获取所有权限清单
 // @Summary 获取所有权限清单
 // @Tags Role
@@ -24,20 +27,20 @@ import (
 // @Router  /GetAllRoleForTransfer [post]
 func GetAllRoleForTransfer(c *gin.Context) {
 	appG := util.Gin{C: c}
-	errMsg:=""
-	s:=""
+	errMsg := ""
+	s := ""
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
 		}
 	}()
-	isOk,err:= util.RedisExists("GetAllRoleForTransfer")
+	isOk, err := util.RedisExists("GetAllRoleForTransfer")
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
 	if isOk {
-		s,err=util.GetRedisString("GetAllRoleForTransfer")
+		s, err = util.GetRedisString("GetAllRoleForTransfer")
 		if err != nil {
 			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 			return
@@ -55,10 +58,10 @@ func GetAllRoleForTransfer(c *gin.Context) {
 			return
 		}
 		s = string(b)
-		err= util.SetRedisAnyEx("GetAllRoleForTransfer",s,"180")
+		err = util.SetRedisAnyEx("GetAllRoleForTransfer", s, "180")
 
 		if err != nil {
-			errMsg=err.Error()
+			errMsg = err.Error()
 		}
 
 	}
@@ -99,7 +102,6 @@ func GetRoleByUserIdForTransfer(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 
 }
-
 
 // GetAllRoleInfo 前台条件获取权限信息
 // @Summary 前台条件获取权限信息
@@ -157,7 +159,6 @@ func GetAllRoleInfo(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 }
 
-
 // DeleteRole 删除权限信息
 // @Summary 删除权限信息
 // @Tags Role
@@ -181,11 +182,11 @@ func DeleteRole(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	date   := strings.Split(str, ",")
+	date := strings.Split(str, ",")
 	err = bill.DeleteRole(date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
@@ -217,15 +218,15 @@ func AddRole(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	var date  model.Role
+	var date model.Role
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return 
+		return
 	}
 	err = bill.AddRole(date)
 	if err != nil {
@@ -258,15 +259,15 @@ func UpdateRole(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	var date  model.Role
+	var date model.Role
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return 
+		return
 	}
 	err = bill.UpdateRole(date)
 	if err != nil {
@@ -339,12 +340,12 @@ func GetMenuByRoleIdForTree(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
 		return
 	}
-	Id := dists["Id"][0]
-	if Id == "" {
+	ID := dists["ID"][0]
+	if ID == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	s, err := bill.GetMenuByRoleIdForTree(Id)
+	s, err := bill.GetMenuByRoleIdForTree(ID)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
@@ -352,7 +353,6 @@ func GetMenuByRoleIdForTree(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 
 }
-
 
 // SetMenuRole 设置权限菜单
 // @Summary 设置权限菜单
@@ -383,7 +383,48 @@ func SetMenuRole(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	err = bill.SetMenuRole(roleId,menuStr)
+	err = bill.SetMenuRole(roleId, menuStr)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+
+}
+
+// SetButtonByMenuIdRoleId 根据菜单ID和角色ID设置按钮权限
+// @Summary 根据菜单ID和角色ID设置按钮权限
+// @Tags Role
+// @Description 根据菜单ID和角色ID设置按钮权限 请求主体: base64(menuId=aaaa&menuId=aaaa) 成功输出User
+// @Accept mpfd
+// @Param Token formData string true "Token"
+//@Param menuId formData string true "菜单ID"
+// @Param roleId formData string true "权限ID"
+// @Param menuStr formData string true "按钮ID，拼着接字符串"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /SetButtonByMenuIdRoleId [post]
+func SetButtonByMenuIdRoleId(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "根据菜单ID和角色ID设置按钮权限", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	menuId := dists["menuId"][0]
+	roleId := dists["roleId"][0]
+	buttonStr := dists["buttonStr"][0]
+	if roleId == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	err = bill.SetButtonByMenuIdRoleId(menuId, roleId, buttonStr)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return

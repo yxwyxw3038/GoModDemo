@@ -100,3 +100,61 @@ func GetButtonByMenuIdnForTransfer(menuId string) (string, error) {
 	return str, err
 
 }
+func GetAllButtonByMenuIdForTransfer(menuId string) (*[]model.TransferModel, error) {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("数据异常")
+		}
+	}()
+
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	strSql := fmt.Sprintf("select b.ID,b.Name from Button b ,MenuButton mb where mb.ButtonId=b.ID and b.IsAble=1 and mb.MenuId='%s'", menuId)
+	data, err := db.Query(strSql)
+	if err != nil {
+		return nil, err
+	}
+
+	var list []model.TransferModel
+	for i := 0; i < len(data); i++ {
+		var temp model.TransferModel
+		temp.Key = util.ToString(data[i]["ID"])
+		temp.Label = util.ToString(data[i]["Name"])
+		temp.Title = util.ToString(data[i]["Name"])
+		temp.Disabled = false
+		list = append(list, temp)
+	}
+	return &list, err
+}
+
+func GetButtonByMenuIdRoleIdForTransfer(menuId, roleId string) (string, error) {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("数据异常")
+		}
+	}()
+
+	db, err := util.OpenDB()
+	if err != nil {
+		return "", err
+	}
+	strSql := fmt.Sprintf("select r.ButtonId from RoleMenuButton as r where r.MenuId='%s' and r.RoleId='%s' and EXISTS (select  1 from MenuButton as m where r.ButtonId=m.ButtonId and r.MenuId=m.MenuId)", menuId, roleId)
+	data, err := db.Query(strSql)
+	if err != nil {
+		return "", err
+	}
+	if len(data) <= 0 {
+		return "", nil
+	}
+	var list []string
+	for i := 0; i < len(data); i++ {
+		temp := util.ToString(data[i]["ButtonId"])
+		list = append(list, temp)
+	}
+	str := strings.Join(list, ",")
+	return str, err
+}

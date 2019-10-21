@@ -268,7 +268,7 @@ func SetMenuRole(roleId, menuStr string) error {
 	}
 
 	for i := 0; i < len(baseData); i++ {
-		tempMenuId := util.ToString(baseData[i]["MenuId"])
+		tempMenuId := util.ToString(baseData[i]["ID"])
 		tempParentId := util.ToString(baseData[i]["ParentId"])
 		basehasmap[tempMenuId] = tempParentId
 	}
@@ -349,4 +349,80 @@ func SetMenuRole(roleId, menuStr string) error {
 	db.Commit()
 	return err
 
+}
+
+func SetButtonByMenuIdRoleId(menuId, roleId, buttonStr string) error {
+	var err error
+	hasmap := make(map[string]string, 0)
+	oldhasmap := make(map[string]string, 0)
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("数据异常")
+		}
+	}()
+	buttonList := make([]string, 0)
+	if buttonStr != "" {
+		buttonList = strings.Split(buttonStr, ",")
+	}
+	for i := 0; i < len(buttonList); i++ {
+		hasmap[buttonList[i]] = ""
+	}
+	db, err := util.OpenDB()
+	if err != nil {
+		return err
+	}
+	strSql := fmt.Sprintf("select r.ButtonId from RoleMenuButton r  where r.MenuId='%s' and r.RoleId='%s' and EXISTS (select  1 from MenuButton as m where m.ButtonId=r.ButtonId and m.MenuId=r.MenuId )", menuId, roleId)
+	data, err := db.Query(strSql)
+	if err != nil {
+		return err
+	}
+	var delList []string
+	for i := 0; i < len(data); i++ {
+		temp := util.ToString(data[i]["ButtonId"])
+		if _, ok := hasmap[temp]; !ok {
+
+			delList = append(delList, temp)
+		}
+		oldhasmap[temp] = ""
+	}
+
+	var tempList []model.RoleMenuButton
+	timeStr := util.GetNowStr()
+	for key, _ := range hasmap {
+		if _, ok := oldhasmap[key]; !ok {
+
+			newUuid := uuid.New()
+			newUuidStr := newUuid.String()
+			var temp model.RoleMenuButton
+			temp.ID = newUuidStr
+			temp.MenuId = menuId
+			temp.RoleId = roleId
+			temp.ButtonId = key
+			temp.CreateBy = "admin"
+			temp.CreateTime = timeStr
+			temp.UpdateBy = "admin"
+			temp.UpdateTime = timeStr
+
+			tempList = append(tempList, temp)
+		}
+
+	}
+
+	db.Begin()
+	for i := 0; i < len(delList); i++ {
+		_, err := db.Table("RoleMenuButton").Where("MenuId", menuId).Where("RoleId", roleId).Where("ButtonId", delList[i]).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+	}
+	for i := 0; i < len(tempList); i++ {
+		_, err := db.Insert(&(tempList[i]))
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+	}
+	db.Commit()
+	return err
 }
