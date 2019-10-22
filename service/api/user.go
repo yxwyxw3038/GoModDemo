@@ -1,17 +1,19 @@
 package api
 
 import (
+	"GoModDemo/bill"
 	"GoModDemo/consts"
 	"GoModDemo/model"
-	"GoModDemo/bill"
 	"GoModDemo/util"
 	"net/http"
+
 	// "time"
 	// "github.com/google/uuid"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GetUserByID 根据用户ID获取用户信息
@@ -68,8 +70,8 @@ func GetUserByID(c *gin.Context) {
 // @Router  /GetUserMenu [post]
 func GetUserMenu(c *gin.Context) {
 	appG := util.Gin{C: c}
-	errMsg:=""
-	s:=""
+	errMsg := ""
+	s := ""
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
@@ -85,38 +87,38 @@ func GetUserMenu(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	isOk,err:= util.RedisExists("GetUserMenu"+userID)
+	isOk, err := util.RedisExists("GetUserMenu" + userID)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
 	if isOk {
-		s,err=util.GetRedisString("GetUserMenu"+userID)
+		s, err = util.GetRedisString("GetUserMenu" + userID)
 		if err != nil {
 			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 			return
 		}
 
 	} else {
-	data, err := bill.GetUserMenu(userID)
-	if err != nil {
-		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return
-	}
-	b, err := json.Marshal(*data)
-	if err != nil {
-		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return
-	}
-	s = string(b)
-	err= util.SetRedisAnyEx("GetUserMenu"+userID,s,"180")
+		data, err := bill.GetUserMenu(userID)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		b, err := json.Marshal(*data)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		s = string(b)
+		err = util.SetRedisAnyEx("GetUserMenu"+userID, s, "180")
 
-	if err != nil {
-		errMsg=err.Error()
-	}
+		if err != nil {
+			errMsg = err.Error()
+		}
 
-}
-appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
 }
 
 // GetAllUserInfo 前台条件获取用户信息
@@ -239,13 +241,12 @@ func GetAllUserViewInfo(c *gin.Context) {
 // @Produce  json
 // @Success 200 {string} json "{"Code":1,"Data":"","Message":""}"
 // @Router  /GetUserLogininfoByToken [post]
-func GetUserLogininfoByToken (c *gin.Context) {
- 
+func GetUserLogininfoByToken(c *gin.Context) {
+
 	appG := util.Gin{C: c}
 	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
 
 }
-
 
 // DeleteUser 删除用户信息
 // @Summary 删除用户信息
@@ -270,11 +271,11 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	date   := strings.Split(str, ",")
+	date := strings.Split(str, ",")
 	err = bill.DeleteUser(date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
@@ -306,15 +307,15 @@ func AddUser(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	var date  model.User
+	var date model.User
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return 
+		return
 	}
 	err = bill.AddUser(date)
 	if err != nil {
@@ -347,15 +348,15 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 	str := dists["str"][0]
-	if str==""{
+	if str == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	var date  model.User
+	var date model.User
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return 
+		return
 	}
 	err = bill.UpdateUser(date)
 	if err != nil {
@@ -394,7 +395,7 @@ func SetUserDept(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	err = bill.SetUserDept(userId,deptStr)
+	err = bill.SetUserDept(userId, deptStr)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
@@ -433,7 +434,7 @@ func SetUserRole(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	err = bill.SetUserRole(userId,roleStr)
+	err = bill.SetUserRole(userId, roleStr)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return

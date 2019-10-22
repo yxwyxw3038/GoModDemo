@@ -33,6 +33,32 @@ paths:
       summary: 新增菜单信息
       tags:
       - Menu
+  /AddRole:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '新增权限信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 新增权限信息
+      tags:
+      - Role
   /AddUser:
     post:
       consumes:
@@ -85,6 +111,32 @@ paths:
       summary: 删除菜单信息
       tags:
       - Menu
+  /DeleteRole:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '删除权限信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 删除权限信息
+      tags:
+      - Role
   /DeleteUser:
     post:
       consumes:
@@ -111,6 +163,48 @@ paths:
       summary: 删除用户信息
       tags:
       - User
+  /GetAllButtonByMenuIdForTransfer:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID获取按钮清单 请求主体: Null  成功输出[]TransferModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]TransferModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID获取按钮清单
+      tags:
+      - Button
+  /GetAllButtonForTransfer:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '获取所有菜单清单 请求主体: Null  成功输出[]TransferModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]TransferModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 获取所有菜单清单
+      tags:
+      - Button
   /GetAllDeptForTransfer:
     post:
       consumes:
@@ -227,6 +321,43 @@ paths:
       summary: 获取所有权限清单
       tags:
       - Role
+  /GetAllRoleInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取权限信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]User},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取权限信息
+      tags:
+      - Role
   /GetAllUserInfo:
     post:
       consumes:
@@ -332,6 +463,63 @@ paths:
       summary: 根据用户ID和菜单ID获取相应权限的按钮信息
       tags:
       - Button
+  /GetButtonByMenuIdRoleIdForTransfer:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID和权限ID获取按钮信息 请求主体: base64(menuId=aaaa&roleId=bbbb) 成功输出字符串'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: menuId
+        in: formData
+        name: menuId
+        required: true
+        type: string
+      - description: roleId
+        in: formData
+        name: roleId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID和权限ID获取按钮信息
+      tags:
+      - Button
+  /GetButtonByMenuIdnForTransfer:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID获取按钮信息 请求主体: base64(menuId=aaaa) 成功输出字符串'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: menuId
+        in: formData
+        name: menuId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID获取按钮信息
+      tags:
+      - Button
   /GetCascaderMenu:
     post:
       consumes:
@@ -352,12 +540,12 @@ paths:
             type: string
       summary: 根据用户ID获取用户菜单信息
       tags:
-      - User
+      - Menu
   /GetDeptByUserIdForTransfer:
     post:
       consumes:
       - multipart/form-data
-      description: '根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串'
+      description: '根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串'
       parameters:
       - description: Token
         in: formData
@@ -371,9 +559,9 @@ paths:
           description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
-      summary: 根据用户ID获取用户权限信息
+      summary: 根据用户ID获取用户部门信息
       tags:
-      - Role
+      - Dept
   /GetMenuAllCount:
     post:
       consumes:
@@ -394,7 +582,7 @@ paths:
             type: string
       summary: 获取菜单总条数
       tags:
-      - User
+      - Menu
   /GetMenuByID:
     post:
       consumes:
@@ -421,6 +609,53 @@ paths:
       summary: 根据菜单ID获取菜单信息
       tags:
       - Menu
+  /GetMenuByRoleIdForTree:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据权限ID获取菜单树所有根结点 请求主体: base64(userId=aaaa) 成功输出字符串'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据权限ID获取菜单树所有根结点
+      tags:
+      - Role
+  /GetRoleByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据权限ID获取权限信息 请求主体: base64(ID=aaaa) 成功输出Role'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{Role},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据权限ID获取权限信息
+      tags:
+      - Role
   /GetUserByID:
     post:
       consumes:
@@ -516,6 +751,104 @@ paths:
       summary: 登录验证服务
       tags:
       - User
+  /SetButtonByMenuIdRoleId:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID和角色ID设置按钮权限 请求主体: base64(menuId=aaaa&menuId=aaaa) 成功输出User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: 菜单ID
+        in: formData
+        name: menuId
+        required: true
+        type: string
+      - description: 权限ID
+        in: formData
+        name: roleId
+        required: true
+        type: string
+      - description: 按钮ID，拼着接字符串
+        in: formData
+        name: menuStr
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID和角色ID设置按钮权限
+      tags:
+      - Role
+  /SetMenuButton:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '设置菜单按钮 请求主体: base64(menuId=aaaa&buttonStr=bbbbbb) 成功输出'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: 菜单ID
+        in: formData
+        name: menuId
+        required: true
+        type: string
+      - description: 按钮ID，拼着接字符串
+        in: formData
+        name: buttonStr
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 设置菜单按钮
+      tags:
+      - Menu
+  /SetMenuRole:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '设置权限菜单 请求主体: base64(roleId=aaaa) 成功输出User'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: 权限ID
+        in: formData
+        name: roleId
+        required: true
+        type: string
+      - description: 菜单ID，拼着接字符串
+        in: formData
+        name: menuStr
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 设置权限菜单
+      tags:
+      - Role
   /SetUserDept:
     post:
       consumes:
@@ -604,6 +937,32 @@ paths:
       summary: 修改菜单信息
       tags:
       - Menu
+  /UpdateRole:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '修改权限信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 修改权限信息
+      tags:
+      - Role
   /UpdateUser:
     post:
       consumes:

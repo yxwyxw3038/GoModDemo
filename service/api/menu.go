@@ -162,7 +162,7 @@ func GetAllMenuViewInfo(c *gin.Context) {
 
 // GetCascaderMenu 根据用户ID获取用户菜单信息
 // @Summary 根据用户ID获取用户菜单信息
-// @Tags User
+// @Tags Menu
 // @Description 根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -215,7 +215,7 @@ func GetCascaderMenu(c *gin.Context) {
 
 // GetMenuAllCount 获取菜单总条数
 // @Summary 获取菜单总条数
-// @Tags User
+// @Tags Menu
 // @Description 获取菜单总条数 请求主体: Null  成功输出 int
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -363,7 +363,7 @@ func UpdateMenu(c *gin.Context) {
 
 // SetMenuButton 设置菜单按钮
 // @Summary 设置菜单按钮
-// @Tags User
+// @Tags Menu
 // @Description 设置菜单按钮 请求主体: base64(menuId=aaaa&buttonStr=bbbbbb) 成功输出
 // @Accept mpfd
 // @Param Token formData string true "Token"

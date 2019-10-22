@@ -6,13 +6,16 @@ import (
 	"GoModDemo/bill"
 	"GoModDemo/util"
 	"net/http"
+
 	// "time"
 	// "github.com/google/uuid"
 	"encoding/json"
+
 	"github.com/gin-gonic/gin"
 	// "strconv"
 	// "strings"
 )
+
 // GetAllDeptForTransfer  获取所有部门清单
 // @Summary 获取所有部门清单
 // @Tags Dept
@@ -24,20 +27,20 @@ import (
 // @Router  /GetAllDeptForTransfer [post]
 func GetAllDeptForTransfer(c *gin.Context) {
 	appG := util.Gin{C: c}
-	errMsg:=""
-	s:=""
+	errMsg := ""
+	s := ""
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
 		}
 	}()
-	isOk,err:= util.RedisExists("GetAllDeptForTransfer")
+	isOk, err := util.RedisExists("GetAllDeptForTransfer")
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
 	if isOk {
-		s,err=util.GetRedisString("GetAllDeptForTransfer")
+		s, err = util.GetRedisString("GetAllDeptForTransfer")
 		if err != nil {
 			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 			return
@@ -55,15 +58,16 @@ func GetAllDeptForTransfer(c *gin.Context) {
 			return
 		}
 		s = string(b)
-		err= util.SetRedisAnyEx("GetAllDeptForTransfer",s,"180")
+		err = util.SetRedisAnyEx("GetAllDeptForTransfer", s, "180")
 
 		if err != nil {
-			errMsg=err.Error()
+			errMsg = err.Error()
 		}
 
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
 }
+
 // GetDeptByUserIdForTransfer 根据用户ID获取用户部门信息
 // @Summary 根据用户ID获取用户部门信息
 // @Tags Dept
@@ -72,7 +76,7 @@ func GetAllDeptForTransfer(c *gin.Context) {
 // @Param Token formData string true "Token"
 // @Produce  json
 // @Success 200 {string} json "{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
-// @Router  /GetDeptByUserIdForTransfer [post]
+// @Router /GetDeptByUserIdForTransfer [post]
 func GetDeptByUserIdForTransfer(c *gin.Context) {
 	appG := util.Gin{C: c}
 	defer func() {

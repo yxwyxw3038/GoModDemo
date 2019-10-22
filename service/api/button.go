@@ -87,7 +87,7 @@ func GetButtonByMenuIdAndUserId(c *gin.Context) {
 
 // GetAllButtonForTransfer  获取所有菜单清单
 // @Summary 获取所有菜单清单
-// @Tags Dept
+// @Tags Button
 // @Description 获取所有菜单清单 请求主体: Null  成功输出[]TransferModel
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -139,7 +139,7 @@ func GetAllButtonForTransfer(c *gin.Context) {
 
 // GetButtonByMenuIdnForTransfer 根据菜单ID获取按钮信息
 // @Summary 根据菜单ID获取按钮信息
-// @Tags Dept
+// @Tags Button
 // @Description 根据菜单ID获取按钮信息 请求主体: base64(menuId=aaaa) 成功输出字符串
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -175,7 +175,7 @@ func GetButtonByMenuIdnForTransfer(c *gin.Context) {
 
 // GetAllButtonByMenuIdForTransfer  根据菜单ID获取按钮清单
 // @Summary 根据菜单ID获取按钮清单
-// @Tags Dept
+// @Tags Button
 // @Description 根据菜单ID获取按钮清单 请求主体: Null  成功输出[]TransferModel
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -222,7 +222,7 @@ func GetAllButtonByMenuIdForTransfer(c *gin.Context) {
 
 // GetButtonByMenuIdRoleIdForTransfer 根据菜单ID和权限ID获取按钮信息
 // @Summary  根据菜单ID和权限ID获取按钮信息
-// @Tags Dept
+// @Tags Button
 // @Description  根据菜单ID和权限ID获取按钮信息 请求主体: base64(menuId=aaaa&roleId=bbbb) 成功输出字符串
 // @Accept mpfd
 // @Param Token formData string true "Token"

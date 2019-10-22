@@ -105,7 +105,7 @@ func GetRoleByUserIdForTransfer(c *gin.Context) {
 
 // GetAllRoleInfo 前台条件获取权限信息
 // @Summary 前台条件获取权限信息
-// @Tags User
+// @Tags Role
 // @Description 前台条件获取权限信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1) 成功输出[]User
 // @Accept mpfd
 // @Param Token formData string true "Token"
@@ -399,7 +399,7 @@ func SetMenuRole(c *gin.Context) {
 // @Description 根据菜单ID和角色ID设置按钮权限 请求主体: base64(menuId=aaaa&menuId=aaaa) 成功输出User
 // @Accept mpfd
 // @Param Token formData string true "Token"
-//@Param menuId formData string true "菜单ID"
+// @Param menuId formData string true "菜单ID"
 // @Param roleId formData string true "权限ID"
 // @Param menuStr formData string true "按钮ID，拼着接字符串"
 // @Produce  json
