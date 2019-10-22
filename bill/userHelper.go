@@ -1,14 +1,15 @@
 package bill
 
 import (
+	"GoModDemo/consts"
 	"GoModDemo/model"
 	"GoModDemo/util"
-	"GoModDemo/consts"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 func UserAuth(userName string, passWord string) error {
@@ -18,20 +19,20 @@ func UserAuth(userName string, passWord string) error {
 		return err
 	}
 	var user []model.User
-	isRedis:=false
-	s,err:=util.GetRedisHasString("TaskUserInfoByAccountName",userName)
+	isRedis := false
+	s, err := util.GetRedisHasString("TaskUserInfoByAccountName", userName)
 	if err == nil {
-		isRedis=true
+		isRedis = true
 	}
 	if isRedis {
-		var tempUser  model.User
+		var tempUser model.User
 		err = json.Unmarshal([]byte(s), &tempUser)
 		if err != nil {
-			isRedis=false
+			isRedis = false
 		}
-		user=append(user,tempUser)
-	} 
-	if !isRedis{
+		user = append(user, tempUser)
+	}
+	if !isRedis {
 
 		err = db.Table(&user).Where("AccountName", "=", userName).Select()
 		if err != nil {
@@ -95,7 +96,7 @@ func GetUserMenu(userId string) (*[]model.MenuTree, error) {
 	if err != nil {
 		return nil, err
 	}
-	strSql := fmt.Sprintf("SELECT	m.* FROM	Menu m,	RoleMenu rm,	UserRole ur,	Role r,	User u WHERE	m.IsAble != 0 AND rm.MenuId = m.ID AND ur.RoleId = rm.RoleId AND r.IsAble != 0 AND ur.UserId = u.ID AND ur.RoleId = r.ID AND u.IsAble != 0 AND u.ID = '%s'", userId)
+	strSql := fmt.Sprintf("SELECT	m.* FROM	Menu m,	RoleMenu rm,	UserRole ur,	Role r,	User u WHERE	m.IsAble != 0 AND rm.MenuId = m.ID AND ur.RoleId = rm.RoleId AND r.IsAble != 0 AND ur.UserId = u.ID AND ur.RoleId = r.ID AND u.IsAble != 0 AND u.ID = '%s' order by m.Sort ", userId)
 	data, err := db.Query(strSql)
 	if err != nil {
 		return nil, err
@@ -146,19 +147,16 @@ func generateMenuTreeNext(id string, list *[]model.MenuTree) *[]model.MenuTree {
 	return &listTemp
 }
 
-
-
-
-func  GetAllUserInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.User, error)   {
-	 whereSql,err:=util.GetWhereSqlLimt("User" ,ParameterStr,PageSize,CurrentPage)
-	 if err != nil {
+func GetAllUserInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.User, error) {
+	whereSql, err := util.GetWhereSqlLimt("User", ParameterStr, PageSize, CurrentPage)
+	if err != nil {
 		return nil, err
 	}
-	 db, err := util.OpenDB()
-	 if err != nil {
-		 return nil, err
-	 }
-	 fmt.Println(whereSql)
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(whereSql)
 	data, err := db.Query(whereSql)
 	if err != nil {
 		return nil, err
@@ -180,81 +178,80 @@ func  GetAllUserInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.Use
 		temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
 		createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
 		updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
-		temp.CreateTime= createTime
-		temp.UpdateTime= updateTime
+		temp.CreateTime = createTime
+		temp.UpdateTime = updateTime
 		temp.IsAble = util.ToInt(data[i]["IsAble"])
 		temp.IfChangePwd = util.ToInt(data[i]["IfChangePwd"])
 		list = append(list, temp)
 	}
-	return &list,nil
+	return &list, nil
 }
 
-func  GetAllUserViewInfo(ParameterStr string,PageSize, CurrentPage int)(*[]model.UserView, error)   {
-	whereSql,err:=util.GetWhereSqlLimt("UserView" ,ParameterStr,PageSize,CurrentPage)
+func GetAllUserViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.UserView, error) {
+	whereSql, err := util.GetWhereSqlLimt("UserView", ParameterStr, PageSize, CurrentPage)
 	if err != nil {
-	   return nil, err
-   }
+		return nil, err
+	}
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(whereSql)
-   data, err := db.Query(whereSql)
-   if err != nil {
-	   return nil, err
-   }
-   list := make([]model.UserView, 0)
-   if len(data) <= 0 {
-	   return &list, nil
-   }
-   for i := 0; i < len(data); i++ {
-	   var temp model.UserView
-	   temp.ID = util.ToString(data[i]["ID"])
-	   temp.AccountName = util.ToString(data[i]["AccountName"])
-	   temp.PassWord = "这不是密码"
-	   temp.RealName = util.ToString(data[i]["RealName"])
-	   temp.MobilePhone = util.ToString(data[i]["MobilePhone"])
-	   temp.Email = util.ToString(data[i]["Email"])
-	   temp.Description = util.ToString(data[i]["Description"])
-	   temp.CreateBy = util.ToString(data[i]["CreateBy"])
-	   temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
-	   createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
-	   updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
-	   temp.CreateTime= createTime
-	   temp.UpdateTime= updateTime
-	   temp.IsAble = util.ToInt(data[i]["IsAble"])
-	   temp.IfChangePwd = util.ToInt(data[i]["IfChangePwd"])
-	   temp.DepartmentName = util.ToString(data[i]["DepartmentName"])
-	   temp.RoleName = util.ToString(data[i]["RoleName"])
-	   list = append(list, temp)
-   }
-   return &list,nil
+	data, err := db.Query(whereSql)
+	if err != nil {
+		return nil, err
+	}
+	list := make([]model.UserView, 0)
+	if len(data) <= 0 {
+		return &list, nil
+	}
+	for i := 0; i < len(data); i++ {
+		var temp model.UserView
+		temp.ID = util.ToString(data[i]["ID"])
+		temp.AccountName = util.ToString(data[i]["AccountName"])
+		temp.PassWord = "这不是密码"
+		temp.RealName = util.ToString(data[i]["RealName"])
+		temp.MobilePhone = util.ToString(data[i]["MobilePhone"])
+		temp.Email = util.ToString(data[i]["Email"])
+		temp.Description = util.ToString(data[i]["Description"])
+		temp.CreateBy = util.ToString(data[i]["CreateBy"])
+		temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
+		createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
+		updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
+		temp.CreateTime = createTime
+		temp.UpdateTime = updateTime
+		temp.IsAble = util.ToInt(data[i]["IsAble"])
+		temp.IfChangePwd = util.ToInt(data[i]["IfChangePwd"])
+		temp.DepartmentName = util.ToString(data[i]["DepartmentName"])
+		temp.RoleName = util.ToString(data[i]["RoleName"])
+		list = append(list, temp)
+	}
+	return &list, nil
 }
-
 
 func DeleteUser(idList []string) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("删除数据异常")
+			err = errors.New("删除数据异常")
 		}
 	}()
-	if len(idList)<=0 {
+	if len(idList) <= 0 {
 		return nil
 	}
-	var sqlList [] string
-	for _,v :=range idList{
-		temp,err:=util.DelSqlByField("User","ID",v)  
+	var sqlList []string
+	for _, v := range idList {
+		temp, err := util.DelSqlByField("User", "ID", v)
 		if err != nil {
-			return  err
-	   }
-	   sqlList=append(sqlList,temp)
+			return err
+		}
+		sqlList = append(sqlList, temp)
 	}
-    db, err := util.OpenDB()
+	db, err := util.OpenDB()
 	if err != nil {
-		return  err
+		return err
 	}
-	err=util.ExecuteList(db,sqlList...)
+	err = util.ExecuteList(db, sqlList...)
 	return err
 }
 
@@ -262,42 +259,42 @@ func AddUser(data model.User) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("新增数据异常")
+			err = errors.New("新增数据异常")
 		}
 	}()
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
+		return err
 	}
 	count, err := db.Table("User").Where("AccountName", "=", data.AccountName).Count()
 	if err != nil {
 		return err
 	}
-    if count>0 {
+	if count > 0 {
 		return errors.New("帐号重复不得新增")
 	}
 	count, err = db.Table("User").Where("Email", "=", data.Email).Count()
 	if err != nil {
 		return err
 	}
-    if count>0 {
+	if count > 0 {
 		return errors.New("邮箱重复不得新增")
 	}
 	count, err = db.Table("User").Where("MobilePhone", "=", data.MobilePhone).Count()
 	if err != nil {
 		return err
 	}
-    if count>0 {
+	if count > 0 {
 		return errors.New("手机号重复不得新增")
 	}
 
-	timeStr:= util.GetNowStr()
-	data.CreateTime=timeStr
-	data.UpdateTime=timeStr
-	_,err = db.ExtraCols(consts.GetUserTabInfo()...).Insert(&data)
+	timeStr := util.GetNowStr()
+	data.CreateTime = timeStr
+	data.UpdateTime = timeStr
+	_, err = db.ExtraCols(consts.GetUserTabInfo()...).Insert(&data)
 	fmt.Println(db.LastSql())
 	if err != nil {
-		return  err
+		return err
 	}
 	return err
 }
@@ -306,172 +303,170 @@ func UpdateUser(data model.User) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("修改数据异常")
+			err = errors.New("修改数据异常")
 		}
 	}()
-	timeStr:= util.GetNowStr()
-	data.UpdateTime=timeStr
+	timeStr := util.GetNowStr()
+	data.UpdateTime = timeStr
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
+		return err
 	}
-	_,err = db.ExtraCols(consts.GetUserTabInfo()...).Where("ID",data.ID).Update(&data)
+	_, err = db.ExtraCols(consts.GetUserTabInfo()...).Where("ID", data.ID).Update(&data)
 	if err != nil {
-		return  err
+		return err
 	}
 	return err
 }
 
-func SetUserDept( userId,deptStr string) error {
+func SetUserDept(userId, deptStr string) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
-	}	
-	deptList:=make([]string,0)
-	if deptStr!="" {
-		deptList= strings.Split(deptStr, ",")
+		return err
 	}
-	hasmap:=make(map[string]int, 0)
-	oldhasmap:=make(map[string]int, 0)
-	for i:=0;i<len(deptList);i++ {
-		hasmap[deptList[i]]=1
+	deptList := make([]string, 0)
+	if deptStr != "" {
+		deptList = strings.Split(deptStr, ",")
+	}
+	hasmap := make(map[string]int, 0)
+	oldhasmap := make(map[string]int, 0)
+	for i := 0; i < len(deptList); i++ {
+		hasmap[deptList[i]] = 1
 	}
 	strSql := fmt.Sprintf("select ud.DepartmentId from  UserDepartment ud ,Department  d   where ud.DepartmentId=d.ID  and ud.UserId='%s'", userId)
 	data, err := db.Query(strSql)
 	if err != nil {
-		return  err
+		return err
 	}
 	var delList []string
 	for i := 0; i < len(data); i++ {
 		temp := util.ToString(data[i]["DepartmentId"])
-		if _,ok:=hasmap[temp];!ok {
-		
-			delList=append(delList,temp)
+		if _, ok := hasmap[temp]; !ok {
+
+			delList = append(delList, temp)
 		}
-		oldhasmap[temp]=0
+		oldhasmap[temp] = 0
 	}
 
+	var tempList []model.UserDepartment
+	timeStr := util.GetNowStr()
+	for key, _ := range hasmap {
+		if _, ok := oldhasmap[key]; !ok {
 
-	  var tempList []model.UserDepartment
-	  timeStr:= util.GetNowStr()
-      for key,_:=range hasmap {
-			if _,ok:=oldhasmap[key];!ok {
-		
-				newUuid := uuid.New()
-				newUuidStr := newUuid.String()
-				var temp	model.UserDepartment
-				temp.ID=newUuidStr
-				temp.UserId=userId
-				temp.DepartmentId=key
-				temp.CreateBy   ="admin"
-				temp.CreateTime  = timeStr
-				temp.UpdateBy     ="admin"
-				temp.UpdateTime  = timeStr
-				
-				tempList=append(tempList,temp)
-			}
+			newUuid := uuid.New()
+			newUuidStr := newUuid.String()
+			var temp model.UserDepartment
+			temp.ID = newUuidStr
+			temp.UserId = userId
+			temp.DepartmentId = key
+			temp.CreateBy = "admin"
+			temp.CreateTime = timeStr
+			temp.UpdateBy = "admin"
+			temp.UpdateTime = timeStr
 
+			tempList = append(tempList, temp)
 		}
-	
+
+	}
+
 	db.Begin()
-	for i:=0;i<len(delList);i++ {
-		_,err := db.Table("UserDepartment").Where("UserId", userId).Where("DepartmentId", delList[i]).Delete()
-		if (err!=nil) {
+	for i := 0; i < len(delList); i++ {
+		_, err := db.Table("UserDepartment").Where("UserId", userId).Where("DepartmentId", delList[i]).Delete()
+		if err != nil {
 			db.Rollback()
 			return err
 		}
 	}
-	for i:=0;i<len(tempList);i++ {
-		_,err := db.Insert(&(tempList[i]))
-		if (err!=nil) {
+	for i := 0; i < len(tempList); i++ {
+		_, err := db.Insert(&(tempList[i]))
+		if err != nil {
 			db.Rollback()
 			return err
 		}
 	}
 	db.Commit()
 	return err
-	
+
 }
 
-func SetUserRole( userId,roleStr string) error {
+func SetUserRole(userId, roleStr string) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err=errors.New("数据异常")
+			err = errors.New("数据异常")
 		}
 	}()
 	db, err := util.OpenDB()
 	if err != nil {
-		return  err
-	}	
-	roleList:=make([]string,0)
-	if roleStr!="" {
-		roleList= strings.Split(roleStr, ",")
+		return err
 	}
-	hasmap:=make(map[string]int, 0)
-	oldhasmap:=make(map[string]int, 0)
-	for i:=0;i<len(roleList);i++ {
-		hasmap[roleList[i]]=1
+	roleList := make([]string, 0)
+	if roleStr != "" {
+		roleList = strings.Split(roleStr, ",")
+	}
+	hasmap := make(map[string]int, 0)
+	oldhasmap := make(map[string]int, 0)
+	for i := 0; i < len(roleList); i++ {
+		hasmap[roleList[i]] = 1
 	}
 	strSql := fmt.Sprintf("select ud.RoleId from  UserRole ud ,Role  d   where ud.RoleId=d.ID  and ud.UserId='%s'", userId)
 	data, err := db.Query(strSql)
 	if err != nil {
-		return  err
+		return err
 	}
 	var delList []string
 	for i := 0; i < len(data); i++ {
 		temp := util.ToString(data[i]["RoleId"])
-		if _,ok:=hasmap[temp];!ok {
-		
-			delList=append(delList,temp)
+		if _, ok := hasmap[temp]; !ok {
+
+			delList = append(delList, temp)
 		}
-		oldhasmap[temp]=0
+		oldhasmap[temp] = 0
 	}
 
+	var tempList []model.UserRole
+	timeStr := util.GetNowStr()
+	for key, _ := range hasmap {
+		if _, ok := oldhasmap[key]; !ok {
 
-	  var tempList []model.UserRole
-	  timeStr:= util.GetNowStr()
-      for key,_:=range hasmap {
-			if _,ok:=oldhasmap[key];!ok {
-		
-				newUuid := uuid.New()
-				newUuidStr := newUuid.String()
-				var temp	model.UserRole
-				temp.ID=newUuidStr
-				temp.UserId=userId
-				temp.RoleId=key
-				temp.CreateBy   ="admin"
-				temp.CreateTime  = timeStr
-				temp.UpdateBy     ="admin"
-				temp.UpdateTime  = timeStr
-				
-				tempList=append(tempList,temp)
-			}
+			newUuid := uuid.New()
+			newUuidStr := newUuid.String()
+			var temp model.UserRole
+			temp.ID = newUuidStr
+			temp.UserId = userId
+			temp.RoleId = key
+			temp.CreateBy = "admin"
+			temp.CreateTime = timeStr
+			temp.UpdateBy = "admin"
+			temp.UpdateTime = timeStr
 
+			tempList = append(tempList, temp)
 		}
-	
+
+	}
+
 	db.Begin()
-	for i:=0;i<len(delList);i++ {
-		_,err := db.Table("UserRole").Where("UserId", userId).Where("RoleId", delList[i]).Delete()
-		if (err!=nil) {
+	for i := 0; i < len(delList); i++ {
+		_, err := db.Table("UserRole").Where("UserId", userId).Where("RoleId", delList[i]).Delete()
+		if err != nil {
 			db.Rollback()
 			return err
 		}
 	}
-	for i:=0;i<len(tempList);i++ {
-		_,err := db.Insert(&(tempList[i]))
-		if (err!=nil) {
+	for i := 0; i < len(tempList); i++ {
+		_, err := db.Insert(&(tempList[i]))
+		if err != nil {
 			db.Rollback()
 			return err
 		}
 	}
 	db.Commit()
 	return err
-	
+
 }

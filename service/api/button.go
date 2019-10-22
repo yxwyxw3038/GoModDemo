@@ -196,6 +196,7 @@ func GetAllButtonByMenuIdForTransfer(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
 		return
 	}
+
 	menuId := dists["menuId"][0]
 	if menuId == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
@@ -206,12 +207,13 @@ func GetAllButtonByMenuIdForTransfer(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
 		return
 	}
-
-	b, err := json.Marshal(*data)
-	s = string(b)
-	if err != nil {
-		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
-		return
+	if data != nil {
+		b, err := json.Marshal(*data)
+		s = string(b)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
 	}
 
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)

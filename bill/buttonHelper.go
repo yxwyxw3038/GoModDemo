@@ -117,7 +117,9 @@ func GetAllButtonByMenuIdForTransfer(menuId string) (*[]model.TransferModel, err
 	if err != nil {
 		return nil, err
 	}
-
+	if len(data) <= 0 {
+		return nil, err
+	}
 	var list []model.TransferModel
 	for i := 0; i < len(data); i++ {
 		var temp model.TransferModel
