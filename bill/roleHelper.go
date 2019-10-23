@@ -336,11 +336,11 @@ func SetMenuRole(roleId, menuStr string) error {
 			db.Rollback()
 			return err
 		}
-		_, err = db.Table("RoleMenuButton").Where("RoleId", roleId).Where("MenuId", delList[i]).Delete()
-		if err != nil {
-			db.Rollback()
-			return err
-		}
+		// _, err = db.Table("RoleMenuButton").Where("RoleId", roleId).Where("MenuId", delList[i]).Delete()
+		// if err != nil {
+		// 	db.Rollback()
+		// 	return err
+		// }
 	}
 	for i := 0; i < len(tempList); i++ {
 		_, err := db.Insert(&(tempList[i]))
