@@ -239,19 +239,44 @@ func DeleteUser(idList []string) error {
 	if len(idList) <= 0 {
 		return nil
 	}
-	var sqlList []string
-	for _, v := range idList {
-		temp, err := util.DelSqlByField("User", "ID", v)
-		if err != nil {
-			return err
-		}
-		sqlList = append(sqlList, temp)
-	}
+	// var sqlList []string
+	// for _, v := range idList {
+	// 	temp, err := util.DelSqlByField("User", "ID", v)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	sqlList = append(sqlList, temp)
+	// }
+	// db, err := util.OpenDB()
+	// if err != nil {
+	// 	return err
+	// }
+	// err = util.ExecuteList(db, sqlList...)
+
 	db, err := util.OpenDB()
 	if err != nil {
 		return err
 	}
-	err = util.ExecuteList(db, sqlList...)
+	db.Begin()
+	for _, v := range idList {
+		_, err = db.Table("User").Where("ID", v).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		_, err = db.Table("UserRole").Where("UserId", v).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		_, err = db.Table("UserDepartment").Where("UserId", v).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+	}
+	db.Commit()
+
 	return err
 }
 

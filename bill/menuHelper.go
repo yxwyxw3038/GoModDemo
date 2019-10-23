@@ -235,21 +235,36 @@ func DeleteMenu(idList []string) error {
 	if len(idList) <= 0 {
 		return nil
 	}
-	var sqlList []string
-	for _, v := range idList {
-		temp, err := util.DelSqlByField("Menu", "ID", v)
-		if err != nil {
-			return err
-		}
-		sqlList = append(sqlList, temp)
-	}
+	// var sqlList []string
+	// for _, v := range idList {
+	// 	temp, err := util.DelSqlByField("Menu", "ID", v)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	sqlList = append(sqlList, temp)
+	// }
 	db, err := util.OpenDB()
 	if err != nil {
 		return err
 	}
 	db.Begin()
-	for _, v := range sqlList {
-		_, err := db.Execute(v)
+	for _, v := range idList {
+		_, err = db.Table("Menu").Where("ID", v).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		_, err = db.Table("MenuButton").Where("MenuId", v).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		_, err = db.Table("RoleMenu").Where("MenuId", v).Delete()
+		if err != nil {
+			db.Rollback()
+			return err
+		}
+		_, err = db.Table("RoleMenuButton").Where("MenuId", v).Delete()
 		if err != nil {
 			db.Rollback()
 			return err
