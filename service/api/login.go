@@ -1,16 +1,17 @@
 package api
 
 import (
+	"GoModDemo/bill"
 	"GoModDemo/consts"
+	"GoModDemo/model"
 	"GoModDemo/service/authentication"
 	"GoModDemo/util"
-	"GoModDemo/model"
 	"encoding/base64"
-	"GoModDemo/bill"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
-	"encoding/json"
+
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 )
@@ -34,7 +35,7 @@ func Login(c *gin.Context) {
 	logger := util.InitZapLog()
 	logger.Debug("开始登录验证！")
 	appG := util.Gin{C: c}
-	defer func(){
+	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 		}
@@ -83,53 +84,54 @@ func Login(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 		return
 	}
-	var tempUser  model.User
-	var user  *model.User
-	isRedis:=false
-	tempStr,err:=util.GetRedisHasString("TaskUserInfoByAccountName",username)
+	var tempUser model.User
+	var user *model.User
+	isRedis := false
+	tempStr, err := util.GetRedisHasString("TaskUserInfoByAccountName", username)
 	if err == nil {
-		isRedis=true
+		isRedis = true
 	}
 	if isRedis {
 
 		err = json.Unmarshal([]byte(tempStr), &tempUser)
 		if err != nil {
-			isRedis=false
+			isRedis = false
 		}
-		user=&tempUser
-	} 
-	if !isRedis{
-		user, err =bill.GetUserInfoByAccountName(username)
+		user = &tempUser
+	}
+	if !isRedis {
+		user, err = bill.GetUserInfoByAccountName(username)
 		if err != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 			return
 		}
 	}
-	
-   createTime,_:=util.ParseAnyToStr((*user).CreateTime)
-   updateTime,_:=util.ParseAnyToStr((*user).UpdateTime)
-   var  tokenUser = model.TokenUser {
-		ID:(*user).ID,
-		AccountName :(*user).AccountName,
-		PassWord   :"",
-		RealName    :(*user).RealName,
-		MobilePhone :(*user).MobilePhone,
-		Email       :(*user).Email,
-		Description :"",
-		CreateBy    :"",
-		CreateTime  :createTime,
-		UpdateBy    :"",
-		UpdateTime  :updateTime,
-		IsAble      :(*user).IsAble,
-		IfChangePwd :(*user).IfChangePwd,
-		Token:token,
+
+	createTime, _ := util.ParseAnyToStr((*user).CreateTime)
+	updateTime, _ := util.ParseAnyToStr((*user).UpdateTime)
+	var tokenUser = model.TokenUser{
+		User: model.User{ID: (*user).ID,
+			AccountName: (*user).AccountName,
+			PassWord:    "",
+			RealName:    (*user).RealName,
+			MobilePhone: (*user).MobilePhone,
+			Email:       (*user).Email,
+			Description: "",
+			CreateBy:    "",
+			CreateTime:  createTime,
+			UpdateBy:    "",
+			UpdateTime:  updateTime,
+			IsAble:      (*user).IsAble,
+			IfChangePwd: (*user).IfChangePwd,
+		},
+		Token: token,
 	}
 	b, err := json.Marshal(tokenUser)
 	if err != nil {
 		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 		return
 	}
-	s:= string(b)
+	s := string(b)
 	// appG.Response(http.StatusOK, consts.SUCCESS, map[string]string{
 	//     "token": token,
 	// })

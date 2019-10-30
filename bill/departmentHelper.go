@@ -209,3 +209,56 @@ func GetDeptByID(ID string) (*model.Department, error) {
 	data[0].UpdateTime, _ = util.ParseAnyToStr(data[0].UpdateTime)
 	return &data[0], nil
 }
+func GetAllDeptViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.DeptView, int, error) {
+	list := make([]model.DeptView, 0)
+	whereSql, err := util.GetWhereSqlOrderLimt("DeptView", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	if err != nil {
+		return nil, 0, err
+	}
+	whereSqlCount, err := util.GetWhereSqlCount("Department", ParameterStr)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	fmt.Println(whereSqlCount)
+	fmt.Println(whereSql)
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, 0, err
+	}
+
+	dataCount, err := db.Query(whereSqlCount)
+	if err != nil {
+		return nil, 0, err
+	}
+	if len(dataCount) <= 0 {
+		return &list, 0, nil
+	}
+	num := util.ToInt(dataCount[0]["Num"])
+	data, err := db.Query(whereSql)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if len(data) <= 0 {
+		return &list, 0, nil
+	}
+	for i := 0; i < len(data); i++ {
+		var temp model.DeptView
+		temp.ID = util.ToString(data[i]["ID"])
+		temp.Name = util.ToString(data[i]["Name"])
+		temp.ParentId = util.ToString(data[i]["ParentId"])
+		temp.ParentName = util.ToString(data[i]["ParentName"])
+		temp.Description = util.ToString(data[i]["Description"])
+		temp.CreateBy = util.ToString(data[i]["CreateBy"])
+		temp.UpdateBy = util.ToString(data[i]["UpdateBy"])
+		createTime, _ := util.AnyToTimeStr(data[i]["CreateTime"])
+		updateTime, _ := util.AnyToTimeStr(data[i]["UpdateTime"])
+		temp.CreateTime = createTime
+		temp.UpdateTime = updateTime
+		temp.IsAble = util.ToInt(data[i]["IsAble"])
+		temp.Sort = util.ToInt(data[i]["Sort"])
+		list = append(list, temp)
+	}
+	return &list, num, nil
+}
