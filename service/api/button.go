@@ -477,3 +477,33 @@ func GetButtonByID(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 
 }
+
+// GetButtonAllCount 获取按钮总条数
+// @Summary 获取按钮总条数
+// @Tags Button
+// @Description 获取按钮总条数 请求主体: Null  成功输出 int
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{int},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetButtonAllCount [post]
+func GetButtonAllCount(c *gin.Context) {
+	appG := util.Gin{C: c}
+	errMsg := ""
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	data, err := bill.GetButtonAllCount()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, data)
+}

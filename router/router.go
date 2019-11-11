@@ -54,7 +54,7 @@ func InitRouter() *gin.Engine {
 	buttonOne.POST("DeleteButton", api.DeleteButton)
 	buttonOne.POST("GetAllButtonInfo", api.GetAllButtonInfo)
 	buttonOne.POST("GetButtonByID", api.GetButtonByID)
-
+	buttonOne.POST("GetButtonAllCount", api.GetButtonAllCount)
 	deptOne := router.Group("/Dept")
 	deptOne.POST("GetAllDeptForTransfer", api.GetAllDeptForTransfer)
 	deptOne.POST("GetDeptByUserIdForTransfer", api.GetDeptByUserIdForTransfer)

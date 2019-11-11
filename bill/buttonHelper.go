@@ -307,3 +307,25 @@ func GetButtonByID(ID string) (*model.Button, error) {
 	data[0].UpdateTime, _ = util.ParseAnyToStr(data[0].UpdateTime)
 	return &data[0], nil
 }
+func GetButtonAllCount() (int, error) {
+	whereSqlCount, err := util.GetWhereSqlCount("Button", "")
+	if err != nil {
+		return 0, err
+	}
+
+	fmt.Println(whereSqlCount)
+	db, err := util.OpenDB()
+	if err != nil {
+		return 0, err
+	}
+
+	dataCount, err := db.Query(whereSqlCount)
+	if err != nil {
+		return 0, err
+	}
+	if len(dataCount) <= 0 {
+		return 0, nil
+	}
+	num := util.ToInt(dataCount[0]["Num"])
+	return num, nil
+}
