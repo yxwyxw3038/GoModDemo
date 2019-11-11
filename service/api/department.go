@@ -3,6 +3,7 @@ package api
 import (
 	"GoModDemo/consts"
 	"GoModDemo/model"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -282,6 +283,7 @@ func AddDept(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
+	fmt.Println(str)
 	var date model.Department
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
@@ -377,4 +379,87 @@ func GetDeptByID(c *gin.Context) {
 	s := string(b)
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 
+}
+
+// GetCascaderDept 获取部门信息
+// @Summary 获取部门信息
+// @Tags Dept
+// @Description 获取部门信息 请求主体: Null  成功输出[]CascaderModel
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{[]CascaderModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetCascaderDept [post]
+func GetCascaderDept(c *gin.Context) {
+	appG := util.Gin{C: c}
+	errMsg := ""
+	s := ""
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+
+	isOk, err := util.RedisExists("GetCascaderDept")
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	if isOk {
+		s, err = util.GetRedisString("GetCascaderDept")
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+
+	} else {
+		data, err := bill.GetCascaderDept()
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		b, err := json.Marshal(*data)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		s = string(b)
+		err = util.SetRedisAnyEx("GetCascaderDept", s, "180")
+
+		if err != nil {
+			errMsg = err.Error()
+		}
+
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
+}
+
+// GetDeptAllCount 获取部门总条数
+// @Summary 获取部门总条数
+// @Tags Dept
+// @Description 获取部门总条数 请求主体: Null  成功输出 int
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{int},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetDeptAllCount [post]
+func GetDeptAllCount(c *gin.Context) {
+	appG := util.Gin{C: c}
+	errMsg := ""
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	data, err := bill.GetDeptAllCount()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, data)
 }

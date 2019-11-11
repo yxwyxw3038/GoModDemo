@@ -145,13 +145,13 @@ func GetAllMenuViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]mode
 	return &list, num, nil
 }
 
-func GetCascaderMenu() (*[]model.CascaderMenu, error) {
+func GetCascaderMenu() (*[]model.CascaderModel, error) {
 
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
 	}
-	list := make([]model.CascaderMenu, 0)
+	list := make([]model.CascaderModel, 0)
 	menuList := make([]model.Menu, 0)
 	err = db.Table(&menuList).Select()
 	if err != nil {
@@ -161,7 +161,7 @@ func GetCascaderMenu() (*[]model.CascaderMenu, error) {
 		return &list, nil
 	}
 	for i := 0; i < len(menuList); i++ {
-		var temp model.CascaderMenu
+		var temp model.CascaderModel
 		temp.Value = util.ToString(menuList[i].ID)
 		temp.Label = util.ToString(menuList[i].Name)
 		list = append(list, temp)
@@ -170,11 +170,11 @@ func GetCascaderMenu() (*[]model.CascaderMenu, error) {
 	return &list, nil
 
 }
-func generateCascaderMenu(list *[]model.Menu) *[]model.CascaderMenu {
-	listTemp := make([]model.CascaderMenu, 0)
+func generateCascaderMenu(list *[]model.Menu) *[]model.CascaderModel {
+	listTemp := make([]model.CascaderModel, 0)
 	for i := 0; i < len(*list); i++ {
 		if (*list)[i].ParentId == "0" {
-			var temp model.CascaderMenu
+			var temp model.CascaderModel
 			temp.Value = util.ToString((*list)[i].ID)
 			temp.Label = util.ToString((*list)[i].Name)
 			node := generateCascaderMenuNext((*list)[i].ID, list)
@@ -186,11 +186,11 @@ func generateCascaderMenu(list *[]model.Menu) *[]model.CascaderMenu {
 	}
 	return &listTemp
 }
-func generateCascaderMenuNext(id string, list *[]model.Menu) *[]model.CascaderMenu {
-	listTemp := make([]model.CascaderMenu, 0)
+func generateCascaderMenuNext(id string, list *[]model.Menu) *[]model.CascaderModel {
+	listTemp := make([]model.CascaderModel, 0)
 	for i := 0; i < len(*list); i++ {
 		if (*list)[i].ParentId == id {
-			var temp model.CascaderMenu
+			var temp model.CascaderModel
 			temp.Value = util.ToString((*list)[i].ID)
 			temp.Label = util.ToString((*list)[i].Name)
 			node := generateCascaderMenuNext((*list)[i].ID, list)

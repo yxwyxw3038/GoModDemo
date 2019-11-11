@@ -64,6 +64,8 @@ func InitRouter() *gin.Engine {
 	deptOne.POST("GetAllDeptInfo", api.GetAllDeptInfo)
 	deptOne.POST("GetAllDeptViewInfo", api.GetAllDeptViewInfo)
 	deptOne.POST("GetDeptByID", api.GetDeptByID)
+	deptOne.POST("GetCascaderDept", api.GetCascaderDept)
+	deptOne.POST("GetDeptAllCount", api.GetDeptAllCount)
 	roleOne := router.Group("/Role")
 	roleOne.POST("GetAllRoleForTransfer", api.GetAllRoleForTransfer)
 	roleOne.POST("GetRoleByUserIdForTransfer", api.GetRoleByUserIdForTransfer)

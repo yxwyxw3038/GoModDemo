@@ -160,14 +160,14 @@ func GetAllMenuViewInfo(c *gin.Context) {
 	appG.Response1(http.StatusOK, consts.SUCCESS, "", s, num)
 }
 
-// GetCascaderMenu 根据用户ID获取用户菜单信息
-// @Summary 根据用户ID获取用户菜单信息
+// GetCascaderMenu 根据菜单信息
+// @Summary 根据菜单信息
 // @Tags Menu
-// @Description 根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree
+// @Description 根据菜单信息 请求主体: Null  成功输出[]CascaderModel
 // @Accept mpfd
 // @Param Token formData string true "Token"
 // @Produce  json
-// @Success 200 {string} json "{"Code":1,"Data":{[]MenuTree},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Success 200 {string} json "{"Code":1,"Data":{[]CascaderModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
 // @Router  /GetCascaderMenu [post]
 func GetCascaderMenu(c *gin.Context) {
 	appG := util.Gin{C: c}

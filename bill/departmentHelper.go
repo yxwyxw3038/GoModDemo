@@ -162,7 +162,7 @@ func AddDept(data model.Department) error {
 	if err != nil {
 		return err
 	}
-	_, err = db.ExtraCols(consts.GetTabInfo()...).Insert(&data)
+	_, err = db.ExtraCols(consts.GetDeptInfo()...).Insert(&data)
 	if err != nil {
 		return err
 	}
@@ -182,7 +182,7 @@ func UpdateDept(data model.Department) error {
 	if err != nil {
 		return err
 	}
-	_, err = db.ExtraCols(consts.GetTabInfo()...).Where("ID", data.ID).Update(&data)
+	_, err = db.ExtraCols(consts.GetDeptInfo()...).Where("ID", data.ID).Update(&data)
 	if err != nil {
 		return err
 	}
@@ -261,4 +261,87 @@ func GetAllDeptViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]mode
 		list = append(list, temp)
 	}
 	return &list, num, nil
+}
+
+func GetCascaderDept() (*[]model.CascaderModel, error) {
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	list := make([]model.CascaderModel, 0)
+	var temp model.CascaderModel
+	temp.Value = "0"
+	temp.Label = "组织机构"
+	list = append(list, temp)
+	listNext := make([]model.CascaderModel, 0)
+	deptList := make([]model.Department, 0)
+	err = db.Table(&deptList).Select()
+	if err != nil {
+		return nil, err
+	}
+	if len(deptList) <= 0 {
+		return &list, nil
+	}
+	list = make([]model.CascaderModel, 0)
+
+	listNext = *generateCascaderDept(&deptList)
+	temp.Children = listNext
+	list = append(list, temp)
+	return &list, nil
+
+}
+func generateCascaderDept(list *[]model.Department) *[]model.CascaderModel {
+	listTemp := make([]model.CascaderModel, 0)
+	for i := 0; i < len(*list); i++ {
+		if (*list)[i].ParentId == "0" {
+			var temp model.CascaderModel
+			temp.Value = util.ToString((*list)[i].ID)
+			temp.Label = util.ToString((*list)[i].Name)
+			node := generateCascaderDeptNext((*list)[i].ID, list)
+			if node != nil && len(*node) > 0 {
+				temp.Children = *node
+			}
+			listTemp = append(listTemp, temp)
+		}
+	}
+	return &listTemp
+}
+func generateCascaderDeptNext(id string, list *[]model.Department) *[]model.CascaderModel {
+	listTemp := make([]model.CascaderModel, 0)
+	for i := 0; i < len(*list); i++ {
+		if (*list)[i].ParentId == id && (*list)[i].ID != "0" {
+			var temp model.CascaderModel
+			temp.Value = util.ToString((*list)[i].ID)
+			temp.Label = util.ToString((*list)[i].Name)
+			node := generateCascaderDeptNext((*list)[i].ID, list)
+			if node != nil && len(*node) > 0 {
+				temp.Children = *node
+			}
+			listTemp = append(listTemp, temp)
+		}
+	}
+	return &listTemp
+}
+
+func GetDeptAllCount() (int, error) {
+	whereSqlCount, err := util.GetWhereSqlCount("Department", "")
+	if err != nil {
+		return 0, err
+	}
+
+	fmt.Println(whereSqlCount)
+	db, err := util.OpenDB()
+	if err != nil {
+		return 0, err
+	}
+
+	dataCount, err := db.Query(whereSqlCount)
+	if err != nil {
+		return 0, err
+	}
+	if len(dataCount) <= 0 {
+		return 0, nil
+	}
+	num := util.ToInt(dataCount[0]["Num"])
+	return num, nil
 }
