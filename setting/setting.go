@@ -7,7 +7,12 @@ import (
 )
 
 type App struct {
-	JwtSecret string
+	JwtSecret  string
+	JumpTime   int32
+	DelayTime  int32
+	OffsetTime int32
+	TaskTime   int32
+	TaskTime1  int32
 }
 type Server struct {
 	Ip   string
