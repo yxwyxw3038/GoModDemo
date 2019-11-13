@@ -15,8 +15,8 @@ type CascaderModel struct {
 	Children []CascaderModel `json:"children"`
 }
 
-type MenuView struct {
-	Menu
-	ParentName string `:"ParentName"` // 父级菜单名
+// type MenuView struct {
+// 	Menu
+// 	ParentName string `:"ParentName"` // 父级菜单名
 
-}
+// }

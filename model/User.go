@@ -20,8 +20,8 @@ type TokenUser struct {
 	Token string
 }
 
-type UserView struct {
-	User
-	DepartmentName string `:"DepartmentName"`
-	RoleName       string `:"DepartmRoleNameentName"`
-}
+// type UserView struct {
+// 	User
+// 	DepartmentName string `:"DepartmentName"`
+// 	RoleName       string `:"RoleName"`
+// }

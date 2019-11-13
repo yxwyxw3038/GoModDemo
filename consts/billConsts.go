@@ -21,3 +21,9 @@ func GetTabInfo() []string {
 	info := []string{"Description", "IsAble", "CreateBy", "UpdateBy"}
 	return info
 }
+
+func GetUserTokenInfo() []string {
+
+	info := []string{"IsLoginOut", "Port", "Address", "CreateTime", "UpdateTime", "LoginOutTime"}
+	return info
+}

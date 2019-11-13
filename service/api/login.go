@@ -35,6 +35,9 @@ func Login(c *gin.Context) {
 	logger := util.InitZapLog()
 	logger.Debug("开始登录验证！")
 	appG := util.Gin{C: c}
+	ip := appG.C.ClientIP()
+
+	fmt.Printf(ip)
 	defer func() {
 		if p := recover(); p != nil {
 			appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
@@ -106,7 +109,11 @@ func Login(c *gin.Context) {
 			return
 		}
 	}
-
+	err = bill.AddUserToken(ip, "", user.ID, token)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
+		return
+	}
 	createTime, _ := util.ParseAnyToStr((*user).CreateTime)
 	updateTime, _ := util.ParseAnyToStr((*user).UpdateTime)
 	var tokenUser = model.TokenUser{

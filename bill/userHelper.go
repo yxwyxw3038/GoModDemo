@@ -495,3 +495,32 @@ func SetUserRole(userId, roleStr string) error {
 	return err
 
 }
+func AddUserToken(ip, post, userId, token string) error {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("数据异常")
+		}
+	}()
+	db, err := util.OpenDB()
+	if err != nil {
+		return err
+	}
+	var data model.UserToken
+	timeStr := util.GetNowStr()
+	data.CreateTime = timeStr
+	data.UpdateTime = timeStr
+	data.LoginOutTime = timeStr
+	data.Token = token
+	data.UserId = userId
+	data.Address = ip
+	data.Port = post
+	data.IsLoginOut = 0
+	_, err = db.ExtraCols(consts.GetUserTokenInfo()...).Insert(&data)
+	fmt.Println(db.LastSql())
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
