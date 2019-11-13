@@ -12,7 +12,7 @@ import (
 
 func GetAllBillNoInfo(BillNoStr string, PageSize, CurrentPage int) (*[]model.BillNo, int, error) {
 	list := make([]model.BillNo, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("BillNo", BillNoStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	whereSql, err := util.GetWhereSqlOrderLimt("BillNo", BillNoStr, "UpdateTime", consts.DESC, PageSize, CurrentPage)
 	if err != nil {
 		return nil, 0, err
 	}
