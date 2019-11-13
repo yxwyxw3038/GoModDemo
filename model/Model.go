@@ -24,6 +24,12 @@ type TransferModel struct {
 	Title    string `json:"title"`
 	Disabled bool   `json:"disabled"`
 }
+type TreeModel struct {
+	ID       string      `json:"id"`
+	Label    string      `json:"label"`
+	RealName string      `json:"RealName"`
+	Children []TreeModel `json:"children"`
+}
 type MenuButton struct {
 	ID         string `:"ID"`         // ID
 	MenuId     string `:"MenuId"`     // 菜单ID

@@ -77,5 +77,12 @@ func InitRouter() *gin.Engine {
 	roleOne.POST("UpdateRole", api.UpdateRole)
 	roleOne.POST("DeleteRole", api.DeleteRole)
 	roleOne.POST("SetButtonByMenuIdRoleId", api.SetButtonByMenuIdRoleId)
+	parameterOne := router.Group("/Parameter")
+	parameterOne.POST("GetTreeParameter", api.GetTreeParameter)
+	parameterOne.POST("GetAllParameterInfo", api.GetAllParameterInfo)
+	parameterOne.POST("GetParameterByID", api.GetParameterByID)
+	parameterOne.POST("AddParameter", api.AddParameter)
+	parameterOne.POST("UpdateParameter", api.UpdateParameter)
+	parameterOne.POST("DeleteParameter", api.DeleteParameter)
 	return router
 }

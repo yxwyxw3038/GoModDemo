@@ -160,12 +160,12 @@ func GetCascaderMenu() (*[]model.CascaderModel, error) {
 	if len(menuList) <= 0 {
 		return &list, nil
 	}
-	for i := 0; i < len(menuList); i++ {
-		var temp model.CascaderModel
-		temp.Value = util.ToString(menuList[i].ID)
-		temp.Label = util.ToString(menuList[i].Name)
-		list = append(list, temp)
-	}
+	// for i := 0; i < len(menuList); i++ {
+	// 	var temp model.CascaderModel
+	// 	temp.Value = util.ToString(menuList[i].ID)
+	// 	temp.Label = util.ToString(menuList[i].Name)
+	// 	list = append(list, temp)
+	// }
 	list = *generateCascaderMenu(&menuList)
 	return &list, nil
 
