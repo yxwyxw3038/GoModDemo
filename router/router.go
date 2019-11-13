@@ -84,5 +84,11 @@ func InitRouter() *gin.Engine {
 	parameterOne.POST("AddParameter", api.AddParameter)
 	parameterOne.POST("UpdateParameter", api.UpdateParameter)
 	parameterOne.POST("DeleteParameter", api.DeleteParameter)
+	billNoOne := router.Group("/BillNo")
+	billNoOne.POST("GetAllBillNoInfo", api.GetAllBillNoInfo)
+	billNoOne.POST("GetBillNoByID", api.GetBillNoByID)
+	billNoOne.POST("AddBillNo", api.AddBillNo)
+	billNoOne.POST("UpdateBillNo", api.UpdateBillNo)
+	billNoOne.POST("DeleteBillNo", api.DeleteBillNo)
 	return router
 }
