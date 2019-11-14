@@ -57,3 +57,37 @@ func TaskUserInfoByAccountName(logger *zap.Logger) {
 	logger.Debug("结束写入用户信息缓存")
 
 }
+func TaskParameter(logger *zap.Logger) {
+	defer func() {
+		if p := recover(); p != nil {
+			logger.Error("异常")
+		}
+	}()
+	logger.Sync()
+	Key := "TaskParameter"
+	times := strconv.FormatInt(int64(setting.AppSetting.TaskTime1+setting.AppSetting.OffsetTime), 10)
+	logger.Debug("开始写入参数缓存")
+	db, err := util.OpenDB()
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	var data []model.Parameter
+	err = db.Table(&data).Select()
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	b, err := json.Marshal(data)
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	s := string(b)
+	err = util.SetRedisAnyEx(Key, s, times)
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	logger.Debug("结束写入参数缓存")
+}

@@ -188,16 +188,30 @@ func GetBillNo(Code string) (string, error) {
 	newTime, timeStr := util.GetNowAndStr()
 	data[0].CreateTime, _ = util.ParseAnyToStr(data[0].CreateTime)
 	data[0].UpdateTime = timeStr
-	data[0].CurrentTime = timeStr
-	data[0].CurrentId = data[0].CurrentId + 1
+
+	oldCurrentId := data[0].CurrentId
 	ymd, err := util.GetMaskDataStr(data[0].MaskInfo, newTime)
 	if err != nil {
 		return "", err
 	}
-
+	oldTime, err := util.ParseAny(data[0].CurrentTime)
+	if err != nil {
+		return "", err
+	}
+	ymdOld, err := util.GetMaskDataStr(data[0].MaskInfo, oldTime)
+	if err != nil {
+		return "", err
+	}
+	if ymdOld != ymd {
+		data[0].CurrentId = 1
+	} else {
+		data[0].CurrentId++
+	}
 	ends := fmt.Sprintf("%0"+strconv.Itoa(data[0].EndLength)+"d", data[0].CurrentId)
 	str = data[0].Code + ymd + ends
-	count, err := db.ExtraCols(consts.GetBillNoInfo()...).Where("ID", data[0].ID).Where("CurrentId", data[0].CurrentId-1).Update(&data)
+	data[0].CurrentTime = timeStr
+	data[0].CurrentBillNo = str
+	count, err := db.ExtraCols(consts.GetBillNoInfo()...).Where("ID", data[0].ID).Where("CurrentId", oldCurrentId).Update(&data)
 	if err != nil {
 		return "", err
 	}

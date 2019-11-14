@@ -123,6 +123,7 @@ func taskRun() {
 	time.Sleep(times * time.Second)
 	var wait util.WaitGroupWrapper
 	wait.Wrap(taskUserInfoByAccountName)
+	wait.Wrap(taskParameter)
 	wait.Wait()
 }
 func taskUserInfoByAccountName() {
@@ -152,6 +153,46 @@ func taskUserInfoByAccountName() {
 		dataSync.mutex.RUnlock()
 		if isSync {
 			TaskUserInfoByAccountName(logger)
+		}
+	}
+	run()
+	ticker := time.NewTicker(times * time.Second)
+	for {
+		select {
+		case <-ticker.C:
+			run()
+		}
+	}
+
+}
+
+func taskParameter() {
+	defer dataSync.mutex.RUnlock()
+	logger := util.InitZapLog()
+	defer func() {
+		if p := recover(); p != nil {
+			logger.Error("异常")
+		}
+	}()
+
+	times := time.Duration(setting.AppSetting.TaskTime1)
+	// for {
+	// 	dataSync.mutex.RLock()
+	// 	isSync := dataSync.isSync
+	// 	dataSync.mutex.RUnlock()
+	// 	if isSync {
+	// 		TaskUserInfoByAccountName(logger)
+	// 	}
+
+	// 	time.Sleep(times * time.Second)
+
+	// }
+	run := func() {
+		dataSync.mutex.RLock()
+		isSync := dataSync.isSync
+		dataSync.mutex.RUnlock()
+		if isSync {
+			TaskParameter(logger)
 		}
 	}
 	run()

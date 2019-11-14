@@ -279,3 +279,75 @@ func UpdateParameter(c *gin.Context) {
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
 }
+
+// GetParameterSelect 根据参数Code获取下级参数
+// @Summary 根据参数Code获取下级参数
+// @Tags Parameter
+// @Description 根据参数Code获取下级参数 请求主体: base64(ID=aaaa) 成功输出[]CascaderListModel
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param ID formData string true "ID"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{[]CascaderListModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetParameterSelect [post]
+func GetParameterSelect(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "根据参数Code获取下级参数", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	s := ""
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	Code := dists["Code"][0]
+	if Code == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	key := "TaskParameter"
+	isOk, err := util.RedisExists(key)
+	var temp *[]model.CascaderListModel
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	if isOk {
+		s, err = util.GetRedisString(key)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		if s == "" {
+			appG.Response(http.StatusOK, consts.SUCCESS, "", s)
+			return
+		}
+		dataList := make([]model.Parameter, 0)
+
+		err = json.Unmarshal([]byte(s), &dataList)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		temp, err = bill.GetParameterRedisSelect(Code, &dataList)
+
+	} else {
+		temp, err = bill.GetParameterSelect(Code)
+
+	}
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	b, err := json.Marshal(*temp)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	s = string(b)
+	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
+
+}

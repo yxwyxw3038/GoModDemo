@@ -203,3 +203,50 @@ func UpdateParameter(data model.Parameter) error {
 	}
 	return err
 }
+func GetParameterSelect(Code string) (*[]model.CascaderListModel, error) {
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	list := make([]model.CascaderListModel, 0)
+	strSql := fmt.Sprintf("select p.Code,p.Name from Parameter  p where p.ParentId in (select p2.ID from  Parameter as p2 where p2.Code='%s') ", Code)
+	data, err := db.Query(strSql)
+	if err != nil {
+		return nil, err
+	}
+	if len(data) <= 0 {
+		return &list, nil
+	}
+	for i := 0; i < len(data); i++ {
+		var temp model.CascaderListModel
+		temp.Value = util.ToString(data[i]["Code"])
+		temp.Label = util.ToString(data[i]["Name"])
+
+		list = append(list, temp)
+	}
+	return &list, nil
+}
+func GetParameterRedisSelect(Code string, dataList *[]model.Parameter) (*[]model.CascaderListModel, error) {
+
+	list := make([]model.CascaderListModel, 0)
+
+	if len(*dataList) <= 0 {
+		return &list, nil
+	}
+	id := ""
+	for i := 0; i < len(*dataList); i++ {
+		if (*dataList)[i].Code == Code {
+			id = (*dataList)[i].ID
+			break
+		}
+	}
+	for i := 0; i < len(*dataList); i++ {
+		if (*dataList)[i].ParentId == id {
+			var temp model.CascaderListModel
+			temp.Value = (*dataList)[i].Code
+			temp.Label = (*dataList)[i].Name
+			list = append(list, temp)
+		}
+	}
+	return &list, nil
+}
