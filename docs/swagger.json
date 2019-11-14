@@ -10,6 +10,45 @@
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/AddBillNo": {
+            "post": {
+                "description": "新增单据号信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BillNo"
+                ],
+                "summary": "新增单据号信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/AddButton": {
             "post": {
                 "description": "新增按钮信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -127,6 +166,45 @@
                 }
             }
         },
+        "/AddParameter": {
+            "post": {
+                "description": "新增参数信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "新增参数信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/AddRole": {
             "post": {
                 "description": "新增权限信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -179,6 +257,45 @@
                     "User"
                 ],
                 "summary": "新增用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/DeleteBillNo": {
+            "post": {
+                "description": "删除单据号信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BillNo"
+                ],
+                "summary": "删除单据号信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -322,6 +439,45 @@
                 }
             }
         },
+        "/DeleteParameter": {
+            "post": {
+                "description": "删除参数信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "删除参数信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/DeleteRole": {
             "post": {
                 "description": "删除权限信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -393,6 +549,59 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetAllBillNoInfo": {
+            "post": {
+                "description": "前台条件获取单据号信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]BillNo",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BillNo"
+                ],
+                "summary": "前台条件获取单据号信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]BillNo},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -602,6 +811,59 @@
                 }
             }
         },
+        "/GetAllDeptViewInfo": {
+            "post": {
+                "description": "前台条件获取单位信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]Department",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dept"
+                ],
+                "summary": "前台条件获取单位信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]DeptView},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetAllMenuInfo": {
             "post": {
                 "description": "前台条件获取菜单信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]Menu",
@@ -701,6 +963,59 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{[]MenuView},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetAllParameterInfo": {
+            "post": {
+                "description": "前台条件获取参数信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]Parameter",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "前台条件获取参数信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]Parameter},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Parameter\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -899,6 +1214,77 @@
                 }
             }
         },
+        "/GetBillNoByID": {
+            "post": {
+                "description": "根据权限ID获取单据号信息 请求主体: base64(ID=aaaa) 成功输出BillNo",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BillNo"
+                ],
+                "summary": "根据权限ID获取单据号信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{BillNo},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetButtonAllCount": {
+            "post": {
+                "description": "获取按钮总条数 请求主体: Null  成功输出 int",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Button"
+                ],
+                "summary": "获取按钮总条数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{int},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetButtonByID": {
             "post": {
                 "description": "根据权限ID获取按钮信息 请求主体: base64(ID=aaaa) 成功输出Button",
@@ -1069,9 +1455,9 @@
                 }
             }
         },
-        "/GetCascaderMenu": {
+        "/GetCascaderDept": {
             "post": {
-                "description": "根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree",
+                "description": "获取部门信息 请求主体: Null  成功输出[]CascaderModel",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -1079,9 +1465,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Menu"
+                    "Dept"
                 ],
-                "summary": "根据用户ID获取用户菜单信息",
+                "summary": "获取部门信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -1093,7 +1479,71 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"Code\":1,\"Data\":{[]MenuTree},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "description": "{\"Code\":1,\"Data\":{[]CascaderModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetCascaderMenu": {
+            "post": {
+                "description": "根据菜单信息 请求主体: Null  成功输出[]CascaderModel",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "根据菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]CascaderModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetDeptAllCount": {
+            "post": {
+                "description": "获取部门总条数 请求主体: Null  成功输出 int",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dept"
+                ],
+                "summary": "获取部门总条数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{int},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -1142,7 +1592,7 @@
         },
         "/GetDeptByUserIdForTransfer": {
             "post": {
-                "description": "根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串",
+                "description": "根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -1150,9 +1600,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Role"
+                    "Dept"
                 ],
-                "summary": "根据用户ID获取用户权限信息",
+                "summary": "根据用户ID获取用户部门信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -1275,6 +1725,84 @@
                 }
             }
         },
+        "/GetParameterByID": {
+            "post": {
+                "description": "根据参数ID获取参数信息 请求主体: base64(ID=aaaa) 成功输出Parameter",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "根据参数ID获取参数信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{Parameter},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetParameterSelect": {
+            "post": {
+                "description": "根据参数Code获取下级参数 请求主体: base64(ID=aaaa) 成功输出[]CascaderListModel",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "根据参数Code获取下级参数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]CascaderListModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetRoleByID": {
             "post": {
                 "description": "根据权限ID获取权限信息 请求主体: base64(ID=aaaa) 成功输出Role",
@@ -1307,6 +1835,38 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{Role},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetTreeParameter": {
+            "post": {
+                "description": "获取参数树信息 请求主体: Null  成功输出[]TreeModel",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "获取参数树信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]TreeModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -1693,6 +2253,45 @@
                 }
             }
         },
+        "/UpdateBillNo": {
+            "post": {
+                "description": "修改单据号信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "BillNo"
+                ],
+                "summary": "修改单据号信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/UpdateButton": {
             "post": {
                 "description": "修改按钮信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -1784,6 +2383,45 @@
                     "Menu"
                 ],
                 "summary": "修改菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/UpdateParameter": {
+            "post": {
+                "description": "修改参数信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Parameter"
+                ],
+                "summary": "修改参数信息",
                 "parameters": [
                     {
                         "type": "string",

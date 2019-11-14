@@ -7,6 +7,32 @@ info:
   title: Rest API
   version: "1.0"
 paths:
+  /AddBillNo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '新增单据号信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 新增单据号信息
+      tags:
+      - BillNo
   /AddButton:
     post:
       consumes:
@@ -85,6 +111,32 @@ paths:
       summary: 新增菜单信息
       tags:
       - Menu
+  /AddParameter:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '新增参数信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 新增参数信息
+      tags:
+      - Parameter
   /AddRole:
     post:
       consumes:
@@ -137,6 +189,32 @@ paths:
       summary: 新增用户信息
       tags:
       - User
+  /DeleteBillNo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '删除单据号信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 删除单据号信息
+      tags:
+      - BillNo
   /DeleteButton:
     post:
       consumes:
@@ -215,6 +293,32 @@ paths:
       summary: 删除菜单信息
       tags:
       - Menu
+  /DeleteParameter:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '删除参数信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 删除参数信息
+      tags:
+      - Parameter
   /DeleteRole:
     post:
       consumes:
@@ -267,6 +371,43 @@ paths:
       summary: 删除用户信息
       tags:
       - User
+  /GetAllBillNoInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取单据号信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]BillNo'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]BillNo},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取单据号信息
+      tags:
+      - BillNo
   /GetAllButtonByMenuIdForTransfer:
     post:
       consumes:
@@ -404,6 +545,43 @@ paths:
       summary: 前台条件获取单位信息
       tags:
       - Dept
+  /GetAllDeptViewInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取单位信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]Department'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]DeptView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取单位信息
+      tags:
+      - Dept
   /GetAllMenuInfo:
     post:
       consumes:
@@ -478,6 +656,43 @@ paths:
       summary: 前台条件获取菜单信息
       tags:
       - Menu
+  /GetAllParameterInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取参数信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]Parameter'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]Parameter},"Message":""} or {"Code":-1,"Data":{},"Parameter":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取参数信息
+      tags:
+      - Parameter
   /GetAllRoleForTransfer:
     post:
       consumes:
@@ -610,6 +825,53 @@ paths:
       summary: 前台条件获取用户信息
       tags:
       - User
+  /GetBillNoByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据权限ID获取单据号信息 请求主体: base64(ID=aaaa) 成功输出BillNo'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{BillNo},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据权限ID获取单据号信息
+      tags:
+      - BillNo
+  /GetButtonAllCount:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '获取按钮总条数 请求主体: Null  成功输出 int'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{int},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 获取按钮总条数
+      tags:
+      - Button
   /GetButtonByID:
     post:
       consumes:
@@ -724,11 +986,11 @@ paths:
       summary: 根据菜单ID获取按钮信息
       tags:
       - Button
-  /GetCascaderMenu:
+  /GetCascaderDept:
     post:
       consumes:
       - multipart/form-data
-      description: '根据用户ID获取用户菜单信息 请求主体: Null  成功输出[]MenuTree'
+      description: '获取部门信息 请求主体: Null  成功输出[]CascaderModel'
       parameters:
       - description: Token
         in: formData
@@ -739,12 +1001,54 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"Code":1,"Data":{[]MenuTree},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          description: '{"Code":1,"Data":{[]CascaderModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
-      summary: 根据用户ID获取用户菜单信息
+      summary: 获取部门信息
+      tags:
+      - Dept
+  /GetCascaderMenu:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单信息 请求主体: Null  成功输出[]CascaderModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]CascaderModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单信息
       tags:
       - Menu
+  /GetDeptAllCount:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '获取部门总条数 请求主体: Null  成功输出 int'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{int},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 获取部门总条数
+      tags:
+      - Dept
   /GetDeptByID:
     post:
       consumes:
@@ -775,7 +1079,7 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: '根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串'
+      description: '根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串'
       parameters:
       - description: Token
         in: formData
@@ -789,9 +1093,9 @@ paths:
           description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
-      summary: 根据用户ID获取用户权限信息
+      summary: 根据用户ID获取用户部门信息
       tags:
-      - Role
+      - Dept
   /GetMenuAllCount:
     post:
       consumes:
@@ -860,6 +1164,58 @@ paths:
       summary: 根据权限ID获取菜单树所有根结点
       tags:
       - Role
+  /GetParameterByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据参数ID获取参数信息 请求主体: base64(ID=aaaa) 成功输出Parameter'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{Parameter},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据参数ID获取参数信息
+      tags:
+      - Parameter
+  /GetParameterSelect:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据参数Code获取下级参数 请求主体: base64(ID=aaaa) 成功输出[]CascaderListModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]CascaderListModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据参数Code获取下级参数
+      tags:
+      - Parameter
   /GetRoleByID:
     post:
       consumes:
@@ -886,6 +1242,27 @@ paths:
       summary: 根据权限ID获取权限信息
       tags:
       - Role
+  /GetTreeParameter:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '获取参数树信息 请求主体: Null  成功输出[]TreeModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]TreeModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 获取参数树信息
+      tags:
+      - Parameter
   /GetUserByID:
     post:
       consumes:
@@ -1141,6 +1518,32 @@ paths:
       summary: 设置用户权限
       tags:
       - User
+  /UpdateBillNo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '修改单据号信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 修改单据号信息
+      tags:
+      - BillNo
   /UpdateButton:
     post:
       consumes:
@@ -1219,6 +1622,32 @@ paths:
       summary: 修改菜单信息
       tags:
       - Menu
+  /UpdateParameter:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '修改参数信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 修改参数信息
+      tags:
+      - Parameter
   /UpdateRole:
     post:
       consumes:

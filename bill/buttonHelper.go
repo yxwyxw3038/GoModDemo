@@ -169,7 +169,7 @@ func GetAllButtonInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.
 			err = errors.New("数据异常")
 		}
 	}()
-	whereSql, err := util.GetWhereSqlLimt("Button", ParameterStr, PageSize, CurrentPage)
+	whereSql, err := util.GetWhereSqlOrderLimt("Button", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
 	if err != nil {
 		return nil, err
 	}
