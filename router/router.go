@@ -33,6 +33,7 @@ func InitRouter() *gin.Engine {
 	userOne.POST("DeleteUser", api.DeleteUser)
 	userOne.POST("SetUserDept", api.SetUserDept)
 	userOne.POST("SetUserRole", api.SetUserRole)
+	userOne.POST("GetTreeUser", api.GetTreeUser)
 	menuOne := router.Group("/Menu")
 	menuOne.POST("GetMenuByID", api.GetMenuByID)
 	menuOne.POST("GetAllMenuInfo", api.GetAllMenuInfo)
@@ -96,5 +97,7 @@ func InitRouter() *gin.Engine {
 	noticeOne.POST("AddNotice", api.AddNotice)
 	noticeOne.POST("UpdateNotice", api.UpdateNotice)
 	noticeOne.POST("DeleteNotice", api.DeleteNotice)
+	noticeOne.POST("GetNoticeByID", api.GetNoticeByID)
+	noticeOne.POST("GetNoticeItemByID", api.GetNoticeItemByID)
 	return router
 }

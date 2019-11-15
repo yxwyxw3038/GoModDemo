@@ -5,6 +5,7 @@ import (
 	"GoModDemo/consts"
 	"GoModDemo/model"
 	"GoModDemo/util"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -94,6 +95,7 @@ func AddNotice(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
+	fmt.Println(str)
 	var date model.NoticeBillModel
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
@@ -135,6 +137,7 @@ func UpdateNotice(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
+	fmt.Println(str)
 	var date model.NoticeBillModel
 	err = json.Unmarshal([]byte(str), &date)
 	if err != nil {
@@ -183,4 +186,88 @@ func DeleteNotice(c *gin.Context) {
 		return
 	}
 	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}
+
+// GetNoticeByID 根据菜单ID获取通知单主表信息
+// @Summary 根据菜单ID获取通知单主表信息
+// @Tags Notice
+// @Description 根据菜单ID获取通知单主表信息 请求主体: base64(ID=aaaa) 成功输出Notice
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param ID formData string true "ID"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{Notice},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetNoticeByID [post]
+func GetNoticeByID(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "根据菜单ID获取通知单主表信息错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	ID := dists["ID"][0]
+	if ID == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	temp, err := bill.GetNoticeByID(ID)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	b, err := json.Marshal(*temp)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	s := string(b)
+	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
+
+}
+
+// GetNoticeItemByID 根据菜单ID获取通知单子表信息
+// @Summary 根据菜单ID获取通知单子表信息
+// @Tags Notice
+// @Description 根据菜单ID获取通知单子表信息 请求主体: base64(ID=aaaa) 成功输出Notice
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param ID formData string true "ID"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{Notice},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetNoticeItemByID [post]
+func GetNoticeItemByID(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "根据菜单ID获取通知单子表信息错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	ID := dists["ID"][0]
+	if ID == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	temp, err := bill.GetNoticeItemByID(ID)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	b, err := json.Marshal(*temp)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	s := string(b)
+	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
+
 }

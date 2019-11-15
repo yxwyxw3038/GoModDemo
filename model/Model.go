@@ -30,6 +30,14 @@ type TreeModel struct {
 	RealName string      `json:"RealName"`
 	Children []TreeModel `json:"children"`
 }
+type TreeNodeModel struct {
+	ID       string          `json:"id"`
+	Value    string          `json:"value"`
+	Key      string          `json:"key"`
+	Label    string          `json:"label"`
+	RealName string          `json:"RealName"`
+	Children []TreeNodeModel `json:"children"`
+}
 type CascaderListModel struct {
 	Value string `json:"value"` //值
 	Label string `json:"label"`

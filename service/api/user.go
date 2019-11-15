@@ -443,3 +443,56 @@ func SetUserRole(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
 
 }
+
+// GetTreeUser 用户信息树
+// @Summary 用户信息树
+// @Tags Menu
+// @Description 用户信息树 请求主体: Null  成功输出[]TreeNodeModel
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{[]TreeNodeModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /GetTreeUser [post]
+func GetTreeUser(c *gin.Context) {
+	appG := util.Gin{C: c}
+	errMsg := ""
+	s := ""
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+
+	isOk, err := util.RedisExists("GetTreeUser")
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	if isOk {
+		s, err = util.GetRedisString("GetTreeUser")
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+
+	} else {
+		data, err := bill.GetTreeUser()
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		b, err := json.Marshal(*data)
+		if err != nil {
+			appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+			return
+		}
+		s = string(b)
+		err = util.SetRedisAnyEx("GetTreeUser", s, "180")
+
+		if err != nil {
+			errMsg = err.Error()
+		}
+
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, errMsg, s)
+}

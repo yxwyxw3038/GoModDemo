@@ -99,7 +99,19 @@ func AddNotice(data model.NoticeBillModel) error {
 		return err
 	}
 	for i := 0; i < len(data.Item); i++ {
-		_, err = db.ExtraCols(consts.GetTabInfo()...).Insert(&(data.Item[i]))
+		item := new(model.NoticeUser)
+		item.ID = data.Item[i].ID
+		item.NoticeId = data.Item[i].NoticeId
+		item.UserId = data.Item[i].UserId
+		item.Notes = data.Item[i].Notes
+		item.CreateBy = timeStr
+		item.CreateTime = data.Item[i].CreateTime
+		item.UpdateBy = data.Item[i].UpdateBy
+		item.UpdateTime = timeStr
+		item.UpdateBy = data.Item[i].UpdateBy
+		item.SendTime = timeStr
+		item.SendFlag = 1
+		_, err = db.ExtraCols(consts.GetTabInfo()...).Insert(item)
 		if err != nil {
 			db.Rollback()
 			return err
@@ -161,8 +173,19 @@ func UpdateNotice(data model.NoticeBillModel) error {
 		return err
 	}
 	for i := 0; i < len(data.Item); i++ {
-
-		count, err := db.ExtraCols(consts.GetTabInfo()...).Where("ID", "=", data.Item[i].ID).Update(&(data.Item[i]))
+		var item model.NoticeUser
+		item.ID = data.Item[i].ID
+		item.NoticeId = data.Item[i].NoticeId
+		item.UserId = data.Item[i].UserId
+		item.Notes = data.Item[i].Notes
+		item.CreateBy = data.Item[i].CreateBy
+		item.CreateTime = data.Item[i].CreateTime
+		item.UpdateBy = data.Item[i].UpdateBy
+		item.UpdateTime = data.Item[i].UpdateTime
+		item.UpdateBy = data.Item[i].UpdateBy
+		item.SendTime = data.Item[i].SendTime
+		item.SendFlag = data.Item[i].SendFlag
+		count, err := db.ExtraCols(consts.GetTabInfo()...).Where("ID", "=", data.Item[i].ID).Update(&item)
 		if err != nil {
 			db.Rollback()
 			return err
@@ -211,4 +234,49 @@ func DeleteNotice(idList []string) error {
 	}
 	db.Commit()
 	return err
+}
+
+func GetNoticeByID(ID string) (*model.Notice, error) {
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	var data []model.Notice
+	err = db.Table(&data).Where("ID", "=", ID).Select()
+	if err != nil {
+		return nil, err
+	}
+	if len(data) <= 0 {
+		return nil, errors.New("未找到对应菜单")
+	}
+	if len(data) > 1 {
+		return nil, errors.New("找到多个对应菜单")
+	}
+	data[0].CreateTime, _ = util.ParseAnyToStr(data[0].CreateTime)
+	data[0].UpdateTime, _ = util.ParseAnyToStr(data[0].UpdateTime)
+	data[0].NoticeTime, _ = util.ParseAnyToStr(data[0].NoticeTime)
+	data[0].SendBeginTime, _ = util.ParseAnyToStr(data[0].SendBeginTime)
+	data[0].SendEndTime, _ = util.ParseAnyToStr(data[0].SendEndTime)
+	return &data[0], nil
+}
+func GetNoticeItemByID(ID string) (*[]model.NoticeUserView, error) {
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	data := make([]model.NoticeUserView, 0)
+	err = db.Table(&data).Where("NoticeId", "=", ID).Select()
+	if err != nil {
+		return nil, err
+	}
+	if len(data) <= 0 {
+		return &data, nil
+	}
+	for i := 0; i < len(data); i++ {
+		data[i].CreateTime, _ = util.ParseAnyToStr(data[i].CreateTime)
+		data[i].UpdateTime, _ = util.ParseAnyToStr(data[i].UpdateTime)
+		data[i].SendTime, _ = util.ParseAnyToStr(data[i].SendTime)
+	}
+
+	return &data, nil
 }

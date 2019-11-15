@@ -524,3 +524,56 @@ func AddUserToken(ip, post, userId, token string) error {
 	return nil
 
 }
+func GetTreeUser() (*[]model.TreeNodeModel, error) {
+	var err error
+	treeUser := make([]model.TreeNodeModel, 0)
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("数据异常")
+		}
+	}()
+	tree1, err := GetTreeUserAll()
+	if err != nil {
+		return &treeUser, err
+	}
+	treeUser = append(treeUser, *tree1)
+	return &treeUser, err
+}
+func GetTreeUserAll() (*model.TreeNodeModel, error) {
+	var err error
+	user := new(model.TreeNodeModel)
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("数据异常")
+		}
+	}()
+	user.ID = "all"
+	user.Label = "全员"
+	user.Key = "all"
+	user.RealName = "全员"
+	user.Value = "all"
+	db, err := util.OpenDB()
+	if err != nil {
+		return nil, err
+	}
+	strSql := fmt.Sprintf("SELECT u.AccountName,u.ID,u.RealName from  User u where u.IsAble=1")
+	data, err := db.Query(strSql)
+	if err != nil {
+		return nil, err
+	}
+	treeUser := make([]model.TreeNodeModel, 0)
+	if len(data) > 0 {
+		key := "all*0*"
+		for i := 0; i < len(data); i++ {
+			var temp model.TreeNodeModel
+			temp.ID = key + util.ToString(data[i]["ID"])
+			temp.Label = util.ToString(data[i]["AccountName"])
+			temp.RealName = util.ToString(data[i]["RealName"])
+			temp.Value = temp.ID
+			temp.Key = temp.ID
+			treeUser = append(treeUser, temp)
+		}
+	}
+	user.Children = treeUser
+	return user, err
+}
