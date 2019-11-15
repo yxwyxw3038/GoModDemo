@@ -93,5 +93,8 @@ func InitRouter() *gin.Engine {
 	billNoOne.POST("DeleteBillNo", api.DeleteBillNo)
 	noticeOne := router.Group("/Notice")
 	noticeOne.POST("GetAllNoticeInfo", api.GetAllNoticeInfo)
+	noticeOne.POST("AddNotice", api.AddNotice)
+	noticeOne.POST("UpdateNotice", api.UpdateNotice)
+	noticeOne.POST("DeleteNotice", api.DeleteNotice)
 	return router
 }
