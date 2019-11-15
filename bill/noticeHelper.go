@@ -167,7 +167,7 @@ func UpdateNotice(data model.NoticeBillModel) error {
 			return err
 		}
 	}
-	_, err = db.ExtraCols(consts.GetNoticeInfo()...).Where("ID", "=", data.Main.ID).Update(&(data.Main))
+	_, err = db.Table("Notice").ExtraCols(consts.GetNoticeInfo()...).Where("ID", "=", data.Main.ID).Update(&(data.Main))
 	if err != nil {
 		db.Rollback()
 		return err
@@ -179,19 +179,31 @@ func UpdateNotice(data model.NoticeBillModel) error {
 		item.UserId = data.Item[i].UserId
 		item.Notes = data.Item[i].Notes
 		item.CreateBy = data.Item[i].CreateBy
-		item.CreateTime = data.Item[i].CreateTime
+		if data.Item[i].CreateTime == "" {
+			item.CreateTime = timeStr
+		} else {
+			item.CreateTime = data.Item[i].CreateTime
+		}
+		if data.Item[i].UpdateTime == "" {
+			item.UpdateTime = timeStr
+		} else {
+			item.UpdateTime = data.Item[i].UpdateTime
+		}
 		item.UpdateBy = data.Item[i].UpdateBy
-		item.UpdateTime = data.Item[i].UpdateTime
-		item.UpdateBy = data.Item[i].UpdateBy
-		item.SendTime = data.Item[i].SendTime
+		if data.Item[i].SendTime == "" {
+			item.SendTime = timeStr
+		} else {
+			item.SendTime = data.Item[i].SendTime
+		}
+
 		item.SendFlag = data.Item[i].SendFlag
-		count, err := db.ExtraCols(consts.GetTabInfo()...).Where("ID", "=", data.Item[i].ID).Update(&item)
+		count, err := db.Table("NoticeUser").ExtraCols(consts.GetTabInfo()...).Where("ID", "=", data.Item[i].ID).Update(&item)
 		if err != nil {
 			db.Rollback()
 			return err
 		}
 		if count <= 0 {
-			_, err = db.ExtraCols(consts.GetTabInfo()...).Insert(&(data.Item[i]))
+			_, err = db.Table("NoticeUser").ExtraCols(consts.GetTabInfo()...).Insert(&item)
 			if err != nil {
 				db.Rollback()
 				return err
