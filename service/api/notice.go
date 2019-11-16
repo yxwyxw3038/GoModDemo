@@ -289,7 +289,7 @@ func UpdateNoticeStatus(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return
 	}
-	UpdateBy := dists["ID"][0]
+	UpdateBy := dists["UpdateBy"][0]
 	if UpdateBy == "" {
 		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
 		return

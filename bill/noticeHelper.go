@@ -233,15 +233,17 @@ func DeleteNotice(idList []string) error {
 	}
 	db.Begin()
 	for _, v := range idList {
-		_, err = db.Table("Notice").Where("ID", v).Delete()
+		count, err := db.Table("Notice").Where("ID", v).Where("Status", "=", 0).Delete()
 		if err != nil {
 			db.Rollback()
 			return err
 		}
-		_, err = db.Table("NoticeUser").Where("NoticeId", v).Delete()
-		if err != nil {
-			db.Rollback()
-			return err
+		if count > 0 {
+			_, err = db.Table("NoticeUser").Where("NoticeId", v).Delete()
+			if err != nil {
+				db.Rollback()
+				return err
+			}
 		}
 	}
 	db.Commit()
