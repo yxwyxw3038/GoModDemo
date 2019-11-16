@@ -99,5 +99,6 @@ func InitRouter() *gin.Engine {
 	noticeOne.POST("DeleteNotice", api.DeleteNotice)
 	noticeOne.POST("GetNoticeByID", api.GetNoticeByID)
 	noticeOne.POST("GetNoticeItemByID", api.GetNoticeItemByID)
+	noticeOne.POST("UpdateNoticeStatus", api.UpdateNoticeStatus)
 	return router
 }

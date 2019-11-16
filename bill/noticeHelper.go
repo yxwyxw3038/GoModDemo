@@ -93,7 +93,7 @@ func AddNotice(data model.NoticeBillModel) error {
 	}
 	data.Main.No = billNo
 	db.Begin()
-	_, err = db.ExtraCols(consts.GetNoticeInfo()...).Insert(&(data.Main))
+	_, err = db.Table("Notice").ExtraCols(consts.GetNoticeInfo()...).Insert(&(data.Main))
 	if err != nil {
 		db.Rollback()
 		return err
@@ -104,14 +104,14 @@ func AddNotice(data model.NoticeBillModel) error {
 		item.NoticeId = data.Item[i].NoticeId
 		item.UserId = data.Item[i].UserId
 		item.Notes = data.Item[i].Notes
-		item.CreateBy = timeStr
-		item.CreateTime = data.Item[i].CreateTime
+		item.CreateBy = data.Item[i].CreateTime
+		item.CreateTime = timeStr
 		item.UpdateBy = data.Item[i].UpdateBy
 		item.UpdateTime = timeStr
 		item.UpdateBy = data.Item[i].UpdateBy
 		item.SendTime = timeStr
-		item.SendFlag = 1
-		_, err = db.ExtraCols(consts.GetTabInfo()...).Insert(item)
+		item.SendFlag = 0
+		_, err = db.Table("NoticeUser").ExtraCols(consts.GetNoticeUserInfo()...).Insert(item)
 		if err != nil {
 			db.Rollback()
 			return err
@@ -197,13 +197,13 @@ func UpdateNotice(data model.NoticeBillModel) error {
 		}
 
 		item.SendFlag = data.Item[i].SendFlag
-		count, err := db.Table("NoticeUser").ExtraCols(consts.GetTabInfo()...).Where("ID", "=", data.Item[i].ID).Update(&item)
+		count, err := db.Table("NoticeUser").ExtraCols(consts.GetNoticeUserInfo()...).Where("ID", "=", data.Item[i].ID).Update(&item)
 		if err != nil {
 			db.Rollback()
 			return err
 		}
 		if count <= 0 {
-			_, err = db.Table("NoticeUser").ExtraCols(consts.GetTabInfo()...).Insert(&item)
+			_, err = db.Table("NoticeUser").ExtraCols(consts.GetNoticeUserInfo()...).Insert(&item)
 			if err != nil {
 				db.Rollback()
 				return err
@@ -249,6 +249,12 @@ func DeleteNotice(idList []string) error {
 }
 
 func GetNoticeByID(ID string) (*model.Notice, error) {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("删除数据异常")
+		}
+	}()
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
@@ -272,17 +278,25 @@ func GetNoticeByID(ID string) (*model.Notice, error) {
 	return &data[0], nil
 }
 func GetNoticeItemByID(ID string) (*[]model.NoticeUserView, error) {
+	var err error
+	defer func() {
+		if p := recover(); p != nil {
+			err = errors.New("删除数据异常")
+		}
+	}()
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
 	}
 	data := make([]model.NoticeUserView, 0)
 	err = db.Table(&data).Where("NoticeId", "=", ID).Select()
+	sqlLog := db.LastSql()
+	fmt.Printf(sqlLog)
 	if err != nil {
 		return nil, err
 	}
 	if len(data) <= 0 {
-		return &data, nil
+		return &data, err
 	}
 	for i := 0; i < len(data); i++ {
 		data[i].CreateTime, _ = util.ParseAnyToStr(data[i].CreateTime)
@@ -290,5 +304,20 @@ func GetNoticeItemByID(ID string) (*[]model.NoticeUserView, error) {
 		data[i].SendTime, _ = util.ParseAnyToStr(data[i].SendTime)
 	}
 
-	return &data, nil
+	return &data, err
+}
+func UpdateNoticeStatus(ID, UpdateBy string, oldStatus, newStatus int64) error {
+	db, err := util.OpenDB()
+	if err != nil {
+		return err
+	}
+	timeStr := util.GetNowStr()
+	count, err := db.Table("Notice").Data(map[string]interface{}{"Status": newStatus, "UpdateBy": UpdateBy, "UpdateTime": timeStr}).Where("ID", "=", ID).Where("Status", "=", oldStatus).Update()
+	if err != nil {
+		return err
+	}
+	if count <= 0 {
+		return errors.New("数据已修改")
+	}
+	return err
 }

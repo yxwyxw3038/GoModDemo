@@ -271,3 +271,53 @@ func GetNoticeItemByID(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 
 }
+
+func UpdateNoticeStatus(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	ID := dists["ID"][0]
+	if ID == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	UpdateBy := dists["ID"][0]
+	if UpdateBy == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	oldStatus := dists["oldStatus"][0]
+	if oldStatus == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	newStatus := dists["newStatus"][0]
+	if newStatus == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	olddata, err := strconv.ParseInt(oldStatus, 10, 64)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "参数转换异常", nil)
+		return
+	}
+	newdata, err := strconv.ParseInt(newStatus, 10, 64)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "参数转换异常", nil)
+		return
+	}
+	err = bill.UpdateNoticeStatus(ID, UpdateBy, olddata, newdata)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}

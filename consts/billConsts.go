@@ -37,3 +37,8 @@ func GetNoticeInfo() []string {
 	info := []string{"TypeId", "Title", "Content", "Notes", "Status", "NoticeTime", "SendBeginTime", "SendEndTime"}
 	return append(info, GetTabInfo()...)
 }
+func GetNoticeUserInfo() []string {
+
+	info := []string{"Notes", "SendFlag", "SendTime"}
+	return append(info, GetTabInfo()...)
+}
