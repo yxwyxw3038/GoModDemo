@@ -100,5 +100,7 @@ func InitRouter() *gin.Engine {
 	noticeOne.POST("GetNoticeByID", api.GetNoticeByID)
 	noticeOne.POST("GetNoticeItemByID", api.GetNoticeItemByID)
 	noticeOne.POST("UpdateNoticeStatus", api.UpdateNoticeStatus)
+	websocketOne := router.Group("/Websocket")
+	websocketOne.GET("Ws", api.WsPage)
 	return router
 }

@@ -7,7 +7,8 @@ import (
 	"GoModDemo/util"
 	"fmt"
 )
-const NOTE_IMG =`
+
+const NOTE_IMG = `
 ┏━┓　　　┏━┓　　　　   ┏━━┓┏━━┓┏┓   ┏┳┓┏┓　　┏━┓
 ┃┃┃┏━┓┃━┫┏━━┓   ┃┏┓┃┃━━┃┃┃   ┃┃┃┃┃　　┃┃┃
 ┃　┫┃┻┫┣━┃┗┓┏┛   ┃┏┓┃┃┏━┛┃┃   ┃┃┃┃┃┏┓┃┃┃
@@ -19,6 +20,7 @@ const URL_IMG = `
 ┗━━┻━━┻━━┻┻┻┻╋━┣━━┻━┻━━╋┓┣━┻━┻━┻┻━┻┻┛
 　　　　　　　　　　　　　┗━┛　　　　　　　┗━┛　　　　　　　　　　　　　　　　　　　　　
 `
+
 // @title Rest API
 // @version 1.0
 // @description 目前仅仅是一个demo
@@ -26,11 +28,11 @@ func main() {
 	logger := util.InitZapLog()
 	fmt.Println(NOTE_IMG)
 	fmt.Println(URL_IMG)
-	
+
 	setting.Setup()
 	util.RegisterInfo()
 	go daemon.Run()
-	
+	go util.WSManager.Start()
 	url := ":" + setting.ServerSetting.Port
 	logger.Debug("启动服务" + url)
 	router := InitRouter()

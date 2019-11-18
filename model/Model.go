@@ -42,6 +42,13 @@ type CascaderListModel struct {
 	Value string `json:"value"` //值
 	Label string `json:"label"`
 }
+
+type WsInfoModel struct {
+	Data string `json:"Data"`
+	Type string `json:"Type"`
+	ID   string `json:"ID"`
+}
+
 type MenuButton struct {
 	ID         string `:"ID"`         // ID
 	MenuId     string `:"MenuId"`     // 菜单ID

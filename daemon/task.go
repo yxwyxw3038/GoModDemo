@@ -1,12 +1,15 @@
 package daemon
 
 import (
+	"GoModDemo/bill"
 	"GoModDemo/model"
 	"GoModDemo/setting"
 	"GoModDemo/util"
 	"encoding/json"
-	"go.uber.org/zap"
+	"fmt"
 	"strconv"
+
+	"go.uber.org/zap"
 )
 
 func TaskUserInfoByAccountName(logger *zap.Logger) {
@@ -88,6 +91,57 @@ func TaskParameter(logger *zap.Logger) {
 	if err != nil {
 		logger.Error(err.Error())
 		return
+	}
+	logger.Debug("结束写入参数缓存")
+}
+func TaskWs(logger *zap.Logger) {
+	defer func() {
+		if p := recover(); p != nil {
+			logger.Error("异常")
+		}
+	}()
+	logger.Sync()
+
+	db, err := util.OpenDB()
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	strSql := fmt.Sprintf("select n.ID, n2.UserId from Notice as n,NoticeUser as n2 where n.ID=n2.NoticeId and n.Status=5 and IFNULL( n2.SendFlag,0)=0")
+	data, err := db.Query(strSql)
+	if err != nil {
+		logger.Error(err.Error())
+		return
+	}
+	for k, v := range util.WSManager.Clients {
+		if v {
+			for i := 0; i < len(data); i++ {
+				UserId := util.ToString(data[i]["UserId"])
+				ID := util.ToString(data[i]["ID"])
+
+				if (*k).UserId == UserId {
+					temp, err := bill.GetNoticeByID(ID)
+					if err != nil {
+						break
+					}
+					b, err := json.Marshal(*temp)
+					if err != nil {
+
+						break
+					}
+
+					msg := util.WSMessage{ID: (*k).ID, Type: "Msg", Data: string(b)}
+					b, err = json.Marshal(msg)
+					if err != nil {
+
+						break
+					}
+					util.WSManager.Send(b, k)
+				}
+
+			}
+		}
+
 	}
 	logger.Debug("结束写入参数缓存")
 }

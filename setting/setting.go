@@ -13,6 +13,7 @@ type App struct {
 	OffsetTime int32
 	TaskTime   int32
 	TaskTime1  int32
+	TaskTime2  int32
 }
 type Server struct {
 	Ip   string
