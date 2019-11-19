@@ -107,36 +107,52 @@ func TaskWs(logger *zap.Logger) {
 		logger.Error(err.Error())
 		return
 	}
-	strSql := fmt.Sprintf("select n.ID, n2.UserId from Notice as n,NoticeUser as n2 where n.ID=n2.NoticeId and n.Status=5 and IFNULL( n2.SendFlag,0)=0")
+	strSql := fmt.Sprintf("select n.ID, n2.UserId,n.TypeId,n.NoticeTime,n.No,n.Title,n.Content from Notice as n,NoticeUser as n2 where n.ID=n2.NoticeId and n.Status=5 and IFNULL( n2.SendFlag,0)=0 and  DATE_FORMAT(n.SendBeginTime,'%Y-%m-%d %H:%i')<=DATE_FORMAT(sysdate(),'%Y-%m-%d %H:%i' ) and  DATE_FORMAT(n.SendEndTime,'%Y-%m-%d %H:%i')>=DATE_FORMAT(sysdate(),'%Y-%m-%d %H:%i' )")
 	data, err := db.Query(strSql)
 	if err != nil {
 		logger.Error(err.Error())
 		return
 	}
+	timeStr := util.GetNowStr()
 	for k, v := range util.WSManager.Clients {
 		if v {
 			for i := 0; i < len(data); i++ {
 				UserId := util.ToString(data[i]["UserId"])
-				ID := util.ToString(data[i]["ID"])
-
 				if (*k).UserId == UserId {
-					temp, err := bill.GetNoticeByID(ID)
 					if err != nil {
+						logger.Error(err.Error())
 						break
 					}
-					b, err := json.Marshal(*temp)
+					var temp model.MsgInfo
+					temp.ID = util.ToString(data[i]["ID"])
+					temp.No = util.ToString(data[i]["No"])
+					temp.TypeId = util.ToInt(data[i]["TypeId"])
+					temp.Title = util.ToString(data[i]["Title"])
+					temp.Content = util.ToString(data[i]["Content"])
+					noticeTime, _ := util.AnyToTimeStr(data[i]["NoticeTime"])
+					temp.BillTime = noticeTime
+					temp.MsgType = "Notice"
+					temp.OpenFlag = 0
+					temp.MsgTime = timeStr
+					b, err := json.Marshal(temp)
 					if err != nil {
-
+						logger.Error(err.Error())
 						break
 					}
 
 					msg := util.WSMessage{ID: (*k).ID, Type: "Msg", Data: string(b)}
 					b, err = json.Marshal(msg)
 					if err != nil {
-
+						logger.Error(err.Error())
 						break
 					}
+
 					util.WSManager.Send(b, k)
+					err = bill.UpdateNoticeUserStatus(temp.ID, UserId)
+					if err != nil {
+						logger.Error(err.Error())
+						break
+					}
 				}
 
 			}

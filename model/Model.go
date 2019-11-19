@@ -48,6 +48,18 @@ type WsInfoModel struct {
 	Type string `json:"Type"`
 	ID   string `json:"ID"`
 }
+type MsgInfo struct {
+	ID       string `:"ID"`       // 主键
+	No       string `:"No"`       // 单号
+	MsgType  string `:"MsgType"`  // 消息类型
+	TypeId   int    `:"TypeId"`   // 通知类型
+	Title    string `:"Title"`    // 标题
+	Content  string `:"Content"`  // 内容
+	OpenFlag int    `:"OpenFlag"` // 打开标记
+	BillTime string `:"BillTime"` // 消息生成时间
+	MsgTime  string `:"MsgTime"`  // 消息发送时间
+
+}
 
 type MenuButton struct {
 	ID         string `:"ID"`         // ID

@@ -323,3 +323,18 @@ func UpdateNoticeStatus(ID, UpdateBy string, oldStatus, newStatus int64) error {
 	}
 	return err
 }
+func UpdateNoticeUserStatus(ID, UserId string) error {
+	db, err := util.OpenDB()
+	if err != nil {
+		return err
+	}
+	timeStr := util.GetNowStr()
+	count, err := db.Table("NoticeUser").Data(map[string]interface{}{"SendFlag": 1, "SendTime": timeStr}).Where("NoticeId", "=", ID).Where("UserId", "=", UserId).Update()
+	if err != nil {
+		return err
+	}
+	if count <= 0 {
+		return errors.New("数据已修改")
+	}
+	return err
+}
