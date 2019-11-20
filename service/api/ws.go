@@ -20,6 +20,12 @@ var upGrader = websocket.Upgrader{
 	},
 }
 
+// WsPage websocket
+// @Summary websocket
+// @Tags Websocket
+// @Description 主要用于推送相关事务
+// @Accept mpfd
+// @Router  /Ws [get]
 func WsPage(c *gin.Context) {
 	appG := util.Gin{C: c}
 	// change the reqest to websocket model

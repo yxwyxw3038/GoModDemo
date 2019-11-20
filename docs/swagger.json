@@ -127,6 +127,45 @@
                 }
             }
         },
+        "/AddFlow": {
+            "post": {
+                "description": "新增流程单信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "新增流程单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/AddMenu": {
             "post": {
                 "description": "新增菜单信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -140,6 +179,45 @@
                     "Menu"
                 ],
                 "summary": "新增菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/AddNotice": {
+            "post": {
+                "description": "新增通知单信息 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "新增通知单信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -400,6 +478,45 @@
                 }
             }
         },
+        "/DeleteFlow": {
+            "post": {
+                "description": "删除流程单 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "删除流程单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/DeleteMenu": {
             "post": {
                 "description": "删除菜单信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -413,6 +530,45 @@
                     "Menu"
                 ],
                 "summary": "删除菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/DeleteNotice": {
+            "post": {
+                "description": "删除通知单 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "删除通知单",
                 "parameters": [
                     {
                         "type": "string",
@@ -864,6 +1020,59 @@
                 }
             }
         },
+        "/GetAllFlowInfo": {
+            "post": {
+                "description": "前台条件获取流程单信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]FlowViewModel",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "前台条件获取流程单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]FlowViewModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Parameter\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/GetAllMenuInfo": {
             "post": {
                 "description": "前台条件获取菜单信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]Menu",
@@ -963,6 +1172,59 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{[]MenuView},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetAllNoticeInfo": {
+            "post": {
+                "description": "前台条件获取通知单信息 请求主体: base64(ParameterStr=aaaa\u0026PageSize=10\u0026CurrentPage=1) 成功输出[]NoticeViewModel",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "前台条件获取通知单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParameterStr",
+                        "name": "ParameterStr",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PageSize",
+                        "name": "PageSize",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "CurrentPage",
+                        "name": "CurrentPage",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]NoticeViewModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Parameter\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -1592,7 +1854,7 @@
         },
         "/GetDeptByUserIdForTransfer": {
             "post": {
-                "description": "根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串",
+                "description": "根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -1600,9 +1862,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Dept"
+                    "Role"
                 ],
-                "summary": "根据用户ID获取用户部门信息",
+                "summary": "根据用户ID获取用户权限信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -1615,6 +1877,84 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":\"aaa,bbb,ccc\",\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetFlowByID": {
+            "post": {
+                "description": "根据流程ID获取流程单主表信息 请求主体: base64(ID=aaaa) 成功输出FlowView",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "根据流程ID获取流程单主表信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{FlowView},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetFlowInfoByMenuId": {
+            "post": {
+                "description": "根据菜单ID获取流程单主表信息 请求主体: base64(ID=aaaa) 成功输出FlowView",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "根据菜单ID获取流程单主表信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{FlowView},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -1718,6 +2058,84 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":\"aaa,bbb,ccc\",\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetNoticeByID": {
+            "post": {
+                "description": "根据菜单ID获取通知单主表信息 请求主体: base64(ID=aaaa) 成功输出Notice",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "根据菜单ID获取通知单主表信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{Notice},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetNoticeItemByID": {
+            "post": {
+                "description": "根据菜单ID获取通知单子表信息 请求主体: base64(ID=aaaa) 成功输出Notice",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "根据菜单ID获取通知单子表信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{Notice},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -1867,6 +2285,38 @@
                 "responses": {
                     "200": {
                         "description": "{\"Code\":1,\"Data\":{[]TreeModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/GetTreeUser": {
+            "post": {
+                "description": "用户信息树 请求主体: Null  成功输出[]TreeNodeModel",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Menu"
+                ],
+                "summary": "用户信息树",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{[]TreeNodeModel},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -2370,6 +2820,45 @@
                 }
             }
         },
+        "/UpdateFlow": {
+            "post": {
+                "description": "修改流程单 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "修改流程单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/UpdateMenu": {
             "post": {
                 "description": "修改菜单信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -2383,6 +2872,45 @@
                     "Menu"
                 ],
                 "summary": "修改菜单信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "str",
+                        "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/UpdateNotice": {
+            "post": {
+                "description": "修改通知单 请求主体: base64(str=aaaa) 成功输出null",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "修改通知单",
                 "parameters": [
                     {
                         "type": "string",
@@ -2524,6 +3052,18 @@
                         }
                     }
                 }
+            }
+        },
+        "/Ws": {
+            "get": {
+                "description": "主要用于推送相关事务",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "Websocket"
+                ],
+                "summary": "websocket"
             }
         },
         "/api/helper": {

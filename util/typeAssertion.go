@@ -1,11 +1,11 @@
 package util
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
-	"errors"
 )
 
 func ToString(t interface{}) string {
@@ -78,8 +78,7 @@ func GetTagName(structName interface{}, tagstr string) []string {
 	return result
 }
 
-
-func GetMapByStruct(st interface{})( map[string]interface{},error ){
+func GetMapByStruct(st interface{}) (map[string]interface{}, error) {
 	// 获取type
 	rt := reflect.TypeOf(st)
 	rv := reflect.ValueOf(st)
@@ -97,30 +96,84 @@ func GetMapByStruct(st interface{})( map[string]interface{},error ){
 	fieldNum := rt.NumField()
 	for i := 0; i < fieldNum; i++ {
 		Name := rt.Field(i).Name
-		v:=   rv.Field(i).Interface()
-        result[Name]=v
-		
+		v := rv.Field(i).Interface()
+		result[Name] = v
+
 	}
-	return result,nil
+	return result, nil
 }
-func SetStructByMap(st interface{},hasMap map[string]interface{}){
-    rt := reflect.TypeOf(st)
+func SetStructByMap(st interface{}, hasMap map[string]interface{}) {
+	rt := reflect.TypeOf(st)
 	rv := reflect.ValueOf(st)
 	// 如果是反射Ptr类型, 就获取他的 element type
 	if rt.Kind() == reflect.Ptr {
 		rt = rt.Elem()
-		rv= rv.Elem()
+		rv = rv.Elem()
 	}
 	// 获取字段数量
 	fieldNum := rt.NumField()
 	for i := 0; i < fieldNum; i++ {
 		Name := rt.Field(i).Name
-		if(rv.Field(i).CanSet()){
-			if v,ok:=hasMap[Name];ok{
+		if rv.Field(i).CanSet() {
+			if v, ok := hasMap[Name]; ok {
 				dataVal := reflect.ValueOf(v)
-			    rv.Field(i).Set(dataVal)
+				rv.Field(i).Set(dataVal)
 			}
 		}
-		
+
 	}
+}
+func DeepFields(ifaceType reflect.Type) []reflect.StructField {
+	var fields []reflect.StructField
+
+	for i := 0; i < ifaceType.NumField(); i++ {
+		v := ifaceType.Field(i)
+		if v.Anonymous && v.Type.Kind() == reflect.Struct {
+			fields = append(fields, DeepFields(v.Type)...)
+		} else {
+			fields = append(fields, v)
+		}
+	}
+
+	return fields
+}
+func StructCopy(DstStructPtr interface{}, SrcStructPtr interface{}) {
+	srcv := reflect.ValueOf(SrcStructPtr)
+	dstv := reflect.ValueOf(DstStructPtr)
+	srct := reflect.TypeOf(SrcStructPtr)
+	dstt := reflect.TypeOf(DstStructPtr)
+	if srct.Kind() != reflect.Ptr || dstt.Kind() != reflect.Ptr ||
+		srct.Elem().Kind() == reflect.Ptr || dstt.Elem().Kind() == reflect.Ptr {
+		panic("Fatal error:type of parameters must be Ptr of value")
+	}
+	if srcv.IsNil() || dstv.IsNil() {
+		panic("Fatal error:value of parameters should not be nil")
+	}
+	srcV := srcv.Elem()
+	dstV := dstv.Elem()
+	srcfields := DeepFields(reflect.ValueOf(SrcStructPtr).Elem().Type())
+	for _, v := range srcfields {
+		if v.Anonymous {
+			continue
+		}
+		dst := dstV.FieldByName(v.Name)
+		src := srcV.FieldByName(v.Name)
+		if !dst.IsValid() {
+			continue
+		}
+		if src.Type() == dst.Type() && dst.CanSet() {
+			dst.Set(src)
+			continue
+		}
+		if src.Kind() == reflect.Ptr && !src.IsNil() && src.Type().Elem() == dst.Type() {
+			dst.Set(src.Elem())
+			continue
+		}
+		if dst.Kind() == reflect.Ptr && dst.Type().Elem() == src.Type() {
+			dst.Set(reflect.New(src.Type()))
+			dst.Elem().Set(src)
+			continue
+		}
+	}
+	return
 }

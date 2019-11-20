@@ -127,6 +127,21 @@ type Flow struct {
 	UpdateTime  string `:"UpdateTime"`  // 修改时间
 	Status      int    `:"Status"`      // 状态
 }
+type FlowView struct {
+	ID          string `:"ID"`          // 主键
+	No          string `:"No"`          // 单据号
+	MenuId      string `:"MenuId"`      // 菜单ID
+	Description string `:"Description"` // 简介
+	Notes       string `:"Notes"`       // 备注
+	CreateBy    string `:"CreateBy"`    // 创建人
+	CreateTime  string `:"CreateTime"`  // 创建时间
+	UpdateBy    string `:"UpdateBy"`    // 修改人
+	UpdateTime  string `:"UpdateTime"`  // 修改时间
+	Status      int    `:"Status"`      // 状态
+	MenuCode    string `:"MenuCode"`    // 菜单代码
+	MenuName    string `:"MenuName"`    // 菜单名称
+	StepNum     int    `:"StepNum"`     // 步骤数
+}
 
 type FlowLog struct {
 	ID          string `:"ID"`          // 主键
@@ -259,7 +274,19 @@ type FlowStepUser struct {
 	UpdateBy   string `:"UpdateBy"`   // 修改人
 	UpdateTime string `:"UpdateTime"` // 修改时间
 }
-
+type FlowStepUserView struct {
+	ID          string `:"ID"`          // 主键
+	FlowId      string `:"FlowId"`      // 流程ID
+	StepId      string `:"StepId"`      // 步骤ID
+	UserId      string `:"UserId"`      // 用户ID
+	Notes       string `:"Notes"`       // 备注
+	CreateBy    string `:"CreateBy"`    // 创建人
+	CreateTime  string `:"CreateTime"`  // 创建时间
+	UpdateBy    string `:"UpdateBy"`    // 修改人
+	UpdateTime  string `:"UpdateTime"`  // 修改时间
+	AccountName string `:"AccountName"` // 帐号
+	RealName    string `:"RealName"`    // 用户名称
+}
 type BillNo struct {
 	ID            string `:"ID"`            // ID
 	Code          string `:"Code"`          // 单位据代码

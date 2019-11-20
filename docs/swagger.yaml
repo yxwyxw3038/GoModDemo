@@ -85,6 +85,32 @@ paths:
       summary: 新增部门信息
       tags:
       - Dept
+  /AddFlow:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '新增流程单信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 新增流程单信息
+      tags:
+      - Flow
   /AddMenu:
     post:
       consumes:
@@ -111,6 +137,32 @@ paths:
       summary: 新增菜单信息
       tags:
       - Menu
+  /AddNotice:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '新增通知单信息 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 新增通知单信息
+      tags:
+      - Notice
   /AddParameter:
     post:
       consumes:
@@ -267,6 +319,32 @@ paths:
       summary: 删除部门信息
       tags:
       - Dept
+  /DeleteFlow:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '删除流程单 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 删除流程单
+      tags:
+      - Flow
   /DeleteMenu:
     post:
       consumes:
@@ -293,6 +371,32 @@ paths:
       summary: 删除菜单信息
       tags:
       - Menu
+  /DeleteNotice:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '删除通知单 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 删除通知单
+      tags:
+      - Notice
   /DeleteParameter:
     post:
       consumes:
@@ -582,6 +686,43 @@ paths:
       summary: 前台条件获取单位信息
       tags:
       - Dept
+  /GetAllFlowInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取流程单信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]FlowViewModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]FlowViewModel},"Message":""} or {"Code":-1,"Data":{},"Parameter":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取流程单信息
+      tags:
+      - Flow
   /GetAllMenuInfo:
     post:
       consumes:
@@ -656,6 +797,43 @@ paths:
       summary: 前台条件获取菜单信息
       tags:
       - Menu
+  /GetAllNoticeInfo:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '前台条件获取通知单信息 请求主体: base64(ParameterStr=aaaa&PageSize=10&CurrentPage=1)
+        成功输出[]NoticeViewModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ParameterStr
+        in: formData
+        name: ParameterStr
+        required: true
+        type: string
+      - description: PageSize
+        in: formData
+        name: PageSize
+        required: true
+        type: integer
+      - description: CurrentPage
+        in: formData
+        name: CurrentPage
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]NoticeViewModel},"Message":""} or {"Code":-1,"Data":{},"Parameter":"错误提示"}'
+          schema:
+            type: string
+      summary: 前台条件获取通知单信息
+      tags:
+      - Notice
   /GetAllParameterInfo:
     post:
       consumes:
@@ -1079,7 +1257,7 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: '根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串'
+      description: '根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串'
       parameters:
       - description: Token
         in: formData
@@ -1093,9 +1271,61 @@ paths:
           description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
-      summary: 根据用户ID获取用户部门信息
+      summary: 根据用户ID获取用户权限信息
       tags:
-      - Dept
+      - Role
+  /GetFlowByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据流程ID获取流程单主表信息 请求主体: base64(ID=aaaa) 成功输出FlowView'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{FlowView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据流程ID获取流程单主表信息
+      tags:
+      - Flow
+  /GetFlowInfoByMenuId:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID获取流程单主表信息 请求主体: base64(ID=aaaa) 成功输出FlowView'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{FlowView},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID获取流程单主表信息
+      tags:
+      - Flow
   /GetMenuAllCount:
     post:
       consumes:
@@ -1164,6 +1394,58 @@ paths:
       summary: 根据权限ID获取菜单树所有根结点
       tags:
       - Role
+  /GetNoticeByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID获取通知单主表信息 请求主体: base64(ID=aaaa) 成功输出Notice'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{Notice},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID获取通知单主表信息
+      tags:
+      - Notice
+  /GetNoticeItemByID:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据菜单ID获取通知单子表信息 请求主体: base64(ID=aaaa) 成功输出Notice'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{Notice},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据菜单ID获取通知单子表信息
+      tags:
+      - Notice
   /GetParameterByID:
     post:
       consumes:
@@ -1263,6 +1545,27 @@ paths:
       summary: 获取参数树信息
       tags:
       - Parameter
+  /GetTreeUser:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '用户信息树 请求主体: Null  成功输出[]TreeNodeModel'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{[]TreeNodeModel},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 用户信息树
+      tags:
+      - Menu
   /GetUserByID:
     post:
       consumes:
@@ -1596,6 +1899,32 @@ paths:
       summary: 修改单位信息
       tags:
       - Dept
+  /UpdateFlow:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '修改流程单 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 修改流程单
+      tags:
+      - Flow
   /UpdateMenu:
     post:
       consumes:
@@ -1622,6 +1951,32 @@ paths:
       summary: 修改菜单信息
       tags:
       - Menu
+  /UpdateNotice:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '修改通知单 请求主体: base64(str=aaaa) 成功输出null'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: str
+        in: formData
+        name: str
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 修改通知单
+      tags:
+      - Notice
   /UpdateParameter:
     post:
       consumes:
@@ -1700,6 +2055,14 @@ paths:
       summary: 修改用户信息
       tags:
       - User
+  /Ws:
+    get:
+      consumes:
+      - multipart/form-data
+      description: 主要用于推送相关事务
+      summary: websocket
+      tags:
+      - Websocket
   /api/helper:
     get:
       parameters:
