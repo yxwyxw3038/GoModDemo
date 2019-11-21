@@ -272,6 +272,19 @@ func GetNoticeItemByID(c *gin.Context) {
 
 }
 
+// UpdateNoticeStatus 根据通知ID更新通知单状态
+// @Summary 根据通知ID更新通知单状态
+// @Tags Notice
+// @Description 根据通知ID更新通知单状态 请求主体: base64(ID=aaaa&UpdateBy=admin&oldStatus=0&newStatus=5) 成功输出Notice
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param ID formData string true "ID"
+// @Param UpdateBy formData string true "UpdateBy"
+// @Param oldStatus formData string true "oldStatus"
+// @Param newStatus formData string true "newStatus"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /UpdateNoticeStatus [post]
 func UpdateNoticeStatus(c *gin.Context) {
 	appG := util.Gin{C: c}
 	defer func() {

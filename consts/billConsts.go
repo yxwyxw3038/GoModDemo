@@ -44,6 +44,6 @@ func GetNoticeUserInfo() []string {
 }
 func GetFlowInfo() []string {
 
-	info := []string{"Notes"}
+	info := []string{"Notes", "Status"}
 	return append(info, GetTabInfo()...)
 }

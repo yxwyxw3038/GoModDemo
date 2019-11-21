@@ -47,7 +47,7 @@ func GetAllFlowInfo(Str string, PageSize, CurrentPage int) (*[]model.FlowView, i
 	for i := 0; i < len(data); i++ {
 		var temp model.FlowView
 		temp.ID = util.ToString(data[i]["ID"])
-		temp.No = util.ToString(data[i]["CodeName"])
+		temp.No = util.ToString(data[i]["No"])
 		temp.StepNum = util.ToInt(data[i]["StepNum"])
 		temp.Status = util.ToInt(data[i]["Status"])
 		temp.MenuId = util.ToString(data[i]["MenuId"])
@@ -65,25 +65,53 @@ func GetAllFlowInfo(Str string, PageSize, CurrentPage int) (*[]model.FlowView, i
 	}
 	return &list, num, nil
 }
-func GetFlowByID(ID string) (*model.FlowView, error) {
+func GetFlowByID(ID string) (*model.FlowBillModel, error) {
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
 	}
-	var data []model.FlowView
-	err = db.Table(&data).Where("ID", "=", ID).Select()
+	data := new(model.FlowBillModel)
+	var main []model.FlowView
+	err = db.Table(&main).Where("ID", "=", ID).Select()
 	if err != nil {
 		return nil, err
 	}
-	if len(data) <= 0 {
+	if len(main) <= 0 {
 		return nil, errors.New("未找到对应单据")
 	}
-	if len(data) > 1 {
+	if len(main) > 1 {
 		return nil, errors.New("找到多个对应单据")
 	}
-	data[0].CreateTime, _ = util.ParseAnyToStr(data[0].CreateTime)
-	data[0].UpdateTime, _ = util.ParseAnyToStr(data[0].UpdateTime)
-	return &data[0], nil
+	main[0].CreateTime, _ = util.ParseAnyToStr(main[0].CreateTime)
+	main[0].UpdateTime, _ = util.ParseAnyToStr(main[0].UpdateTime)
+	var flowStep []model.FlowStep
+	err = db.Reset().Table(&flowStep).Where("FlowId", "=", ID).Select()
+	sqllog := db.LastSql()
+	fmt.Println(sqllog)
+	if err != nil {
+		return nil, err
+	}
+	if len(flowStep) > 1 {
+		for i := 0; i < len(flowStep); i++ {
+			flowStep[i].CreateTime, _ = util.ParseAnyToStr(flowStep[i].CreateTime)
+			flowStep[i].UpdateTime, _ = util.ParseAnyToStr(flowStep[i].UpdateTime)
+		}
+	}
+	var flowStepUser []model.FlowStepUserView
+	err = db.Reset().Table(&flowStepUser).Where("FlowId", "=", ID).Select()
+	if err != nil {
+		return nil, err
+	}
+	if len(flowStepUser) > 1 {
+		for i := 0; i < len(flowStepUser); i++ {
+			flowStepUser[i].CreateTime, _ = util.ParseAnyToStr(flowStepUser[i].CreateTime)
+			flowStepUser[i].UpdateTime, _ = util.ParseAnyToStr(flowStepUser[i].UpdateTime)
+		}
+	}
+	(*data).Flow = main[0]
+	(*data).FlowStep = flowStep
+	(*data).FlowStepUser = flowStepUser
+	return data, nil
 }
 func GetFlowInfoByMenuId(ID string) (*model.FlowView, error) {
 	db, err := util.OpenDB()
@@ -110,14 +138,25 @@ func AddFlow(data model.FlowBillModel) error {
 	var err error
 	defer func() {
 		if p := recover(); p != nil {
-			err = errors.New("新增数据异常")
+			switch x := p.(type) {
+			case string:
+				err = errors.New("新增数据异常:" + x)
+			case error:
+				err = errors.New("新增数据异常:" + x.Error())
+			default:
+				err = errors.New("新增数据异常")
+			}
+			if err != nil {
+				fmt.Println("recover后的错误:", err)
+			}
+
 		}
 	}()
 	timeStr := util.GetNowStr()
 	data.Flow.CreateTime = timeStr
 	data.Flow.UpdateTime = timeStr
 	main := new(model.Flow)
-	util.StructCopy(main, data.Flow)
+	util.StructCopy(main, &data.Flow)
 	db, err := util.OpenDB()
 	if err != nil {
 		return err
@@ -126,7 +165,7 @@ func AddFlow(data model.FlowBillModel) error {
 	if err != nil {
 		return err
 	}
-	data.Flow.No = billNo
+	(*main).No = billNo
 	db.Begin()
 	_, err = db.Table("Flow").ExtraCols(consts.GetFlowInfo()...).Insert(main)
 	if err != nil {
@@ -135,7 +174,9 @@ func AddFlow(data model.FlowBillModel) error {
 	}
 	for i := 0; i < len(data.FlowStep); i++ {
 		item := new(model.FlowStep)
-		util.StructCopy(item, data.FlowStep[i])
+		util.StructCopy(item, &(data.FlowStep[i]))
+		(*item).CreateBy = (*main).CreateBy
+		(*item).UpdateBy = (*main).UpdateBy
 		(*item).CreateTime = timeStr
 		(*item).UpdateTime = timeStr
 		_, err = db.Table("FlowStep").ExtraCols(consts.GetFlowInfo()...).Insert(item)
@@ -146,7 +187,9 @@ func AddFlow(data model.FlowBillModel) error {
 	}
 	for i := 0; i < len(data.FlowStepUser); i++ {
 		item := new(model.FlowStepUser)
-		util.StructCopy(item, data.FlowStepUser[i])
+		util.StructCopy(item, &(data.FlowStepUser[i]))
+		(*item).CreateBy = (*main).CreateBy
+		(*item).UpdateBy = (*main).UpdateBy
 		(*item).CreateTime = timeStr
 		(*item).UpdateTime = timeStr
 
@@ -170,7 +213,7 @@ func UpdateFlow(data model.FlowBillModel) error {
 	timeStr := util.GetNowStr()
 	data.Flow.UpdateTime = timeStr
 	main := new(model.Flow)
-	util.StructCopy(main, data.Flow)
+	util.StructCopy(main, &data.Flow)
 	db, err := util.OpenDB()
 	delSql1 := ""
 	delSql2 := ""
@@ -248,7 +291,8 @@ func UpdateFlow(data model.FlowBillModel) error {
 	}
 	for i := 0; i < len(data.FlowStep); i++ {
 		item := new(model.FlowStep)
-		util.StructCopy(item, data.FlowStep[i])
+		util.StructCopy(item, &(data.FlowStep[i]))
+		(*item).UpdateBy = (*main).UpdateBy
 		(*item).CreateTime = timeStr
 		(*item).UpdateTime = timeStr
 		_, err = db.Table("FlowStep").ExtraCols(consts.GetFlowInfo()...).Insert(item)
@@ -259,7 +303,8 @@ func UpdateFlow(data model.FlowBillModel) error {
 	}
 	for i := 0; i < len(data.FlowStepUser); i++ {
 		item := new(model.FlowStepUser)
-		util.StructCopy(item, data.FlowStepUser[i])
+		util.StructCopy(item, &(data.FlowStepUser[i]))
+		(*item).UpdateBy = (*main).UpdateBy
 		(*item).CreateTime = timeStr
 		(*item).UpdateTime = timeStr
 
@@ -309,5 +354,20 @@ func DeleteFlow(idList []string) error {
 		}
 	}
 	db.Commit()
+	return err
+}
+func UpdateFlowStatus(ID, UpdateBy string, oldStatus, newStatus int64) error {
+	db, err := util.OpenDB()
+	if err != nil {
+		return err
+	}
+	timeStr := util.GetNowStr()
+	count, err := db.Table("Flow").Data(map[string]interface{}{"Status": newStatus, "UpdateBy": UpdateBy, "UpdateTime": timeStr}).Where("ID", "=", ID).Where("Status", "=", oldStatus).Update()
+	if err != nil {
+		return err
+	}
+	if count <= 0 {
+		return errors.New("数据已修改")
+	}
 	return err
 }

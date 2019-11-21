@@ -271,3 +271,66 @@ func GetFlowInfoByMenuId(c *gin.Context) {
 	appG.Response(http.StatusOK, consts.SUCCESS, "", s)
 
 }
+
+// UpdateFlowStatus 根据流程ID更新流程单状态
+// @Summary 根据流程ID更新流程单状态
+// @Tags Flow
+// @Description 根据流程ID更新流程单状态 请求主体: base64(ID=aaaa&UpdateBy=admin&oldStatus=0&newStatus=5) 成功输出Notice
+// @Accept mpfd
+// @Param Token formData string true "Token"
+// @Param ID formData string true "ID"
+// @Param UpdateBy formData string true "UpdateBy"
+// @Param oldStatus formData string true "oldStatus"
+// @Param newStatus formData string true "newStatus"
+// @Produce  json
+// @Success 200 {string} json "{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}"
+// @Router  /UpdateFlowStatus [post]
+func UpdateFlowStatus(c *gin.Context) {
+	appG := util.Gin{C: c}
+	defer func() {
+		if p := recover(); p != nil {
+			appG.Response(http.StatusOK, consts.ERROR, "错误", nil)
+		}
+	}()
+	dists, err := appG.ParseQuery()
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "数据包解密失败", nil)
+		return
+	}
+	ID := dists["ID"][0]
+	if ID == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	UpdateBy := dists["UpdateBy"][0]
+	if UpdateBy == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	oldStatus := dists["oldStatus"][0]
+	if oldStatus == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	newStatus := dists["newStatus"][0]
+	if newStatus == "" {
+		appG.Response(http.StatusOK, consts.ERROR, "参数为空", nil)
+		return
+	}
+	olddata, err := strconv.ParseInt(oldStatus, 10, 64)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "参数转换异常", nil)
+		return
+	}
+	newdata, err := strconv.ParseInt(newStatus, 10, 64)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, "参数转换异常", nil)
+		return
+	}
+	err = bill.UpdateFlowStatus(ID, UpdateBy, olddata, newdata)
+	if err != nil {
+		appG.Response(http.StatusOK, consts.ERROR, err.Error(), nil)
+		return
+	}
+	appG.Response(http.StatusOK, consts.SUCCESS, "", "")
+}
