@@ -107,6 +107,7 @@ func InitRouter() *gin.Engine {
 	flowOne.POST("DeleteFlow", api.DeleteFlow)
 	flowOne.POST("GetFlowByID", api.GetFlowByID)
 	flowOne.POST("GetFlowInfoByMenuId", api.GetFlowInfoByMenuId)
+	flowOne.POST("UpdateFlowStatus", api.UpdateFlowStatus)
 	websocketOne := router.Group("/Websocket")
 	websocketOne.GET("Ws", api.WsPage)
 	return router
