@@ -2,6 +2,7 @@ package util
 
 import (
 	"GoModDemo/consts"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/url"
 )
@@ -48,6 +49,7 @@ func (g *Gin) GetBase64Body() (string, error) {
 	buf := make([]byte, count)
 	n, _ := g.C.Request.Body.Read(buf)
 	passwordString := string(buf[0:n])
+	fmt.Println(passwordString)
 	decodeString, err := UnBase64(passwordString)
 	if err != nil {
 		return returnStr, err

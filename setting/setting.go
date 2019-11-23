@@ -7,6 +7,7 @@ import (
 )
 
 type App struct {
+	AesKey     string
 	JwtSecret  string
 	JumpTime   int32
 	DelayTime  int32
