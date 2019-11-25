@@ -8,6 +8,7 @@ import (
 
 type App struct {
 	AesKey     string
+	AesIV      string
 	JwtSecret  string
 	JumpTime   int32
 	DelayTime  int32
