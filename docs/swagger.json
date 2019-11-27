@@ -1854,7 +1854,7 @@
         },
         "/GetDeptByUserIdForTransfer": {
             "post": {
-                "description": "根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串",
+                "description": "根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -1862,9 +1862,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Role"
+                    "Dept"
                 ],
-                "summary": "根据用户ID获取用户权限信息",
+                "summary": "根据用户ID获取用户部门信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -2859,6 +2859,66 @@
                 }
             }
         },
+        "/UpdateFlowStatus": {
+            "post": {
+                "description": "根据流程ID更新流程单状态 请求主体: base64(ID=aaaa\u0026UpdateBy=admin\u0026oldStatus=0\u0026newStatus=5) 成功输出Notice",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Flow"
+                ],
+                "summary": "根据流程ID更新流程单状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "UpdateBy",
+                        "name": "UpdateBy",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "oldStatus",
+                        "name": "oldStatus",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "newStatus",
+                        "name": "newStatus",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/UpdateMenu": {
             "post": {
                 "description": "修改菜单信息 请求主体: base64(str=aaaa) 成功输出null",
@@ -2923,6 +2983,66 @@
                         "type": "string",
                         "description": "str",
                         "name": "str",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"Code\":1,\"Data\":{},\"Message\":\"\"} or {\"Code\":-1,\"Data\":{},\"Message\":\"错误提示\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/UpdateNoticeStatus": {
+            "post": {
+                "description": "根据通知ID更新通知单状态 请求主体: base64(ID=aaaa\u0026UpdateBy=admin\u0026oldStatus=0\u0026newStatus=5) 成功输出Notice",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notice"
+                ],
+                "summary": "根据通知ID更新通知单状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Token",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "ID",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "UpdateBy",
+                        "name": "UpdateBy",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "oldStatus",
+                        "name": "oldStatus",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "newStatus",
+                        "name": "newStatus",
                         "in": "formData",
                         "required": true
                     }

@@ -1257,7 +1257,7 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: '根据用户ID获取用户权限信息 请求主体: base64(userId=aaaa) 成功输出字符串'
+      description: '根据用户ID获取用户部门信息 请求主体: base64(userId=aaaa) 成功输出字符串'
       parameters:
       - description: Token
         in: formData
@@ -1271,9 +1271,9 @@ paths:
           description: '{"Code":1,"Data":"aaa,bbb,ccc","Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
           schema:
             type: string
-      summary: 根据用户ID获取用户权限信息
+      summary: 根据用户ID获取用户部门信息
       tags:
-      - Role
+      - Dept
   /GetFlowByID:
     post:
       consumes:
@@ -1925,6 +1925,48 @@ paths:
       summary: 修改流程单
       tags:
       - Flow
+  /UpdateFlowStatus:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据流程ID更新流程单状态 请求主体: base64(ID=aaaa&UpdateBy=admin&oldStatus=0&newStatus=5)
+        成功输出Notice'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      - description: UpdateBy
+        in: formData
+        name: UpdateBy
+        required: true
+        type: string
+      - description: oldStatus
+        in: formData
+        name: oldStatus
+        required: true
+        type: string
+      - description: newStatus
+        in: formData
+        name: newStatus
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据流程ID更新流程单状态
+      tags:
+      - Flow
   /UpdateMenu:
     post:
       consumes:
@@ -1975,6 +2017,48 @@ paths:
           schema:
             type: string
       summary: 修改通知单
+      tags:
+      - Notice
+  /UpdateNoticeStatus:
+    post:
+      consumes:
+      - multipart/form-data
+      description: '根据通知ID更新通知单状态 请求主体: base64(ID=aaaa&UpdateBy=admin&oldStatus=0&newStatus=5)
+        成功输出Notice'
+      parameters:
+      - description: Token
+        in: formData
+        name: Token
+        required: true
+        type: string
+      - description: ID
+        in: formData
+        name: ID
+        required: true
+        type: string
+      - description: UpdateBy
+        in: formData
+        name: UpdateBy
+        required: true
+        type: string
+      - description: oldStatus
+        in: formData
+        name: oldStatus
+        required: true
+        type: string
+      - description: newStatus
+        in: formData
+        name: newStatus
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"Code":1,"Data":{},"Message":""} or {"Code":-1,"Data":{},"Message":"错误提示"}'
+          schema:
+            type: string
+      summary: 根据通知ID更新通知单状态
       tags:
       - Notice
   /UpdateParameter:
