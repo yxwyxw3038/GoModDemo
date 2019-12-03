@@ -114,24 +114,29 @@ func Login(c *gin.Context) {
 		appG.Response(http.StatusOK, consts.ERROR, "JWT验证失败", nil)
 		return
 	}
-	createTime, _ := util.ParseAnyToStr((*user).CreateTime)
-	updateTime, _ := util.ParseAnyToStr((*user).UpdateTime)
+	// createTime, _ := util.ParseAnyToStr((*user).CreateTime)
+	// updateTime, _ := util.ParseAnyToStr((*user).UpdateTime)
+	timeStr := util.GetNowStr()
 	var tokenUser = model.TokenUser{
-		User: model.User{ID: (*user).ID,
-			AccountName: (*user).AccountName,
-			PassWord:    "",
-			RealName:    (*user).RealName,
-			MobilePhone: (*user).MobilePhone,
-			Email:       (*user).Email,
-			Description: "",
-			CreateBy:    "",
-			CreateTime:  createTime,
-			UpdateBy:    "",
-			UpdateTime:  updateTime,
-			IsAble:      (*user).IsAble,
-			IfChangePwd: (*user).IfChangePwd,
-		},
-		Token: token,
+		// User: model.User{ID: (*user).ID,
+		// 	AccountName: (*user).AccountName,
+		// 	PassWord:    "",
+		// 	RealName:    (*user).RealName,
+		// 	MobilePhone: (*user).MobilePhone,
+		// 	Email:       (*user).Email,
+		// 	Description: "",
+		// 	CreateBy:    "",
+		// 	CreateTime:  createTime,
+		// 	UpdateBy:    "",
+		// 	UpdateTime:  updateTime,
+		// 	IsAble:      (*user).IsAble,
+		// 	IfChangePwd: (*user).IfChangePwd,
+		// },
+		ID:          (*user).ID,
+		AccountName: (*user).AccountName,
+		RealName:    (*user).RealName,
+		CreateTime:  timeStr,
+		Token:       token,
 	}
 	b, err := json.Marshal(tokenUser)
 	if err != nil {

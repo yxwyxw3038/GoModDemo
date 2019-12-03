@@ -16,8 +16,11 @@ package model
 // 	IfChangePwd int    `:"IfChangePwd"` // 是否修改密码
 // }
 type TokenUser struct {
-	User
-	Token string
+	ID          string `:"ID"`          // 主键
+	AccountName string `:"AccountName"` // 帐户名
+	RealName    string `:"RealName"`    // 别名
+	CreateTime  string `:"CreateTime"`  // 创建时间
+	Token       string
 }
 
 // type UserView struct {
