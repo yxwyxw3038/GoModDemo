@@ -7,20 +7,35 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
 	// "strings"
+	"github.com/yxwyxw3038/whysql"
 )
 
 func GetAllFlowInfo(Str string, PageSize, CurrentPage int) (*[]model.FlowView, int, error) {
 	list := make([]model.FlowView, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("FlowView", Str, "UpdateTime", consts.DESC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("FlowView", Str, "UpdateTime", consts.DESC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	// whereSqlCount, err := util.GetWhereSqlCount("FlowView", Str)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	sqldb, err := whysql.NewWhy(Str)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSql, err := sqldb.SetTabName("FlowView").SetOrderBy("UpdateTime").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("FlowView").GetCountSql()
 	if err != nil {
 		return nil, 0, err
 	}
-	whereSqlCount, err := util.GetWhereSqlCount("FlowView", Str)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	fmt.Println(whereSqlCount)
 	fmt.Println(whereSql)
 	db, err := util.OpenDB()

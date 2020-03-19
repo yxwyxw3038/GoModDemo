@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/yxwyxw3038/whysql"
 )
 
 func GetMenuByID(ID string) (*model.Menu, error) {
@@ -34,15 +35,28 @@ func GetMenuByID(ID string) (*model.Menu, error) {
 
 func GetAllMenuInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.Menu, int, error) {
 	list := make([]model.Menu, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("Menu", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("Menu", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	// whereSqlCount, err := util.GetWhereSqlCount("Menu", ParameterStr)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSql, err := sqldb.SetTabName("Menu").SetOrderBy("Sort", whysql.ASC).SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("Menu").GetCountSql()
 	if err != nil {
 		return nil, 0, err
 	}
-	whereSqlCount, err := util.GetWhereSqlCount("Menu", ParameterStr)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	fmt.Println(whereSqlCount)
 	fmt.Println(whereSql)
 	db, err := util.OpenDB()
@@ -90,15 +104,28 @@ func GetAllMenuInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.Me
 
 func GetAllMenuViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.MenuView, int, error) {
 	list := make([]model.MenuView, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("MenuView", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("MenuView", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	// whereSqlCount, err := util.GetWhereSqlCount("Menu", ParameterStr)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSql, err := sqldb.SetTabName("MenuView").SetOrderBy("Sort", whysql.ASC).SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("Menu").GetCountSql()
 	if err != nil {
 		return nil, 0, err
 	}
-	whereSqlCount, err := util.GetWhereSqlCount("Menu", ParameterStr)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	fmt.Println(whereSqlCount)
 	fmt.Println(whereSql)
 	db, err := util.OpenDB()
@@ -203,11 +230,20 @@ func generateCascaderMenuNext(id string, list *[]model.Menu) *[]model.CascaderMo
 	return &listTemp
 }
 func GetMenuAllCount() (int, error) {
-	whereSqlCount, err := util.GetWhereSqlCount("Menu", "")
+	// whereSqlCount, err := util.GetWhereSqlCount("Menu", "")
+	// if err != nil {
+	// 	return 0, err
+	// }
+	sqldb, err := whysql.NewWhy("")
 	if err != nil {
+		fmt.Println(err.Error())
 		return 0, err
 	}
 
+	whereSqlCount, err := sqldb.SetTabName("Menu").GetCountSql()
+	if err != nil {
+		return 0, err
+	}
 	fmt.Println(whereSqlCount)
 	db, err := util.OpenDB()
 	if err != nil {

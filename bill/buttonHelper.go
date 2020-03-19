@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/yxwyxw3038/whysql"
 )
 
 func GetButtonByMenuIdAndUserId(menuId string, userId string) (*[]model.Button, error) {
@@ -169,10 +171,21 @@ func GetAllButtonInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.
 			err = errors.New("数据异常")
 		}
 	}()
-	whereSql, err := util.GetWhereSqlOrderLimt("Button", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("Button", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
+	whereSql, err := sqldb.SetTabName("Button").SetOrderBy("Sort", whysql.ASC).SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
 	db, err := util.OpenDB()
 	if err != nil {
 		return nil, err
@@ -308,11 +321,20 @@ func GetButtonByID(ID string) (*model.Button, error) {
 	return &data[0], nil
 }
 func GetButtonAllCount() (int, error) {
-	whereSqlCount, err := util.GetWhereSqlCount("Button", "")
+	// whereSqlCount, err := util.GetWhereSqlCount("Button", "")
+	// if err != nil {
+	// 	return 0, err
+	// }
+	sqldb, err := whysql.NewWhy("")
+	if err != nil {
+		fmt.Println(err.Error())
+		return 0, err
+
+	}
+	whereSqlCount, err := sqldb.SetTabName("Button").GetCountSql()
 	if err != nil {
 		return 0, err
 	}
-
 	fmt.Println(whereSqlCount)
 	db, err := util.OpenDB()
 	if err != nil {

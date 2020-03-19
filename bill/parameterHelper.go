@@ -6,6 +6,8 @@ import (
 	"GoModDemo/util"
 	"errors"
 	"fmt"
+
+	"github.com/yxwyxw3038/whysql"
 	// "github.com/google/uuid"
 )
 
@@ -63,15 +65,28 @@ func generateTreeParameterNext(id string, list *[]model.Parameter) *[]model.Tree
 }
 func GetAllParameterInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.Parameter, int, error) {
 	list := make([]model.Parameter, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("Parameter", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("Parameter", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	// whereSqlCount, err := util.GetWhereSqlCount("Parameter", ParameterStr)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSql, err := sqldb.SetTabName("Parameter").SetOrderBy("Sort", whysql.ASC).SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("Parameter").GetCountSql()
 	if err != nil {
 		return nil, 0, err
 	}
-	whereSqlCount, err := util.GetWhereSqlCount("Parameter", ParameterStr)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	fmt.Println(whereSqlCount)
 	fmt.Println(whereSql)
 	db, err := util.OpenDB()

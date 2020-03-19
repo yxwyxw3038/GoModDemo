@@ -7,16 +7,25 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+
+	"github.com/yxwyxw3038/whysql"
 	// "strings"
 )
 
 func GetAllBillNoInfo(BillNoStr string, PageSize, CurrentPage int) (*[]model.BillNo, int, error) {
 	list := make([]model.BillNo, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("BillNo", BillNoStr, "UpdateTime", consts.DESC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("BillNo", BillNoStr, "UpdateTime", consts.DESC, PageSize, CurrentPage)
+	sqldb, err := whysql.NewWhy(BillNoStr)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, 0, err
 	}
-	whereSqlCount, err := util.GetWhereSqlCount("BillNo", BillNoStr)
+	whereSql, err := sqldb.SetTabName("BillNo").SetOrderBy("UpdateTime").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("BillNo").GetCountSql()
 	if err != nil {
 		return nil, 0, err
 	}

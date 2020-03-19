@@ -9,6 +9,8 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/yxwyxw3038/whysql"
 )
 
 func GetAllDeptForTransfer() (*[]model.TransferModel, error) {
@@ -78,8 +80,18 @@ func GetAllDeptInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.De
 			err = errors.New("数据异常")
 		}
 	}()
-	whereSql, err := util.GetWhereSqlLimt("Department", ParameterStr, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlLimt("Department", ParameterStr, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
 	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	whereSql, err := sqldb.SetTabName("Department").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 	db, err := util.OpenDB()
@@ -211,15 +223,29 @@ func GetDeptByID(ID string) (*model.Department, error) {
 }
 func GetAllDeptViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.DeptView, int, error) {
 	list := make([]model.DeptView, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("DeptView", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("DeptView", ParameterStr, "Sort", consts.ASC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	// whereSqlCount, err := util.GetWhereSqlCount("Department", ParameterStr)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, 0, err
-	}
-	whereSqlCount, err := util.GetWhereSqlCount("Department", ParameterStr)
-	if err != nil {
-		return nil, 0, err
-	}
 
+	}
+	whereSql, err := sqldb.SetTabName("DeptView").SetOrderBy("Sort").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("DeptView").GetCountSql()
+	if err != nil {
+		return nil, 0, err
+	}
 	fmt.Println(whereSqlCount)
 	fmt.Println(whereSql)
 	db, err := util.OpenDB()
@@ -324,7 +350,17 @@ func generateCascaderDeptNext(id string, list *[]model.Department) *[]model.Casc
 }
 
 func GetDeptAllCount() (int, error) {
-	whereSqlCount, err := util.GetWhereSqlCount("Department", "")
+	// whereSqlCount, err := util.GetWhereSqlCount("Department", "")
+	// if err != nil {
+	// 	return 0, err
+	// }
+	sqldb, err := whysql.NewWhy("")
+	if err != nil {
+		fmt.Println(err.Error())
+		return 0, err
+
+	}
+	whereSqlCount, err := sqldb.SetTabName("Department").GetCountSql()
 	if err != nil {
 		return 0, err
 	}

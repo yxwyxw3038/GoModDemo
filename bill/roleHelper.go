@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/yxwyxw3038/whysql"
 )
 
 func GetAllRoleForTransfer() (*[]model.TransferModel, error) {
@@ -80,8 +81,18 @@ func GetAllRoleInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.Ro
 			err = errors.New("数据异常")
 		}
 	}()
-	whereSql, err := util.GetWhereSqlLimt("Role", ParameterStr, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlLimt("Role", ParameterStr, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
 	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	whereSql, err := sqldb.SetTabName("Role").SetOrderBy("UpdateTime").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 	db, err := util.OpenDB()

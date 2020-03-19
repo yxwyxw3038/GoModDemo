@@ -7,20 +7,35 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/yxwyxw3038/whysql"
 	// "strings"
 )
 
 func GetAllNoticeInfo(BillNoStr string, PageSize, CurrentPage int) (*[]model.NoticeViewModel, int, error) {
 	list := make([]model.NoticeViewModel, 0)
-	whereSql, err := util.GetWhereSqlOrderLimt("NoticeView", BillNoStr, "UpdateTime", consts.DESC, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlOrderLimt("NoticeView", BillNoStr, "UpdateTime", consts.DESC, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	// whereSqlCount, err := util.GetWhereSqlCount("Notice", BillNoStr)
+	// if err != nil {
+	// 	return nil, 0, err
+	// }
+	sqldb, err := whysql.NewWhy(BillNoStr)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSql, err := sqldb.SetTabName("NoticeView").SetOrderBy("UpdateTime").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, 0, err
+	}
+	whereSqlCount, err := sqldb.SetTabName("Notice").GetCountSql()
 	if err != nil {
 		return nil, 0, err
 	}
-	whereSqlCount, err := util.GetWhereSqlCount("Notice", BillNoStr)
-	if err != nil {
-		return nil, 0, err
-	}
-
 	fmt.Println(whereSqlCount)
 	fmt.Println(whereSql)
 	db, err := util.OpenDB()

@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/yxwyxw3038/whysql"
 )
 
 func UserAuth(userName string, passWord string) error {
@@ -148,8 +149,19 @@ func generateMenuTreeNext(id string, list *[]model.MenuTree) *[]model.MenuTree {
 }
 
 func GetAllUserInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.User, error) {
-	whereSql, err := util.GetWhereSqlLimt("User", ParameterStr, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlLimt("User", ParameterStr, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	sqldb, err := whysql.NewWhy(ParameterStr)
 	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	whereSql, err := sqldb.SetTabName("User").SetOrderBy("UpdateTime").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 	db, err := util.OpenDB()
@@ -188,8 +200,18 @@ func GetAllUserInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.Us
 }
 
 func GetAllUserViewInfo(ParameterStr string, PageSize, CurrentPage int) (*[]model.UserView, error) {
-	whereSql, err := util.GetWhereSqlLimt("UserView", ParameterStr, PageSize, CurrentPage)
+	// whereSql, err := util.GetWhereSqlLimt("UserView", ParameterStr, PageSize, CurrentPage)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	sqldb, err := whysql.NewWhy(ParameterStr)
 	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	whereSql, err := sqldb.SetTabName("UserView").SetOrderBy("UpdateTime").SetLimt(CurrentPage, PageSize).GetQuerySql()
+	if err != nil {
+		fmt.Println(err.Error())
 		return nil, err
 	}
 	db, err := util.OpenDB()
