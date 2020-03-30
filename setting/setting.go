@@ -41,6 +41,7 @@ type Database struct {
 var AppSetting = &App{}
 var ServerSetting = &Server{}
 var DatabaseSetting = &Database{}
+var DatabaseSetting1 = &Database{}
 var MogodbSetting = &Server{}
 var RedisSetting = &RedisServer{}
 var config *ini.File
@@ -54,6 +55,7 @@ func Setup() {
 	mapTo("app", AppSetting)
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
+	mapTo("database1", DatabaseSetting1)
 	mapTo("mogodbconfig", MogodbSetting)
 	mapTo("redisconfig", RedisSetting)
 }
