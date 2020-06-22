@@ -18,7 +18,7 @@ require (
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.3
-	github.com/yxwyxw3038/whysql v0.0.0-20200319010825-ac9bd6c1533c
+	github.com/yxwyxw3038/whysql v0.0.0-20200621142402-8f5607a7d0ac
 	go.uber.org/atomic v1.4.0 // indirect
 	go.uber.org/multierr v1.2.0 // indirect
 	go.uber.org/zap v1.10.0

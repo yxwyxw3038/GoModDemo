@@ -170,6 +170,8 @@ github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijb
 github.com/wendal/errors v0.0.0-20130201093226-f66c77a7882b/go.mod h1:Q12BUT7DqIlHRmgv3RskH+UCM/4eqVMgI0EMmlSpAXc=
 github.com/yxwyxw3038/whysql v0.0.0-20200319010825-ac9bd6c1533c h1:cCCmUFij1og0aBQwJ+xuARI/5AZTl7C+N0r1lnxiq/0=
 github.com/yxwyxw3038/whysql v0.0.0-20200319010825-ac9bd6c1533c/go.mod h1:UXBtMfRRG2jA6hlqauW4Dj/zr/4aVO+4CiSOv8aC3x4=
+github.com/yxwyxw3038/whysql v0.0.0-20200621142402-8f5607a7d0ac h1:gstT2Sbchv5U6cReDGQIiahJU2NCiz1SuG1gxJ/dAow=
+github.com/yxwyxw3038/whysql v0.0.0-20200621142402-8f5607a7d0ac/go.mod h1:UXBtMfRRG2jA6hlqauW4Dj/zr/4aVO+4CiSOv8aC3x4=
 go.uber.org/atomic v1.4.0 h1:cxzIVoETapQEqDhQu3QfnvXAV4AlzcvUCxkVUFw3+EU=
 go.uber.org/atomic v1.4.0/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
 go.uber.org/multierr v1.1.0 h1:HoEmRHQPVSqub6w2z2d2EOVs2fjyFRGyofhKuyDq0QI=
